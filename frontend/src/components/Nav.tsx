@@ -1,7 +1,9 @@
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import { Button } from "./ui/button";
 
 function Nav() {
+  const location = useLocation();
+
   return (
     <div className="py-8">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6">
@@ -9,9 +11,11 @@ function Nav() {
           eVolV
         </Link>
         <div>
-          <Button className="cursor-pointer font-semibold">
-            <Link to="/login">Log in</Link>
-          </Button>
+          {location.pathname !== "/login" && (
+            <Button asChild className="cursor-pointer font-semibold">
+              <Link to="/login">Log in</Link>
+            </Button>
+          )}
         </div>
       </div>
     </div>

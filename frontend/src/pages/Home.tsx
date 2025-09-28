@@ -9,7 +9,10 @@ function Home() {
         eVolV is all-in-one app for your self-improvement. Focus, Task, Mood
         tracking, journaling, notes, and more.
       </p>
-      <Button className="cursor-pointer px-8 py-6 text-xl font-semibold">
+      <Button
+        asChild
+        className="cursor-pointer px-8 py-6 text-xl font-semibold"
+      >
         <Link to="/login">Get Started</Link>
       </Button>
     </div>
