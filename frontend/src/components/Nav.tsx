@@ -11,9 +11,18 @@ function Nav() {
           eVolV
         </Link>
         <div>
-          {location.pathname !== "/login" && (
-            <Button asChild className="cursor-pointer font-semibold">
+          {location.pathname === "/" && (
+            <Button
+              variant="secondary"
+              asChild
+              className="cursor-pointer font-semibold"
+            >
               <Link to="/login">Log in</Link>
+            </Button>
+          )}
+          {location.pathname === "/" && (
+            <Button asChild className="cursor-pointer font-semibold">
+              <Link to="/signup">Sign Up</Link>
             </Button>
           )}
         </div>

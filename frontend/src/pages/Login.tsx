@@ -2,9 +2,9 @@ import { LoginForm } from "@/components/login-form";
 
 function Login() {
   return (
-    <form>
-      <LoginForm className="mx-auto max-w-sm" />
-    </form>
+    <div>
+      <LoginForm className="mx-auto max-w-md" />
+    </div>
   );
 }
 
