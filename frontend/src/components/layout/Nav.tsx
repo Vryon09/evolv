@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 
 function Nav() {
   const location = useLocation();
