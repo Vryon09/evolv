@@ -15,7 +15,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
       </Route>
       <Route path="/app" element={<OSLayout />}>
-        <Route index element={<Dashboard />} />
+        <Route path="/app/dashboard" element={<Dashboard />} />
       </Route>
     </Routes>
   );
