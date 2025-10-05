@@ -1,11 +1,15 @@
 import { Outlet } from "react-router";
-import Sidebar from "./Sidebar";
+import { SidebarProvider, SidebarTrigger } from "../ui/sidebar";
+import AppSidebar from "../AppSidebar";
 
 function OSLayout() {
   return (
-    <div className="flex">
-      <Sidebar />
-      <Outlet />
+    <div>
+      <SidebarProvider>
+        <AppSidebar />
+        <SidebarTrigger className="size-10 cursor-pointer" />
+        <Outlet />
+      </SidebarProvider>
     </div>
   );
 }
