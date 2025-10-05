@@ -7,7 +7,7 @@ function OSLayout() {
     <div>
       <SidebarProvider>
         <AppSidebar />
-        <SidebarTrigger className="size-10 cursor-pointer" />
+        <SidebarTrigger className="size-8 cursor-pointer" />
         <Outlet />
       </SidebarProvider>
     </div>

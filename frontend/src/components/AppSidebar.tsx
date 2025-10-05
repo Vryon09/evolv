@@ -1,47 +1,48 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
+import { Brain, Home, Meh, Network, TreePalm } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "./ui/sidebar";
-import { Link } from "react-router";
+import { Link, NavLink, useLocation } from "react-router";
 
 const items = [
   {
     title: "Home",
-    url: "#",
+    url: "dashboard",
     icon: Home,
   },
   {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
+    title: "Habit",
+    url: "habit",
+    icon: TreePalm,
   },
   {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
+    title: "Mood",
+    url: "mood",
+    icon: Meh,
   },
   {
-    title: "Search",
-    url: "#",
-    icon: Search,
+    title: "Knowledge",
+    url: "knowledge",
+    icon: Brain,
   },
   {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
+    title: "Opportunity",
+    url: "opportunity",
+    icon: Network,
   },
 ];
 
 function AppSidebar() {
+  const location = useLocation();
+
   return (
     <Sidebar>
       <SidebarHeader>
@@ -55,16 +56,22 @@ function AppSidebar() {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                  <SidebarMenuButton
+                    asChild
+                    className={
+                      location.pathname.split("/")[2] === item.url
+                        ? `bg-neutral-200 hover:bg-neutral-200`
+                        : `hover:bg-neutral-200`
+                    }
+                  >
+                    <NavLink to={`/app/${item.url}`}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
