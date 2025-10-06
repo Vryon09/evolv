@@ -24,3 +24,19 @@ export function useAddUser() {
     mutationFn: handleAddUser,
   });
 }
+
+async function handleLoginUser({ email, password }: Omit<IUser, "name">) {
+  try {
+    const user = { email, password };
+    const res = await axios.post(`${API_BASE_URL}/api/auth/login`, user);
+    return res.data || {};
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export function useLoginUser() {
+  return useMutation({
+    mutationFn: handleLoginUser,
+  });
+}
