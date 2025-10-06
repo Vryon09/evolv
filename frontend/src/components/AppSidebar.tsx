@@ -1,4 +1,4 @@
-import { Brain, Home, Meh, Network, TreePalm } from "lucide-react";
+import { Brain, Home, LogOut, Meh, Network, TreePalm } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -10,7 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "./ui/sidebar";
-import { Link, NavLink, useLocation } from "react-router";
+import { Link, NavLink, useLocation, useNavigate } from "react-router";
 
 const items = [
   {
@@ -42,6 +42,13 @@ const items = [
 
 function AppSidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  function handleLogout() {
+    localStorage.removeItem("evolv_token");
+    localStorage.removeItem("evolv_user");
+    navigate("/");
+  }
 
   return (
     <Sidebar>
@@ -79,7 +86,14 @@ function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>Footer</SidebarFooter>
+      <SidebarFooter>
+        <SidebarMenuItem>
+          <SidebarMenuButton onClick={handleLogout}>
+            <LogOut />
+            <span>Logout</span>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarFooter>
     </Sidebar>
   );
 }
