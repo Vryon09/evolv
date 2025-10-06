@@ -13,8 +13,8 @@ function Hero() {
         asChild
         className="cursor-pointer px-8 py-6 text-xl font-semibold"
       >
-        {/* <Link to="/signup">Get Started</Link> */}
-        <Link to="/app/dashboard">Get Started</Link>
+        <Link to="/signup">Get Started</Link>
+        {/* <Link to="/app/dashboard">Get Started</Link> */}
       </Button>
     </div>
   );

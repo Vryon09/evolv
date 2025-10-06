@@ -10,9 +10,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link, useNavigate } from "react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useLoginUser } from "@/services/apiAuth";
+import { jwtDecode } from "jwt-decode";
 
 const initialState = {
   email: "",
@@ -32,14 +33,35 @@ export function LoginForm({
     e.preventDefault();
     handleLoginUser(form, {
       onSuccess: (data) => {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
-        console.log("tangina naman");
+        localStorage.setItem("evolv_token", data.token);
+        localStorage.setItem("evolv_user", JSON.stringify(data.user));
         navigate("/app/dashboard");
       },
     });
     setForm(initialState);
   }
+
+  useEffect(() => {
+    const token = localStorage.getItem("evolv_token");
+    if (token) {
+      try {
+        const user = jwtDecode(token);
+
+        if (
+          user &&
+          typeof user.exp === "number" &&
+          user.exp * 1000 > Date.now()
+        ) {
+          navigate("/app/dashboard");
+        } else {
+          localStorage.removeItem("evolv_token");
+        }
+      } catch (error) {
+        console.log(error);
+        localStorage.removeItem("evolv_token");
+      }
+    }
+  }, [navigate]);
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
