@@ -1,10 +1,10 @@
 import express from "express";
-import { getAllUsers } from "../controller/authController.ts";
+import { addUser, getAllUsers } from "../controller/authController.ts";
 
 const router = express.Router();
 
 router.get("/", getAllUsers);
 
-router.post("/");
+router.post("/", addUser);
 
 export default router;
