@@ -1,6 +1,8 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
+import type { InferSchemaType } from "mongoose";
+import bcrypt from "bcrypt";
 
-const userSchema = new mongoose.Schema(
+const userSchema = new Schema(
   {
     name: {
       type: String,
@@ -46,25 +48,25 @@ const userSchema = new mongoose.Schema(
     // References to other collections
     habits: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Habit",
       },
     ],
     journals: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Journal",
       },
     ],
     notes: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Note",
       },
     ],
     contacts: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Contact",
       },
     ],
@@ -77,4 +79,20 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("User", userSchema);
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
+
+userSchema.methods.comparePassword = async function (enteredPassword: string) {
+  return bcrypt.compare(enteredPassword, this.password);
+};
+
+export type IUser = InferSchemaType<typeof userSchema> & {
+  comparePassword: (enteredPassword: string) => Promise<boolean>;
+};
+
+export default mongoose.model<IUser>("User", userSchema);
