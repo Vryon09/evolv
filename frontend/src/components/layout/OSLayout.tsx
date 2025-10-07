@@ -2,8 +2,19 @@ import { Outlet, useNavigate } from "react-router";
 import { SidebarProvider, SidebarTrigger } from "../ui/sidebar";
 import AppSidebar from "../AppSidebar";
 import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchCurrentUser } from "@/services/apiAuth";
 
 function OSLayout() {
+  const token = localStorage.getItem("evolv_token");
+
+  const { data: user, isPending } = useQuery({
+    queryKey: ["currentUser"],
+    queryFn: () => fetchCurrentUser(token!),
+    enabled: !!token,
+    retry: 1,
+  });
+
   const navigate = useNavigate();
   useEffect(() => {
     const token = localStorage.getItem("evolv_token");
@@ -12,10 +23,14 @@ function OSLayout() {
     }
   }, [navigate]);
 
+  if (isPending) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div>
       <SidebarProvider>
-        <AppSidebar />
+        <AppSidebar username={user.name} />
         <SidebarTrigger className="size-8 cursor-pointer" />
         <Outlet />
       </SidebarProvider>

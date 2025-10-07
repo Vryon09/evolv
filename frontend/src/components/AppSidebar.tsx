@@ -40,14 +40,14 @@ const items = [
   },
 ];
 
-function AppSidebar() {
+function AppSidebar({ username }: { username: string }) {
   const location = useLocation();
   const navigate = useNavigate();
 
   function handleLogout() {
     localStorage.removeItem("evolv_token");
     localStorage.removeItem("evolv_user");
-    navigate("/");
+    navigate("/login");
   }
 
   return (
@@ -88,6 +88,9 @@ function AppSidebar() {
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenuItem>
+          <SidebarMenuButton onClick={handleLogout}>
+            {username}
+          </SidebarMenuButton>
           <SidebarMenuButton onClick={handleLogout}>
             <LogOut />
             <span>Logout</span>

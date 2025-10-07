@@ -40,3 +40,16 @@ export function useLoginUser() {
     mutationFn: handleLoginUser,
   });
 }
+
+export async function fetchCurrentUser(token: string) {
+  try {
+    const res = await axios.get(`${API_BASE_URL}/api/auth/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return res.data || {};
+  } catch (error) {
+    console.log(error);
+  }
+}

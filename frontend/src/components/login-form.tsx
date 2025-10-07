@@ -26,7 +26,7 @@ export function LoginForm({
 }: React.ComponentProps<"div">) {
   const [form, setForm] = useState(initialState);
   const [isShowPassword, setIsShowPassword] = useState(false);
-  const { mutate: handleLoginUser } = useLoginUser();
+  const { mutate: handleLoginUser, isPending: isLoggingin } = useLoginUser();
   const navigate = useNavigate();
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -126,7 +126,11 @@ export function LoginForm({
                 </div>
               </div>
               <div className="flex flex-col gap-3">
-                <Button type="submit" className="w-full cursor-pointer">
+                <Button
+                  type="submit"
+                  className="w-full cursor-pointer"
+                  disabled={isLoggingin}
+                >
                   Login
                 </Button>
                 {/* <Button variant="outline" className="w-full">

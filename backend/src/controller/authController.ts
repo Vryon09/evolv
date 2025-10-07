@@ -1,6 +1,11 @@
 import type { Request, Response } from "express";
 import User from "../models/User.ts";
+import type { IUser } from "../models/User.ts";
 import { generateToken } from "../utils/generateToken.ts";
+
+interface UserRequest extends Request {
+  user?: IUser;
+}
 
 export async function getAllUsers(req: Request, res: Response) {
   try {
@@ -11,6 +16,10 @@ export async function getAllUsers(req: Request, res: Response) {
     console.error("Error in getAllUsers controller.", error);
     res.status(500).json({ message: "Internal Server Error!" });
   }
+}
+
+export async function fetchCurrentUser(req: UserRequest, res: Response) {
+  res.status(200).json(req.user);
 }
 
 export async function addUser(req: Request, res: Response): Promise<void> {
