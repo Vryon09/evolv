@@ -51,7 +51,7 @@ function AppSidebar({ username }: { username: string }) {
   }
 
   return (
-    <Sidebar>
+    <Sidebar className="border-transparent">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>

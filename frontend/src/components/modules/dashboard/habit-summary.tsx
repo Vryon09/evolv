@@ -13,6 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
 import { ArrowRight, Flame } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Link } from "react-router";
 
 interface Habit {
   id: string;
@@ -73,9 +74,11 @@ export function HabitSummary() {
               Track your daily habits and build streaks
             </CardDescription>
           </div>
-          <Button variant="ghost" size="sm" className="gap-2">
-            View All Habits
-            <ArrowRight className="h-4 w-4" />
+          <Button variant="ghost" size="sm" className="gap-2" asChild>
+            <Link to="/app/habit">
+              View All Habits
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </Button>
         </div>
       </CardHeader>

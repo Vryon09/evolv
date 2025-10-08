@@ -1,5 +1,12 @@
+import ModuleHeader from "@/components/layout/ModuleHeader";
+import ModuleLayout from "@/components/layout/ModuleLayout";
+
 function Mood() {
-  return <div>Mood</div>;
+  return (
+    <ModuleLayout>
+      <ModuleHeader title="Mood" />
+    </ModuleLayout>
+  );
 }
 
 export default Mood;

@@ -1,5 +1,5 @@
 import { Outlet, useNavigate } from "react-router";
-import { SidebarProvider, SidebarTrigger } from "../ui/sidebar";
+import { SidebarProvider } from "../ui/sidebar";
 import AppSidebar from "../AppSidebar";
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -31,7 +31,6 @@ function OSLayout() {
     <div>
       <SidebarProvider>
         <AppSidebar username={user.name} />
-        <SidebarTrigger className="size-8 cursor-pointer" />
         <Outlet />
       </SidebarProvider>
     </div>
