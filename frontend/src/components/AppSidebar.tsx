@@ -55,7 +55,7 @@ function AppSidebar({ username }: { username: string }) {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild className="hover:bg-neutral-200">
+            <SidebarMenuButton asChild className="hover:bg-border">
               <Link to="/app/dashboard">eVolV</Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -71,8 +71,8 @@ function AppSidebar({ username }: { username: string }) {
                     asChild
                     className={
                       location.pathname.split("/")[2] === item.url
-                        ? `bg-neutral-200 hover:bg-neutral-200`
-                        : `hover:bg-neutral-200`
+                        ? `bg-border hover:bg-border`
+                        : `hover:bg-border`
                     }
                   >
                     <NavLink to={`/app/${item.url}`}>

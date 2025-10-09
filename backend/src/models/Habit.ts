@@ -40,6 +40,7 @@ const habitSchema = new Schema(
         type: Date,
       },
     ],
+    tags: [{ type: String, trim: true, lowercase: true }],
     isArchived: {
       type: Boolean,
       default: false,

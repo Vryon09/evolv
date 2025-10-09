@@ -132,7 +132,7 @@ export function HabitSummary() {
               </div>
 
               <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1 rounded-full bg-orange-500/10 px-3 py-1 text-xs font-semibold text-orange-600 dark:text-orange-400">
+                <div className="bg-flame/10 text-flame dark:text-flame flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold">
                   <Flame className="h-3 w-3" />
                   <span>{habit.streak}</span>
                 </div>

@@ -1,18 +1,11 @@
 import ModuleHeader from "@/components/layout/ModuleHeader";
 import ModuleLayout from "@/components/layout/ModuleLayout";
-import HabitStats from "./HabitStats";
-import HabitActions from "./HabitActions";
-import Habits from "./Habits";
-
+import HabitsPage from "./HabitsPage";
 function Habit() {
   return (
     <ModuleLayout>
       <ModuleHeader title="Habit" />
-      <div className="m-4">
-        <HabitStats />
-        <HabitActions />
-        <Habits />
-      </div>
+      <HabitsPage />
     </ModuleLayout>
   );
 }

@@ -31,7 +31,7 @@ function OSLayout() {
     <div>
       <SidebarProvider>
         <AppSidebar username={user.name} />
-        <Outlet />
+        <Outlet context={{ user }} />
       </SidebarProvider>
     </div>
   );

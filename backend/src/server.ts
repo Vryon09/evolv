@@ -3,6 +3,8 @@ import express from "express";
 import cors from "cors";
 import { connectDB } from "./config/db.ts";
 import authRoutes from "./routes/authRoutes.ts";
+import habitRoutes from "./routes/habitRoutes.ts";
+import tagRoutes from "./routes/tagRoutes.ts";
 
 const app = express();
 
@@ -16,6 +18,8 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/habits", habitRoutes);
+app.use("/api/tags", tagRoutes);
 
 connectDB();
 

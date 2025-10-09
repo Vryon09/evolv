@@ -47,6 +47,8 @@ const userSchema = new Schema(
       },
     },
 
+    tags: [{ type: String, trim: true, lowercase: true }],
+
     // References to other collections
     habits: [
       {

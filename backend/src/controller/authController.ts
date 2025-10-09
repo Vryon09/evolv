@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import User from "../models/User.ts";
 import type { IUser } from "../models/User.ts";
 import { generateToken } from "../utils/generateToken.ts";
+import { ObjectId } from "mongodb";
 
 interface UserRequest extends Request {
   user?: IUser;

@@ -1,0 +1,152 @@
+import { useState } from "react";
+import {
+  Check,
+  Flame,
+  MoreVertical,
+  Edit2,
+  Trash2,
+  Calendar,
+} from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { MiniCalendar } from "./mini-calendar";
+import type { Habit } from "types/habit";
+import { cn } from "@/lib/utils";
+
+interface HabitCardProps {
+  habit: Habit;
+  onToggleComplete: (id: string) => void;
+  onEdit: () => void;
+  onDelete: (id: string) => void;
+}
+
+export function HabitCard({
+  habit,
+  onToggleComplete,
+  onEdit,
+  onDelete,
+}: HabitCardProps) {
+  const [showCalendar, setShowCalendar] = useState(false);
+  const today = new Date().toISOString().split("T")[0];
+  const isCompletedToday = habit.completedDates.includes(today);
+
+  // Calculate completion rate (last 30 days)
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  const recentCompletions = habit.completedDates.filter(
+    (date) => new Date(date) >= thirtyDaysAgo,
+  ).length;
+  const completionRate = Math.round((recentCompletions / 30) * 100);
+
+  return (
+    <Card className="group relative overflow-hidden transition-all hover:shadow-lg">
+      <div className="p-6">
+        {/* Header */}
+        <div className="mb-4 flex items-start justify-between">
+          <div className="flex-1">
+            <h3 className="text-foreground mb-1 font-semibold text-balance">
+              {habit.name}
+            </h3>
+            <p className="text-muted-foreground text-sm">{habit.goal}</p>
+          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 opacity-0 transition-opacity group-hover:opacity-100"
+              >
+                <MoreVertical className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={onEdit}>
+                <Edit2 className="mr-2 h-4 w-4" />
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => onDelete(habit.id)}
+                className="text-destructive"
+              >
+                <Trash2 className="mr-2 h-4 w-4" />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+
+        {/* Streak */}
+        <div className="mb-4 flex items-center gap-2">
+          <div className="bg-flame/10 flex items-center gap-1.5 rounded-full px-3 py-1.5">
+            <Flame className="text-flame h-4 w-4" />
+            <span className="text-flame text-sm font-semibold">
+              {habit.streak} day streak
+            </span>
+          </div>
+          {habit.category && (
+            <span className="bg-muted text-muted-foreground rounded-full px-3 py-1.5 text-xs font-medium">
+              {habit.category}
+            </span>
+          )}
+        </div>
+
+        {/* Progress */}
+        <div className="mb-4">
+          <div className="mb-2 flex items-center justify-between text-sm">
+            <span className="text-muted-foreground">30-day completion</span>
+            <span className="text-foreground font-semibold">
+              {completionRate}%
+            </span>
+          </div>
+          <Progress value={completionRate} className="h-2" />
+        </div>
+
+        {/* Actions */}
+        <div className="flex gap-2">
+          <Button
+            onClick={() => onToggleComplete(habit.id)}
+            className={cn(
+              "flex-1 gap-2 transition-all",
+              isCompletedToday
+                ? "text-primary-foreground bg-success hover:bg-success/90"
+                : "",
+            )}
+            variant={isCompletedToday ? "default" : "outline"}
+          >
+            <Check
+              className={cn(
+                "h-4 w-4",
+                isCompletedToday && "animate-in zoom-in-50",
+              )}
+            />
+            {isCompletedToday ? "Completed Today" : "Mark as Done"}
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setShowCalendar(!showCalendar)}
+          >
+            <Calendar className="h-4 w-4" />
+          </Button>
+        </div>
+
+        {/* Mini Calendar */}
+        {showCalendar && (
+          <div className="animate-in slide-in-from-top-2 mt-4">
+            <MiniCalendar
+              completedDates={habit.completedDates}
+              startDate={habit.startDate}
+            />
+          </div>
+        )}
+      </div>
+    </Card>
+  );
+}
