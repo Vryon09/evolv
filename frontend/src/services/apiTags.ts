@@ -3,9 +3,9 @@ import axios from "axios";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
-const token = localStorage.getItem("evolv_token");
-
 export async function getTags() {
+  const token = localStorage.getItem("evolv_token");
+
   try {
     const res = await axios.get(`${API_BASE_URL}/api/tags`, {
       headers: {
@@ -13,13 +13,15 @@ export async function getTags() {
       },
     });
 
-    return res.data || [];
+    return res.data ?? [];
   } catch (error) {
     console.log(error);
   }
 }
 
 async function handleAddTag({ tag }: { tag: string }) {
+  const token = localStorage.getItem("evolv_token");
+
   try {
     const res = await axios.post(
       `${API_BASE_URL}/api/tags/`,

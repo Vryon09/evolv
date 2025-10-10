@@ -5,8 +5,6 @@ export async function getTags(req: Request, res: Response) {
   try {
     const authUser = (req as any).user;
 
-    console.log(authUser);
-
     const user = await User.findById(authUser._id).select("tags");
 
     if (!user) {

@@ -12,10 +12,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
 import { HabitDialog } from "@/components/habit-dialog";
-
+import { HabitCard } from "@/components/habit-card";
+import { useQuery } from "@tanstack/react-query";
+import { handleGetHabits } from "@/services/apiHabits";
 export default function HabitsPage() {
   const [editingHabit, setEditingHabit] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { data: habits = [] } = useQuery({
+    queryFn: handleGetHabits,
+    queryKey: ["habits"],
+  });
   const [sortBy, setSortBy] = useState<"streak" | "recent" | "name">("streak");
 
   return (
@@ -28,7 +34,6 @@ export default function HabitsPage() {
           longestStreak={longestStreak}
           totalHabits={habits.length}
         /> */}
-
         {/* Controls */}
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
@@ -73,7 +78,22 @@ export default function HabitsPage() {
             Add Habit
           </Button>
         </div>
-
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {habits.map((habit) => (
+            <HabitCard
+              key={habit._id}
+              habit={habit}
+              // onToggleComplete={handleToggleComplete}
+              onToggleComplete={() => {}}
+              onEdit={() => {
+                setEditingHabit(habit);
+                setIsDialogOpen(true);
+              }}
+              // onDelete={handleDeleteHabit}
+              onDelete={() => {}}
+            />
+          ))}
+        </div>
         {/* Habits Grid */}
         {/* {habits.length === 0 ? (
           <Card className="flex flex-col items-center justify-center py-16 text-center">
@@ -91,7 +111,7 @@ export default function HabitsPage() {
           </Card>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {sortedHabits.map((habit) => (
+            {habits.map((habit) => (
               <HabitCard
                 key={habit.id}
                 habit={habit}
@@ -105,7 +125,6 @@ export default function HabitsPage() {
             ))}
           </div>
         )} */}
-
         {/* Motivational Insight */}
         {/* {habits.length > 0 && (
           <Card className="border-accent/20 bg-accent/5 mt-8 p-6">

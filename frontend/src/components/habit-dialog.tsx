@@ -25,7 +25,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Check, Plus } from "lucide-react";
+import { Check, Plus, X } from "lucide-react";
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 import { useAddHabit } from "@/services/apiHabits";
 import { getTags, useAddTag } from "@/services/apiTags";
@@ -148,9 +148,23 @@ export function HabitDialog({ open, onOpenChange, habit }: HabitDialogProps) {
                   {formData.tags.map((tag, i) => (
                     <div
                       key={i}
-                      className="bg-accent rounded-xl px-2 py-0.5 text-xs capitalize"
+                      className="group bg-accent flex items-center justify-between gap-1 rounded-xl px-2 py-0.5 text-xs capitalize"
                     >
-                      <p>{tag}</p>
+                      <span>{tag}</span>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setFormData((prev) => {
+                            return {
+                              ...prev,
+                              tags: prev.tags.filter((t) => t !== tag),
+                            };
+                          });
+                        }}
+                        className="hover:bg-accent-foreground/20 rounded-full p-1 opacity-0 group-hover:opacity-100"
+                      >
+                        <X className="h-3 w-3" strokeWidth={3} />
+                      </button>
                     </div>
                   ))}
                 </div>
@@ -219,19 +233,6 @@ export function HabitDialog({ open, onOpenChange, habit }: HabitDialogProps) {
               </DropdownMenu>
             </div>
           </div>
-
-          {/* <div className="space-y-2">
-            <Label htmlFor="startDate">Start Date</Label>
-            <Input
-              id="startDate"
-              type="date"
-              value={formData.startDate}
-              onChange={(e) =>
-                setFormData({ ...formData, startDate: e.target.value })
-              }
-              required
-            />
-          </div> */}
 
           <div className="flex justify-end gap-3">
             <Button

@@ -52,9 +52,9 @@ export function HabitCard({
         <div className="mb-4 flex items-start justify-between">
           <div className="flex-1">
             <h3 className="text-foreground mb-1 font-semibold text-balance">
-              {habit.name}
+              {habit.title}
             </h3>
-            <p className="text-muted-foreground text-sm">{habit.goal}</p>
+            <p className="text-muted-foreground text-sm">{habit.description}</p>
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -90,9 +90,9 @@ export function HabitCard({
               {habit.streak} day streak
             </span>
           </div>
-          {habit.category && (
+          {habit.tags && (
             <span className="bg-muted text-muted-foreground rounded-full px-3 py-1.5 text-xs font-medium">
-              {habit.category}
+              {habit.tags}
             </span>
           )}
         </div>
