@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
@@ -46,5 +46,54 @@ async function handleAddHabit({
 }
 
 export function useAddHabit() {
-  return useMutation({ mutationFn: handleAddHabit });
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: handleAddHabit,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["habits"] }),
+  });
+}
+
+async function handleUpdateHabit({
+  _id,
+  title,
+  description,
+  frequency,
+  tags,
+}: {
+  _id: string;
+  title?: string;
+  description?: string;
+  frequency?: "daily" | "weekly" | "monthly";
+  tags?: string[];
+}) {
+  const token = localStorage.getItem("evolv_token");
+
+  try {
+    await axios.patch(
+      `${API_BASE_URL}/api/habits/${_id}`,
+      {
+        title,
+        description,
+        frequency,
+        tags,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export function useUpdateHabit() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: handleUpdateHabit,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["habits"] }),
+    onError: () => console.log("tangina di nagupdate"),
+  });
 }

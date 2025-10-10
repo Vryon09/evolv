@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Habit } from "types/habit";
+import type { IHabit } from "types/habit";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,14 +27,14 @@ import {
 } from "./ui/dropdown-menu";
 import { Check, Plus, X } from "lucide-react";
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
-import { useAddHabit } from "@/services/apiHabits";
+import { useAddHabit, useUpdateHabit } from "@/services/apiHabits";
 import { getTags, useAddTag } from "@/services/apiTags";
 import { useQuery } from "@tanstack/react-query";
 
 interface HabitDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  habit?: Habit | null;
+  habit?: IHabit | null;
 }
 
 type Frequency = "daily" | "weekly" | "monthly";
@@ -46,13 +46,15 @@ interface FormDataTypes {
   tags: string[];
 }
 
+const formDataInitialState = {
+  title: "",
+  description: "",
+  frequency: "daily" as Frequency,
+  tags: [],
+};
+
 export function HabitDialog({ open, onOpenChange, habit }: HabitDialogProps) {
-  const [formData, setFormData] = useState<FormDataTypes>({
-    title: "",
-    description: "",
-    frequency: "daily",
-    tags: [],
-  });
+  const [formData, setFormData] = useState<FormDataTypes>(formDataInitialState);
 
   const [isCreatingTag, setIsCreatingTag] = useState(false);
   const [newTag, setNewTag] = useState("");
@@ -62,11 +64,22 @@ export function HabitDialog({ open, onOpenChange, habit }: HabitDialogProps) {
   });
 
   const { mutate: handleAddHabit } = useAddHabit();
+  const { mutate: handleUpdateHabit } = useUpdateHabit();
   const { mutate: handleAddTag } = useAddTag();
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    if (habit) {
+      handleUpdateHabit({ _id: habit._id, ...formData });
+      setFormData(formDataInitialState);
+      onOpenChange(false);
+      return;
+    }
+
     handleAddHabit(formData);
+    setFormData(formDataInitialState);
+    onOpenChange(false);
   }
 
   function addTag() {
@@ -79,6 +92,20 @@ export function HabitDialog({ open, onOpenChange, habit }: HabitDialogProps) {
     setIsCreatingTag(false);
     setNewTag("");
   }
+
+  useEffect(() => {
+    if (habit) {
+      setFormData({
+        title: habit.title,
+        description: habit.description ?? "",
+        frequency: habit.frequency,
+        tags: habit.tags,
+      });
+      return;
+    }
+
+    setFormData(formDataInitialState);
+  }, [habit]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -148,7 +175,7 @@ export function HabitDialog({ open, onOpenChange, habit }: HabitDialogProps) {
                   {formData.tags.map((tag, i) => (
                     <div
                       key={i}
-                      className="group bg-accent flex items-center justify-between gap-1 rounded-xl px-2 py-0.5 text-xs capitalize"
+                      className="group bg-accent flex items-center justify-between gap-2 rounded-xl px-1.5 py-0.5 text-xs capitalize"
                     >
                       <span>{tag}</span>
                       <button
@@ -161,7 +188,7 @@ export function HabitDialog({ open, onOpenChange, habit }: HabitDialogProps) {
                             };
                           });
                         }}
-                        className="hover:bg-accent-foreground/20 rounded-full p-1 opacity-0 group-hover:opacity-100"
+                        className="hover:bg-accent-foreground/20 hidden h-4 w-4 items-center justify-center rounded-full group-hover:flex"
                       >
                         <X className="h-3 w-3" strokeWidth={3} />
                       </button>
@@ -171,7 +198,11 @@ export function HabitDialog({ open, onOpenChange, habit }: HabitDialogProps) {
               )}
               <DropdownMenu>
                 <DropdownMenuTrigger disabled={isTagsLoading} asChild>
-                  <Button className="flex" variant="secondary">
+                  <Button
+                    className="bg-accent flex cursor-pointer"
+                    variant="ghost"
+                    size="sm"
+                  >
                     <Plus /> <span className="text-sm">Add Tag</span>
                   </Button>
                 </DropdownMenuTrigger>

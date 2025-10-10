@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus, Filter } from "lucide-react";
+import { Plus, Filter, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 // import { HabitCard } from "@/components/habits/habit-card";
 // import { HabitStats } from "@/components/habits/habit-stats";
@@ -15,14 +15,16 @@ import { HabitDialog } from "@/components/habit-dialog";
 import { HabitCard } from "@/components/habit-card";
 import { useQuery } from "@tanstack/react-query";
 import { handleGetHabits } from "@/services/apiHabits";
+import type { IHabit } from "types/habit";
+import { Card } from "@/components/ui/card";
 export default function HabitsPage() {
-  const [editingHabit, setEditingHabit] = useState(null);
+  const [editingHabit, setEditingHabit] = useState<IHabit | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { data: habits = [] } = useQuery({
+  const [sortBy, setSortBy] = useState<"streak" | "recent" | "name">("streak");
+  const { data: habits = [] } = useQuery<IHabit[]>({
     queryFn: handleGetHabits,
     queryKey: ["habits"],
   });
-  const [sortBy, setSortBy] = useState<"streak" | "recent" | "name">("streak");
 
   return (
     <div className="bg-background min-h-screen">
@@ -78,24 +80,9 @@ export default function HabitsPage() {
             Add Habit
           </Button>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {habits.map((habit) => (
-            <HabitCard
-              key={habit._id}
-              habit={habit}
-              // onToggleComplete={handleToggleComplete}
-              onToggleComplete={() => {}}
-              onEdit={() => {
-                setEditingHabit(habit);
-                setIsDialogOpen(true);
-              }}
-              // onDelete={handleDeleteHabit}
-              onDelete={() => {}}
-            />
-          ))}
-        </div>
+
         {/* Habits Grid */}
-        {/* {habits.length === 0 ? (
+        {habits.length === 0 ? (
           <Card className="flex flex-col items-center justify-center py-16 text-center">
             <Calendar className="text-muted-foreground mb-4 h-12 w-12" />
             <h3 className="text-foreground mb-2 text-lg font-semibold">
@@ -113,18 +100,18 @@ export default function HabitsPage() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {habits.map((habit) => (
               <HabitCard
-                key={habit.id}
+                key={habit._id}
                 habit={habit}
-                onToggleComplete={handleToggleComplete}
+                onToggleComplete={() => {}}
                 onEdit={() => {
                   setEditingHabit(habit);
                   setIsDialogOpen(true);
                 }}
-                onDelete={handleDeleteHabit}
+                onDelete={() => {}}
               />
             ))}
           </div>
-        )} */}
+        )}
         {/* Motivational Insight */}
         {/* {habits.length > 0 && (
           <Card className="border-accent/20 bg-accent/5 mt-8 p-6">

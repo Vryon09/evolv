@@ -17,11 +17,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MiniCalendar } from "./mini-calendar";
-import type { Habit } from "types/habit";
+import type { IHabit } from "types/habit";
 import { cn } from "@/lib/utils";
 
 interface HabitCardProps {
-  habit: Habit;
+  habit: IHabit;
   onToggleComplete: (id: string) => void;
   onEdit: () => void;
   onDelete: (id: string) => void;
@@ -72,7 +72,7 @@ export function HabitCard({
                 Edit
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => onDelete(habit.id)}
+                onClick={() => onDelete(habit._id)}
                 className="text-destructive"
               >
                 <Trash2 className="mr-2 h-4 w-4" />
@@ -90,11 +90,15 @@ export function HabitCard({
               {habit.streak} day streak
             </span>
           </div>
-          {habit.tags && (
-            <span className="bg-muted text-muted-foreground rounded-full px-3 py-1.5 text-xs font-medium">
-              {habit.tags}
-            </span>
-          )}
+          {habit.tags &&
+            habit.tags.map((tag, i) => (
+              <span
+                key={i}
+                className="bg-muted text-muted-foreground rounded-full px-3 py-1.5 text-xs font-medium capitalize"
+              >
+                {tag}
+              </span>
+            ))}
         </div>
 
         {/* Progress */}
@@ -111,7 +115,7 @@ export function HabitCard({
         {/* Actions */}
         <div className="flex gap-2">
           <Button
-            onClick={() => onToggleComplete(habit.id)}
+            onClick={() => onToggleComplete(habit._id)}
             className={cn(
               "flex-1 gap-2 transition-all",
               isCompletedToday

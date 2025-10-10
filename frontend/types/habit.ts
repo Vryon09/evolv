@@ -1,10 +1,15 @@
-export interface Habit {
-  id: string;
+export interface IHabit {
+  _id: string;
+  user: string;
   title: string;
+  description?: string;
   frequency: "daily" | "weekly" | "monthly";
-  description: string;
   streak: number;
-  completedDates: string[];
+  bestStreak: number;
   startDate: string;
-  tags?: [];
+  completedDates: string[];
+  tags: string[];
+  isArchived: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
