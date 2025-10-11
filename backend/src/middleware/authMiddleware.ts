@@ -27,7 +27,7 @@ export async function protect(
       const secret = process.env.JWT_SECRET as string;
       const decoded = jwt.verify(token, secret) as JwtPayload;
 
-      console.log(decoded);
+      // console.log(decoded);
 
       req.user = (await User.findById(decoded.id).select(
         "-password"

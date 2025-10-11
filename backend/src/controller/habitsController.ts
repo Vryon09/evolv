@@ -14,6 +14,7 @@ export async function getHabits(req: Request, res: Response) {
       .populate({
         path: "habits",
         model: Habit,
+        match: { isArchived: false },
       })
       .select("habits");
 

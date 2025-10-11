@@ -6,6 +6,7 @@ import {
   Edit2,
   Trash2,
   Calendar,
+  Archive,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -24,6 +25,7 @@ interface HabitCardProps {
   habit: IHabit;
   onToggleComplete: (id: string) => void;
   onEdit: () => void;
+  onArchive: () => void;
   onDelete: (id: string) => void;
 }
 
@@ -31,6 +33,7 @@ export function HabitCard({
   habit,
   onToggleComplete,
   onEdit,
+  onArchive,
   onDelete,
 }: HabitCardProps) {
   const [showCalendar, setShowCalendar] = useState(false);
@@ -70,6 +73,10 @@ export function HabitCard({
               <DropdownMenuItem onClick={onEdit}>
                 <Edit2 className="mr-2 h-4 w-4" />
                 Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={onArchive}>
+                <Archive className="mr-2 h-4 w-4" />
+                Archive
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => onDelete(habit._id)}

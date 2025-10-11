@@ -59,12 +59,14 @@ async function handleUpdateHabit({
   description,
   frequency,
   tags,
+  isArchived,
 }: {
   _id: string;
   title?: string;
   description?: string;
   frequency?: "daily" | "weekly" | "monthly";
   tags?: string[];
+  isArchived?: boolean;
 }) {
   const token = localStorage.getItem("evolv_token");
 
@@ -76,6 +78,7 @@ async function handleUpdateHabit({
         description,
         frequency,
         tags,
+        isArchived,
       },
       {
         headers: {
