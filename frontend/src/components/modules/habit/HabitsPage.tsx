@@ -14,7 +14,11 @@ import { useState } from "react";
 import { HabitDialog } from "@/components/habit-dialog";
 import { HabitCard } from "@/components/habit-card";
 import { useQuery } from "@tanstack/react-query";
-import { handleGetHabits, useUpdateHabit } from "@/services/apiHabits";
+import {
+  handleGetHabits,
+  useDeleteHabit,
+  useUpdateHabit,
+} from "@/services/apiHabits";
 import type { IHabit } from "types/habit";
 import { Card } from "@/components/ui/card";
 export default function HabitsPage() {
@@ -27,6 +31,7 @@ export default function HabitsPage() {
     queryKey: ["habits"],
   });
   const { mutate: handleUpdateHabit } = useUpdateHabit();
+  const { mutate: handleDeleteHabit } = useDeleteHabit();
 
   return (
     <div className="bg-background min-h-screen">
@@ -112,7 +117,7 @@ export default function HabitsPage() {
                 onArchive={() => {
                   handleUpdateHabit({ _id: habit._id, isArchived: true });
                 }}
-                onDelete={() => {}}
+                onDelete={() => handleDeleteHabit({ _id: habit._id })}
               />
             ))}
           </div>

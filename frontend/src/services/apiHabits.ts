@@ -97,6 +97,28 @@ export function useUpdateHabit() {
   return useMutation({
     mutationFn: handleUpdateHabit,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["habits"] }),
-    onError: () => console.log("tangina di nagupdate"),
+  });
+}
+
+async function handleDeleteHabit({ _id }: { _id: string }) {
+  const token = localStorage.getItem("evolv_token");
+
+  try {
+    await axios.delete(`${API_BASE_URL}/api/habits/${_id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export function useDeleteHabit() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: handleDeleteHabit,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["habits"] }),
   });
 }

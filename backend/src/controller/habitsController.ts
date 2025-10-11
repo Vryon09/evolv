@@ -79,3 +79,38 @@ export async function updateHabit(req: Request, res: Response) {
     res.status(500).json({ message: "Internal Server Error!" });
   }
 }
+
+export async function deleteHabit(req: Request, res: Response) {
+  try {
+    const { id } = req.params;
+
+    const deletedHabit = await Habit.findByIdAndDelete(id);
+
+    const authUser = (req as any).user;
+
+    if (!authUser) {
+      res.status(401).json({ message: "Unauthorized" });
+      return;
+    }
+
+    const updatedUserHabit = authUser.habits.filter(
+      (habit: string) => habit.toString() !== id
+    );
+
+    const habitUser = await User.findById(authUser._id);
+
+    if (!habitUser) {
+      res.status(401).json({ message: "User not found" });
+      return;
+    }
+
+    habitUser.habits = updatedUserHabit;
+
+    await habitUser.save();
+
+    res.status(200).json(deletedHabit);
+  } catch (error) {
+    console.log("Error in deleteHabit controller", error);
+    res.status(500).json({ message: "Internal Server Error!" });
+  }
+}
