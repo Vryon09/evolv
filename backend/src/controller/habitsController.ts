@@ -132,26 +132,42 @@ export async function completeHabit(req: Request, res: Response) {
     }
 
     const now = dayjs(new Date()).toDate();
+    const newDate = dayjs(now).format("DD-MM-YYYY");
 
     const isDuplicate = habit.completedDates.some((date) => {
       const prevDate = dayjs(date).format("DD-MM-YYYY");
-      const newDate = dayjs(now).format("DD-MM-YYYY");
       return prevDate === newDate;
     });
 
     if (isDuplicate) {
       const updatedCompletedDates = habit.completedDates.filter((date) => {
         const prevDate = dayjs(date).format("DD-MM-YYYY");
-        const newDate = dayjs(now).format("DD-MM-YYYY");
         return prevDate !== newDate;
       });
 
       habit.completedDates = updatedCompletedDates;
 
+      if (habit.streak > 0) {
+        habit.streak--;
+      }
+
       const savedHabit = await habit.save();
 
       res.status(200).json(savedHabit);
       return;
+    }
+
+    const isCompletedYesterday =
+      dayjs(habit.completedDates[habit.completedDates.length - 1])
+        .add(1, "day")
+        .format("DD-MM-YYYY") === newDate;
+
+    if (habit.completedDates.length === 0 || isCompletedYesterday) {
+      habit.streak++;
+    }
+
+    if (habit.streak > habit.bestStreak) {
+      habit.bestStreak = habit.streak;
     }
 
     habit.completedDates.push(now);
