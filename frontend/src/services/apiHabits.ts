@@ -122,3 +122,30 @@ export function useDeleteHabit() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["habits"] }),
   });
 }
+
+async function handleCompleteHabit({ _id }: { _id: string }) {
+  const token = localStorage.getItem("evolv_token");
+
+  try {
+    await axios.patch(
+      `${API_BASE_URL}/api/habits/${_id}/complete`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export function useCompleteHabit() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: handleCompleteHabit,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["habits"] }),
+  });
+}

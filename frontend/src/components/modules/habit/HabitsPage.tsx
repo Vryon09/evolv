@@ -16,6 +16,7 @@ import { HabitCard } from "@/components/habit-card";
 import { useQuery } from "@tanstack/react-query";
 import {
   handleGetHabits,
+  useCompleteHabit,
   useDeleteHabit,
   useUpdateHabit,
 } from "@/services/apiHabits";
@@ -32,6 +33,7 @@ export default function HabitsPage() {
   });
   const { mutate: handleUpdateHabit } = useUpdateHabit();
   const { mutate: handleDeleteHabit } = useDeleteHabit();
+  const { mutate: handleCompleteHabit } = useCompleteHabit();
 
   return (
     <div className="bg-background min-h-screen">
@@ -109,7 +111,9 @@ export default function HabitsPage() {
               <HabitCard
                 key={habit._id}
                 habit={habit}
-                onToggleComplete={() => {}}
+                onToggleComplete={(_id: string) => {
+                  handleCompleteHabit({ _id });
+                }}
                 onEdit={() => {
                   setEditingHabit(habit);
                   setIsDialogOpen(true);

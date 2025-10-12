@@ -1,6 +1,7 @@
 import express from "express";
 import {
   addHabit,
+  completeHabit,
   deleteHabit,
   getHabits,
   updateHabit,
@@ -16,5 +17,7 @@ router.post("/", protect, addHabit);
 router.patch("/:id", protect, updateHabit);
 
 router.delete("/:id", protect, deleteHabit);
+
+router.patch("/:id/complete", protect, completeHabit);
 
 export default router;

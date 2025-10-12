@@ -1,6 +1,12 @@
 import type { Request, Response } from "express";
 import Habit from "../models/Habit.ts";
 import User from "../models/User.ts";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc.js";
+import timezone from "dayjs/plugin/timezone.js";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export async function getHabits(req: Request, res: Response) {
   try {
@@ -111,6 +117,50 @@ export async function deleteHabit(req: Request, res: Response) {
     res.status(200).json(deletedHabit);
   } catch (error) {
     console.log("Error in deleteHabit controller", error);
+    res.status(500).json({ message: "Internal Server Error!" });
+  }
+}
+
+export async function completeHabit(req: Request, res: Response) {
+  try {
+    const { id } = req.params;
+    const habit = await Habit.findById(id);
+
+    if (!habit) {
+      res.status(401).json({ message: "Habit not found" });
+      return;
+    }
+
+    const now = dayjs(new Date()).toDate();
+
+    const isDuplicate = habit.completedDates.some((date) => {
+      const prevDate = dayjs(date).format("DD-MM-YYYY");
+      const newDate = dayjs(now).format("DD-MM-YYYY");
+      return prevDate === newDate;
+    });
+
+    if (isDuplicate) {
+      const updatedCompletedDates = habit.completedDates.filter((date) => {
+        const prevDate = dayjs(date).format("DD-MM-YYYY");
+        const newDate = dayjs(now).format("DD-MM-YYYY");
+        return prevDate !== newDate;
+      });
+
+      habit.completedDates = updatedCompletedDates;
+
+      const savedHabit = await habit.save();
+
+      res.status(200).json(savedHabit);
+      return;
+    }
+
+    habit.completedDates.push(now);
+
+    const savedHabit = await habit.save();
+
+    res.status(200).json(savedHabit);
+  } catch (error) {
+    console.log("Error in completeHabit controller", error);
     res.status(500).json({ message: "Internal Server Error!" });
   }
 }

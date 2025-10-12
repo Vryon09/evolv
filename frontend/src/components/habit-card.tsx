@@ -38,7 +38,9 @@ export function HabitCard({
 }: HabitCardProps) {
   const [showCalendar, setShowCalendar] = useState(false);
   const today = new Date().toISOString().split("T")[0];
-  const isCompletedToday = habit.completedDates.includes(today);
+  const isCompletedToday = habit.completedDates.some(
+    (date) => date.split("T")[0] === today,
+  );
 
   // Calculate completion rate (last 30 days)
   const thirtyDaysAgo = new Date();
@@ -126,10 +128,8 @@ export function HabitCard({
           <Button
             onClick={() => onToggleComplete(habit._id)}
             className={cn(
-              "flex-1 gap-2 transition-all",
-              isCompletedToday
-                ? "text-primary-foreground bg-success hover:bg-success/90"
-                : "",
+              "hover:bg-success/90 hover:text-primary-foreground flex-1 cursor-pointer gap-2 transition-all",
+              isCompletedToday ? "text-primary-foreground bg-success" : "",
             )}
             variant={isCompletedToday ? "default" : "outline"}
           >
