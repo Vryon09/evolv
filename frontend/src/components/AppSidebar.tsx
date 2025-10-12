@@ -71,8 +71,8 @@ function AppSidebar({ username }: { username: string }) {
                     asChild
                     className={
                       location.pathname.split("/")[2] === item.url
-                        ? `bg-border hover:bg-border`
-                        : `hover:bg-border`
+                        ? `bg-muted hover:bg-muted`
+                        : `hover:bg-muted`
                     }
                   >
                     <NavLink to={`/app/${item.url}`}>
@@ -88,10 +88,13 @@ function AppSidebar({ username }: { username: string }) {
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenuItem>
-          <SidebarMenuButton onClick={handleLogout}>
+          <SidebarMenuButton className="hover:bg-muted cursor-pointer">
             {username}
           </SidebarMenuButton>
-          <SidebarMenuButton onClick={handleLogout}>
+          <SidebarMenuButton
+            className="hover:bg-muted cursor-pointer"
+            onClick={handleLogout}
+          >
             <LogOut />
             <span>Logout</span>
           </SidebarMenuButton>

@@ -58,6 +58,17 @@ export function HabitCard({
               {habit.title}
             </h3>
             <p className="text-muted-foreground text-sm">{habit.description}</p>
+            <div className="mt-2 flex gap-2">
+              {habit.tags &&
+                habit.tags.map((tag, i) => (
+                  <p
+                    key={i}
+                    className="bg-muted text-muted-foreground rounded-full px-3 py-1.5 text-xs font-medium capitalize"
+                  >
+                    {tag}
+                  </p>
+                ))}
+            </div>
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -97,15 +108,6 @@ export function HabitCard({
               {habit.streak} day streak
             </span>
           </div>
-          {habit.tags &&
-            habit.tags.map((tag, i) => (
-              <span
-                key={i}
-                className="bg-muted text-muted-foreground rounded-full px-3 py-1.5 text-xs font-medium capitalize"
-              >
-                {tag}
-              </span>
-            ))}
         </div>
 
         {/* Progress */}
