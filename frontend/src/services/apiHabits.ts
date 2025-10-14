@@ -3,11 +3,11 @@ import axios from "axios";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
-export async function handleGetHabits() {
+export async function handleGetHabits(sortBy: string) {
   const token = localStorage.getItem("evolv_token");
 
   try {
-    const res = await axios.get(`${API_BASE_URL}/api/habits`, {
+    const res = await axios.get(`${API_BASE_URL}/api/habits?sortBy=${sortBy}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

@@ -8,12 +8,29 @@ import timezone from "dayjs/plugin/timezone.js";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
+interface filterTypes {
+  createdAt?: number;
+  streak?: number;
+}
+
 export async function getHabits(req: Request, res: Response) {
   try {
     const authUser = (req as any).user;
+    const { sortBy } = req.query;
+    const filter: filterTypes = {};
 
     if (!authUser) {
       return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    switch (sortBy) {
+      case "recent":
+        filter.createdAt = -1;
+        break;
+      case "streak":
+        filter.streak = -1;
+      default:
+        break;
     }
 
     const userWithHabits = await User.findById(authUser._id)
@@ -21,6 +38,7 @@ export async function getHabits(req: Request, res: Response) {
         path: "habits",
         model: Habit,
         match: { isArchived: false },
+        options: { sort: filter },
       })
       .select("habits");
 

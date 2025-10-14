@@ -40,11 +40,9 @@ export function HabitCard({
   const [showCalendar, setShowCalendar] = useState(false);
   const date = new Date();
   const today = format(date, "yyyy-MM-dd'T'HH:mm:ssXXX").split("T")[0];
-  const isCompletedToday = habit.completedDates.some((date) => {
-    console.log("From habit: ", date.split("T")[0]);
-    console.log("From frontend: ", today);
-    return date.split("T")[0] === today;
-  });
+  const isCompletedToday = habit.completedDates.some(
+    (date) => date.split("T")[0] === today,
+  );
 
   // Calculate completion rate (last 30 days)
   const thirtyDaysAgo = new Date();

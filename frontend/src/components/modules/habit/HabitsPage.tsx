@@ -25,11 +25,13 @@ import { Card } from "@/components/ui/card";
 export default function HabitsPage() {
   const [editingHabit, setEditingHabit] = useState<IHabit | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [sortBy, setSortBy] = useState<"streak" | "recent" | "name">("streak");
+  const [sortBy, setSortBy] = useState<"streak" | "recent" | "default">(
+    "default",
+  );
 
   const { data: habits = [] } = useQuery<IHabit[]>({
-    queryFn: handleGetHabits,
-    queryKey: ["habits"],
+    queryFn: () => handleGetHabits(sortBy),
+    queryKey: ["habits", sortBy],
   });
   const { mutate: handleUpdateHabit } = useUpdateHabit();
   const { mutate: handleDeleteHabit } = useDeleteHabit();
@@ -56,23 +58,23 @@ export default function HabitsPage() {
                   className="gap-2 bg-transparent"
                 >
                   <Filter className="h-4 w-4" />
-                  Sort by:
+                  Sort by:{" "}
                   {sortBy === "streak"
                     ? "Streak"
                     : sortBy === "recent"
                       ? "Recent"
-                      : "Name"}
+                      : "Default"}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
-                <DropdownMenuItem onClick={() => setSortBy("streak")}>
-                  Highest Streak
+                <DropdownMenuItem onClick={() => setSortBy("default")}>
+                  Default
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setSortBy("recent")}>
                   Most Recent
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSortBy("name")}>
-                  Name (A-Z)
+                <DropdownMenuItem onClick={() => setSortBy("streak")}>
+                  Highest Streak
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
