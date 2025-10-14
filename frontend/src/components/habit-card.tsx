@@ -1,11 +1,9 @@
-import { useState } from "react";
 import {
   Check,
   Flame,
   MoreVertical,
   Edit2,
   Trash2,
-  Calendar,
   Archive,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
@@ -17,7 +15,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MiniCalendar } from "./mini-calendar";
 import type { IHabit } from "types/habit";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -37,7 +34,6 @@ export function HabitCard({
   onArchive,
   onDelete,
 }: HabitCardProps) {
-  const [showCalendar, setShowCalendar] = useState(false);
   const date = new Date();
   const today = format(date, "yyyy-MM-dd'T'HH:mm:ssXXX").split("T")[0];
   const isCompletedToday = habit.completedDates.some(
@@ -131,7 +127,9 @@ export function HabitCard({
             onClick={() => onToggleComplete(habit._id)}
             className={cn(
               "hover:bg-success/90 hover:text-primary-foreground flex-1 cursor-pointer gap-2 transition-all",
-              isCompletedToday ? "text-primary-foreground bg-success" : "",
+              isCompletedToday
+                ? "text-primary-foreground bg-success"
+                : "border-accent border",
             )}
             variant={isCompletedToday ? "default" : "outline"}
           >
@@ -143,24 +141,7 @@ export function HabitCard({
             />
             {isCompletedToday ? "Completed Today" : "Mark as Done"}
           </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => setShowCalendar(!showCalendar)}
-          >
-            <Calendar className="h-4 w-4" />
-          </Button>
         </div>
-
-        {/* Mini Calendar */}
-        {showCalendar && (
-          <div className="animate-in slide-in-from-top-2 mt-4">
-            <MiniCalendar
-              completedDates={habit.completedDates}
-              startDate={habit.startDate}
-            />
-          </div>
-        )}
       </div>
     </Card>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus, Filter, Calendar } from "lucide-react";
+import { Plus, Filter, Calendar, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 // import { HabitCard } from "@/components/habits/habit-card";
 // import { HabitStats } from "@/components/habits/habit-stats";
@@ -22,6 +22,7 @@ import {
 } from "@/services/apiHabits";
 import type { IHabit } from "types/habit";
 import { Card } from "@/components/ui/card";
+import { HabitStats } from "@/components/habit-stats";
 export default function HabitsPage() {
   const [editingHabit, setEditingHabit] = useState<IHabit | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -29,7 +30,7 @@ export default function HabitsPage() {
     "default",
   );
 
-  const { data: habits = [] } = useQuery<IHabit[]>({
+  const { data: habits = [], isPending: isHabitsLoading } = useQuery<IHabit[]>({
     queryFn: () => handleGetHabits(sortBy),
     queryKey: ["habits", sortBy],
   });
@@ -37,16 +38,27 @@ export default function HabitsPage() {
   const { mutate: handleDeleteHabit } = useDeleteHabit();
   const { mutate: handleCompleteHabit } = useCompleteHabit();
 
+  if (isHabitsLoading) return <p>Loading...</p>;
+
+  const totalCompletions = habits.reduce((acc, curr) => {
+    return (acc += curr.completedDates.length);
+  }, 0);
+  const averageStreak = habits.reduce((acc, curr) => {
+    return (acc += curr.bestStreak) / habits.length;
+  }, 0);
+  const longestStreak = habits.sort((a, b) => b.bestStreak - a.bestStreak)[0]
+    .bestStreak;
+
   return (
     <div className="bg-background min-h-screen">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Stats Overview */}
-        {/* <HabitStats
+        <HabitStats
           totalCompletions={totalCompletions}
           averageStreak={averageStreak}
           longestStreak={longestStreak}
           totalHabits={habits.length}
-        /> */}
+        />
         {/* Controls */}
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
@@ -129,7 +141,7 @@ export default function HabitsPage() {
           </div>
         )}
         {/* Motivational Insight */}
-        {/* {habits.length > 0 && (
+        {habits.length > 0 && (
           <Card className="border-accent/20 bg-accent/5 mt-8 p-6">
             <div className="flex items-start gap-4">
               <div className="rounded-lg bg-blue-500/10 p-3">
@@ -149,7 +161,7 @@ export default function HabitsPage() {
               </div>
             </div>
           </Card>
-        )} */}
+        )}
       </div>
 
       {/* Add/Edit Dialog */}
