@@ -29,9 +29,11 @@ export default function HabitsPage() {
   const totalCompletions = habits.reduce((acc, curr) => {
     return (acc += curr.completedDates.length);
   }, 0);
-  const averageStreak = habits.reduce((acc, curr) => {
-    return (acc += curr.bestStreak) / habits.length;
-  }, 0);
+  const averageStreak = habits
+    .reduce((acc, curr) => {
+      return (acc += curr.bestStreak) / habits.length;
+    }, 0)
+    .toFixed(2);
   const longestStreak = habits.sort((a, b) => b.bestStreak - a.bestStreak)[0]
     .bestStreak;
 

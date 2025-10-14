@@ -1,14 +1,19 @@
-import { TrendingUp, Flame, Target, Calendar } from "lucide-react"
-import { Card } from "@/components/ui/card"
+import { TrendingUp, Flame, Target, Calendar } from "lucide-react";
+import { Card } from "@/components/ui/card";
 
 interface HabitStatsProps {
-  totalCompletions: number
-  averageStreak: number
-  longestStreak: number
-  totalHabits: number
+  totalCompletions: number;
+  averageStreak: string;
+  longestStreak: number;
+  totalHabits: number;
 }
 
-export function HabitStats({ totalCompletions, averageStreak, longestStreak, totalHabits }: HabitStatsProps) {
+export function HabitStats({
+  totalCompletions,
+  averageStreak,
+  longestStreak,
+  totalHabits,
+}: HabitStatsProps) {
   const stats = [
     {
       label: "Total Completions",
@@ -38,12 +43,12 @@ export function HabitStats({ totalCompletions, averageStreak, longestStreak, tot
       color: "text-chart-4",
       bgColor: "bg-chart-4/10",
     },
-  ]
+  ];
 
   return (
     <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       {stats.map((stat) => {
-        const Icon = stat.icon
+        const Icon = stat.icon;
         return (
           <Card key={stat.label} className="p-6">
             <div className="flex items-center gap-4">
@@ -51,13 +56,15 @@ export function HabitStats({ totalCompletions, averageStreak, longestStreak, tot
                 <Icon className={`h-5 w-5 ${stat.color}`} />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">{stat.label}</p>
-                <p className="text-2xl font-bold text-foreground">{stat.value}</p>
+                <p className="text-muted-foreground text-sm">{stat.label}</p>
+                <p className="text-foreground text-2xl font-bold">
+                  {stat.value}
+                </p>
               </div>
             </div>
           </Card>
-        )
+        );
       })}
     </div>
-  )
+  );
 }

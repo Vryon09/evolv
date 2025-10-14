@@ -4,6 +4,7 @@ import User from "../models/User.ts";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
 import timezone from "dayjs/plugin/timezone.js";
+import { bestStreakCalculator } from "../helper/BestStreakCalculator.ts";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -157,6 +158,7 @@ export async function completeHabit(req: Request, res: Response) {
       return prevDate === newDate;
     });
 
+    //If there is duplicate
     if (isDuplicate) {
       const updatedCompletedDates = habit.completedDates.filter((date) => {
         const prevDate = dayjs(date).format("DD-MM-YYYY");
@@ -169,11 +171,15 @@ export async function completeHabit(req: Request, res: Response) {
         habit.streak--;
       }
 
+      habit.bestStreak = bestStreakCalculator({ dates: habit.completedDates });
+
       const savedHabit = await habit.save();
 
       res.status(200).json(savedHabit);
       return;
     }
+
+    //If not duplicate
 
     const isCompletedYesterday =
       dayjs(habit.completedDates[habit.completedDates.length - 1])
@@ -184,11 +190,9 @@ export async function completeHabit(req: Request, res: Response) {
       habit.streak++;
     }
 
-    if (habit.streak > habit.bestStreak) {
-      habit.bestStreak = habit.streak;
-    }
-
     habit.completedDates.push(now);
+
+    habit.bestStreak = bestStreakCalculator({ dates: habit.completedDates });
 
     const savedHabit = await habit.save();
 
