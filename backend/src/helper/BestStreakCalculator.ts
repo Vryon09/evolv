@@ -6,8 +6,6 @@ export function bestStreakCalculator({ dates }: { dates: Date[] }) {
   let curr = 1;
   let best = 1;
 
-  console.log(dates);
-
   for (let i = 1; i < dates.length; i++) {
     const currDay = dayjs(dates[i]).startOf("day");
     const prevDay = dayjs(dates[i - 1]).startOf("day");

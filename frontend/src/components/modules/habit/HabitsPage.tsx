@@ -12,6 +12,7 @@ import HabitsSort from "./HabitsSort";
 import Habits from "./Habits";
 import NoHabits from "./NoHabits";
 import HabitsInsight from "./HabitsInsight";
+import PomodoroTImer from "./PomodoroTImer";
 export default function HabitsPage() {
   const [editingHabit, setEditingHabit] = useState<IHabit | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -80,6 +81,8 @@ export default function HabitsPage() {
         {habits.length > 0 && (
           <HabitsInsight totalCompletions={totalCompletions} />
         )}
+
+        <PomodoroTImer />
       </div>
 
       {/* Add/Edit Dialog */}
