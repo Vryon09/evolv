@@ -6,15 +6,22 @@ import { Check, Edit, Pause, Play, RotateCcw } from "lucide-react";
 import { useEffect, useState } from "react";
 
 function PomodoroTImer() {
+  const [timeData, setTimeData] = useState([
+    { type: "pomodoro", time: 25 },
+    { type: "short", time: 5 },
+    { type: "long", time: 15 },
+  ]);
+  const [timerType, setTimerType] = useState<number>(0);
   const [timerState, setTimerState] = useState<"idle" | "running">("idle");
-  const [pomodoroTime, setPomodoroTime] = useState(25);
   const [isPomodoroTimeEditing, setIsPomodoroTimeEditing] = useState(false);
   const [time, setTime] = useState(25 * 60);
 
   useEffect(() => {
     if (time === 0) {
+      const nextIndex = timerType === timeData.length - 1 ? 0 : timerType + 1;
+      setTimerType(nextIndex);
       console.log("Break Time!!");
-      setTime(pomodoroTime * 60);
+      setTime(timeData[nextIndex].time * 60);
       setTimerState("idle");
     }
 
@@ -25,7 +32,7 @@ function PomodoroTImer() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [time, timerState, pomodoroTime]);
+  }, [time, timerState, timeData, timerType]);
 
   function formatTime(seconds: number) {
     const date = new Date(seconds * 1000);
@@ -36,7 +43,9 @@ function PomodoroTImer() {
   return (
     <Card className="mt-8 max-w-[500px] p-6">
       <div className="flex items-center justify-between">
-        <h3>Pomodoro Timer</h3>
+        <h3>
+          <span className="capitalize">{timeData[timerType].type}</span> Timer
+        </h3>
 
         {timerState === "idle" && (
           <form className="flex gap-2">
@@ -44,13 +53,22 @@ function PomodoroTImer() {
               disabled={!isPomodoroTimeEditing}
               className="w-16"
               type="number"
-              value={pomodoroTime}
+              value={timeData[timerType].time}
               onChange={(e) => {
-                if (pomodoroTime <= 1) {
-                  setPomodoroTime(2);
+                if (timeData[timerType].time <= 1) {
+                  setTimeData((prev) => {
+                    return prev.map((data, i) =>
+                      i === timerType ? { ...data, time: 2 } : data,
+                    );
+                  });
                   return;
                 }
-                setPomodoroTime(+e.target.value);
+
+                setTimeData((prev) => {
+                  return prev.map((data, i) =>
+                    i === timerType ? { ...data, time: +e.target.value } : data,
+                  );
+                });
               }}
             />
             <Button
@@ -64,9 +82,9 @@ function PomodoroTImer() {
                   return;
                 }
 
-                if (pomodoroTime < 1) return;
+                if (timeData[timerType].time < 1) return;
 
-                setTime(pomodoroTime * 60);
+                setTime(timeData[timerType].time * 60);
                 setTimerState("idle");
 
                 setIsPomodoroTimeEditing(false);
@@ -96,7 +114,7 @@ function PomodoroTImer() {
         <Button
           disabled={timerState === "running"}
           className="cursor-pointer"
-          onClick={() => setTime(pomodoroTime * 60)}
+          onClick={() => setTime(timeData[timerType].time * 60)}
         >
           <RotateCcw />
         </Button>
