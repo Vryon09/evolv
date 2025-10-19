@@ -2,10 +2,33 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Settings } from "lucide-react";
 import PomodoroSettings from "./PomodoroSettings";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useOutletContext } from "react-router";
+import type { IUser } from "@/components/layout/OSLayout";
 
 function PomodoroTimer() {
+  const [pomodoroSettings, setPomodoroSettings] = useState({
+    pomodoroTime: 0,
+    shortTime: 0,
+    longTime: 0,
+    autoPomodoro: false,
+    autoBreak: false,
+  });
   const [isPomodoroSettingsOpen, setIsPomodoroSettingsOpen] = useState(false);
+
+  const { user }: { user?: IUser } = useOutletContext();
+
+  useEffect(() => {
+    setPomodoroSettings(
+      user?.pomodoroSetting || {
+        pomodoroTime: 0,
+        shortTime: 0,
+        longTime: 0,
+        autoPomodoro: false,
+        autoBreak: false,
+      },
+    );
+  }, [user]);
 
   return (
     <div>
@@ -42,6 +65,7 @@ function PomodoroTimer() {
       <PomodoroSettings
         open={isPomodoroSettingsOpen}
         onOpenChange={(open) => setIsPomodoroSettingsOpen(open)}
+        pomodoroSettings={pomodoroSettings}
       />
     </div>
   );
