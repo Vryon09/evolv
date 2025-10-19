@@ -47,6 +47,14 @@ const userSchema = new Schema(
       },
     },
 
+    pomodoroSetting: {
+      pomodoroTime: { type: Number, default: 25 },
+      shortTime: { type: Number, default: 5 },
+      longTime: { type: Number, default: 15 },
+      autoPomodoro: { type: Boolean, default: false },
+      autoBreak: { type: Boolean, default: false },
+    },
+
     tags: [{ type: String, trim: true, lowercase: true }],
 
     // References to other collections

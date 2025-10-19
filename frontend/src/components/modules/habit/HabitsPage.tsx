@@ -12,7 +12,7 @@ import HabitsSort from "./HabitsSort";
 import Habits from "./Habits";
 import NoHabits from "./NoHabits";
 import HabitsInsight from "./HabitsInsight";
-import PomodoroTImer from "./PomodoroTImer";
+import PomodoroTimer from "./PomodoroTimer";
 export default function HabitsPage() {
   const [editingHabit, setEditingHabit] = useState<IHabit | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -27,16 +27,24 @@ export default function HabitsPage() {
 
   if (isHabitsLoading) return <p>Loading...</p>;
 
-  const totalCompletions = habits.reduce((acc, curr) => {
-    return (acc += curr.completedDates.length);
-  }, 0);
-  const averageStreak = habits
-    .reduce((acc, curr) => {
-      return (acc += curr.bestStreak) / habits.length;
-    }, 0)
-    .toFixed(2);
-  const longestStreak = habits.sort((a, b) => b.bestStreak - a.bestStreak)[0]
-    .bestStreak;
+  const totalCompletions =
+    habits.length === 0
+      ? 0
+      : habits.reduce((acc, curr) => {
+          return (acc += curr.completedDates.length);
+        }, 0);
+  const averageStreak =
+    habits.length === 0
+      ? "0"
+      : habits
+          .reduce((acc, curr) => {
+            return (acc += curr.bestStreak) / habits.length;
+          }, 0)
+          .toFixed(2);
+  const longestStreak =
+    habits.length === 0
+      ? 0
+      : habits.sort((a, b) => b.bestStreak - a.bestStreak)[0].bestStreak;
 
   return (
     <div className="bg-background min-h-screen">
@@ -82,7 +90,7 @@ export default function HabitsPage() {
           <HabitsInsight totalCompletions={totalCompletions} />
         )}
 
-        <PomodoroTImer />
+        <PomodoroTimer />
       </div>
 
       {/* Add/Edit Dialog */}
