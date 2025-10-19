@@ -35,7 +35,7 @@ export default function HabitsPage() {
         }, 0);
   const averageStreak =
     habits.length === 0
-      ? "0"
+      ? "0.00"
       : habits
           .reduce((acc, curr) => {
             return (acc += curr.bestStreak) / habits.length;

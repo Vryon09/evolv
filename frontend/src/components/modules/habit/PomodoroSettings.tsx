@@ -11,9 +11,9 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 
 interface IPomodoroSettings {
-  pomodoroTime: number;
-  shortTime: number;
-  longTime: number;
+  pomodoro: number;
+  short: number;
+  long: number;
   autoPomodoro: boolean;
   autoBreak: boolean;
 }
@@ -43,7 +43,7 @@ function PomodoroSettings({
               <Input
                 id="pomodoro"
                 type="number"
-                defaultValue={pomodoroSettings.pomodoroTime}
+                defaultValue={pomodoroSettings.pomodoro}
               />
             </div>
             <div className="space-y-1">
@@ -51,7 +51,7 @@ function PomodoroSettings({
               <Input
                 id="short"
                 type="number"
-                defaultValue={pomodoroSettings.shortTime}
+                defaultValue={pomodoroSettings.short}
               />
             </div>
             <div className="space-y-1">
@@ -59,7 +59,7 @@ function PomodoroSettings({
               <Input
                 id="long"
                 type="number"
-                defaultValue={pomodoroSettings.longTime}
+                defaultValue={pomodoroSettings.long}
               />
             </div>
           </div>

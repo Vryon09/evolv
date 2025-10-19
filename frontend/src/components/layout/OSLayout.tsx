@@ -15,9 +15,9 @@ export interface IUser {
     notificationsEnabled: boolean;
   };
   pomodoroSetting: {
-    pomodoroTime: number;
-    shortTime: number;
-    longTime: number;
+    pomodoro: number;
+    short: number;
+    long: number;
     autoPomodoro: boolean;
     autoBreak: boolean;
   };
