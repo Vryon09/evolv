@@ -18,6 +18,7 @@ export interface IPomodoroSettings {
   long: number;
   autoPomodoro: boolean;
   autoBreak: boolean;
+  longBreakInterval: number;
 }
 
 interface PomodoroSettingsProps {
@@ -121,6 +122,22 @@ function PomodoroSettings({
                   });
                 }}
                 defaultChecked={pomodoroSettings.autoPomodoro}
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <Label htmlFor="long">Long Break Interval</Label>
+              <Input
+                className="w-14"
+                id="long"
+                type="number"
+                value={pomodoroSettings.longBreakInterval}
+                onChange={(e) => {
+                  e.preventDefault();
+                  setPomodoroSettings((prev: IPomodoroSettings) => {
+                    return { ...prev, longBreakInterval: +e.target.value };
+                  });
+                }}
               />
             </div>
           </div>

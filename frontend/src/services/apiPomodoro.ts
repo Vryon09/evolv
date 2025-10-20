@@ -10,6 +10,7 @@ async function handleUpdatePomodoroSettings({
   long,
   autoPomodoro,
   autoBreak,
+  longBreakInterval,
 }: IPomodoroSettings) {
   const token = localStorage.getItem("evolv_token");
 
@@ -22,6 +23,7 @@ async function handleUpdatePomodoroSettings({
         long,
         autoPomodoro,
         autoBreak,
+        longBreakInterval,
       },
       {
         headers: {

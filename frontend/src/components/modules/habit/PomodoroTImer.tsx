@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Settings } from "lucide-react";
+import { Settings, SkipForward } from "lucide-react";
 import PomodoroSettings from "./PomodoroSettings";
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router";
@@ -21,8 +21,10 @@ function PomodoroTimer() {
     long: 0,
     autoPomodoro: false,
     autoBreak: false,
+    longBreakInterval: 0,
   });
   const [isPomodoroSettingsOpen, setIsPomodoroSettingsOpen] = useState(false);
+  const [pomodoroCount, setPomodoroCount] = useState<number>(1);
 
   const { user }: { user?: IUser } = useOutletContext();
 
@@ -34,6 +36,7 @@ function PomodoroTimer() {
         long: 0,
         autoPomodoro: false,
         autoBreak: false,
+        longBreakInterval: 0,
       },
     );
 
@@ -53,19 +56,31 @@ function PomodoroTimer() {
 
   useEffect(() => {
     if (time === 0) {
-      setTimerState("idle");
-      setTime(pomodoroSettings[timerType] * 60);
-    }
-  }, [time, pomodoroSettings, timerType]);
+      setTimerState(
+        (timerType === "pomodoro" && pomodoroSettings.autoBreak) ||
+          (timerType === "short" && pomodoroSettings.autoPomodoro) ||
+          (timerType === "long" && pomodoroSettings.autoPomodoro)
+          ? "running"
+          : "idle",
+      );
 
-  //create the logic for switching timer type with long break interval
-  // useEffect(() => {
-  //   if(time === 0){
-  //     if(timerType === "pomodoro"){
-  //       if(pomodoroSettings.autoBreak)
-  //     }
-  //   }
-  // }, [time])
+      setTime(pomodoroSettings[timerType] * 60);
+
+      setPomodoroCount((prev) => (timerType === "pomodoro" ? prev + 1 : prev));
+
+      setTimerType((prev) =>
+        prev === "pomodoro" &&
+        pomodoroCount % pomodoroSettings.longBreakInterval === 0
+          ? "long"
+          : prev === "pomodoro" &&
+              pomodoroCount % pomodoroSettings.longBreakInterval !== 0
+            ? "short"
+            : "pomodoro",
+      );
+    }
+  }, [time, pomodoroSettings, timerType, pomodoroCount]);
+
+  //add ringtone when time === 0
 
   function formatTime() {
     const mins = String(Math.floor(time / 60)).padStart(2, "0");
@@ -139,18 +154,31 @@ function PomodoroTimer() {
         <div className="flex items-center justify-center">
           <p className="text-6xl">{formatTime()}</p>
         </div>
-        <Button
-          className="cursor-pointer"
-          onClick={() => {
-            if (timerState === "running") {
-              setTimerState("paused");
-              return;
-            }
-            setTimerState("running");
-          }}
-        >
-          {timerState === "idle" || timerState === "paused" ? "Start" : "Pause"}
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            className="flex-1 cursor-pointer"
+            onClick={() => {
+              if (timerState === "running") {
+                setTimerState("paused");
+                return;
+              }
+              setTimerState("running");
+            }}
+          >
+            {timerState === "idle" || timerState === "paused"
+              ? "Start"
+              : "Pause"}
+          </Button>
+          <Button
+            disabled={timerState === "idle"}
+            className="w-20 cursor-pointer"
+            onClick={() => setTime(0)}
+          >
+            <SkipForward />
+          </Button>
+        </div>
+
+        <p className="mx-auto text-lg">#{pomodoroCount}</p>
       </Card>
 
       <PomodoroSettings

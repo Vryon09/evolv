@@ -53,6 +53,7 @@ const userSchema = new Schema(
       long: { type: Number, default: 15 },
       autoPomodoro: { type: Boolean, default: false },
       autoBreak: { type: Boolean, default: false },
+      longBreakInterval: { type: Number, default: 4 },
     },
 
     tags: [{ type: String, trim: true, lowercase: true }],

@@ -4,6 +4,7 @@ import AppSidebar from "../AppSidebar";
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCurrentUser } from "@/services/apiAuth";
+import type { IPomodoroSettings } from "../modules/habit/PomodoroSettings";
 export interface IUser {
   _id: string;
   name: string;
@@ -14,13 +15,7 @@ export interface IUser {
     theme: "light" | "dark" | "system";
     notificationsEnabled: boolean;
   };
-  pomodoroSettings: {
-    pomodoro: number;
-    short: number;
-    long: number;
-    autoPomodoro: boolean;
-    autoBreak: boolean;
-  };
+  pomodoroSettings: IPomodoroSettings;
   tags: string[];
   habits: string[]; // references to Habit IDs
   journals: string[]; // references to Journal IDs
