@@ -51,6 +51,13 @@ function PomodoroTimer() {
     return () => clearInterval(interval);
   }, [timerState]);
 
+  useEffect(() => {
+    if (time === 0) {
+      setTimerState("idle");
+      setTime(pomodoroSettings[timerType] * 60);
+    }
+  }, [time, pomodoroSettings, timerType]);
+
   //create the logic for switching timer type with long break interval
   // useEffect(() => {
   //   if(time === 0){
@@ -66,8 +73,6 @@ function PomodoroTimer() {
 
     return `${mins}:${secs}`;
   }
-
-  formatTime();
 
   return (
     <div>
