@@ -6,13 +6,12 @@ import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router";
 import type { IUser } from "@/components/layout/OSLayout";
 import { cn } from "@/lib/utils";
-import { format } from "date-fns";
 
 function PomodoroTimer() {
   const [timerType, setTimerType] = useState<"pomodoro" | "short" | "long">(
     "pomodoro",
   );
-  const [time, setTime] = useState(25);
+  const [time, setTime] = useState(25 * 60);
   const [timerState, setTimerState] = useState<"idle" | "paused" | "running">(
     "idle",
   );
@@ -29,7 +28,7 @@ function PomodoroTimer() {
 
   useEffect(() => {
     setPomodoroSettings(
-      user?.pomodoroSetting || {
+      user?.pomodoroSettings || {
         pomodoro: 0,
         short: 0,
         long: 0,
@@ -39,7 +38,7 @@ function PomodoroTimer() {
     );
 
     setTime(
-      (user?.pomodoroSetting && user?.pomodoroSetting[timerType] * 60) ||
+      (user?.pomodoroSettings && user?.pomodoroSettings[timerType] * 60) ||
         25 * 60,
     );
   }, [user, timerType]);
@@ -60,6 +59,15 @@ function PomodoroTimer() {
   //     }
   //   }
   // }, [time])
+
+  function formatTime() {
+    const mins = String(Math.floor(time / 60)).padStart(2, "0");
+    const secs = String(time % 60).padStart(2, "0");
+
+    return `${mins}:${secs}`;
+  }
+
+  formatTime();
 
   return (
     <div>
@@ -124,9 +132,7 @@ function PomodoroTimer() {
           </div>
         </header>
         <div className="flex items-center justify-center">
-          <p className="text-6xl">
-            {format(new Date(time).getTime() * 1000, "mm:ss")}
-          </p>
+          <p className="text-6xl">{formatTime()}</p>
         </div>
         <Button
           className="cursor-pointer"
@@ -146,6 +152,7 @@ function PomodoroTimer() {
         open={isPomodoroSettingsOpen}
         onOpenChange={(open) => setIsPomodoroSettingsOpen(open)}
         pomodoroSettings={pomodoroSettings}
+        setPomodoroSettings={setPomodoroSettings}
       />
     </div>
   );

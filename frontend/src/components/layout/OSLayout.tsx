@@ -14,7 +14,7 @@ export interface IUser {
     theme: "light" | "dark" | "system";
     notificationsEnabled: boolean;
   };
-  pomodoroSetting: {
+  pomodoroSettings: {
     pomodoro: number;
     short: number;
     long: number;

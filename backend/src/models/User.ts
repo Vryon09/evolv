@@ -47,7 +47,7 @@ const userSchema = new Schema(
       },
     },
 
-    pomodoroSetting: {
+    pomodoroSettings: {
       pomodoro: { type: Number, default: 25 },
       short: { type: Number, default: 5 },
       long: { type: Number, default: 15 },

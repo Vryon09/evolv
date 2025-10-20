@@ -9,8 +9,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { useUpdatePomodoroSettings } from "@/services/apiPomodoro";
+import type React from "react";
 
-interface IPomodoroSettings {
+export interface IPomodoroSettings {
   pomodoro: number;
   short: number;
   long: number;
@@ -22,13 +24,23 @@ interface PomodoroSettingsProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   pomodoroSettings: IPomodoroSettings;
+  setPomodoroSettings: React.Dispatch<React.SetStateAction<IPomodoroSettings>>;
 }
 
 function PomodoroSettings({
   open,
   onOpenChange,
   pomodoroSettings,
+  setPomodoroSettings,
 }: PomodoroSettingsProps) {
+  const { mutate: handleUpdatePomodoroSettings } = useUpdatePomodoroSettings();
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    handleUpdatePomodoroSettings(pomodoroSettings);
+    onOpenChange(false);
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
@@ -36,14 +48,20 @@ function PomodoroSettings({
           <DialogTitle>Settings</DialogTitle>
           <DialogDescription>Customize your pomodoro</DialogDescription>
         </DialogHeader>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="flex gap-4">
             <div className="space-y-1">
               <Label htmlFor="pomodoro">Pomodoro</Label>
               <Input
                 id="pomodoro"
                 type="number"
-                defaultValue={pomodoroSettings.pomodoro}
+                value={pomodoroSettings.pomodoro}
+                onChange={(e) => {
+                  e.preventDefault();
+                  setPomodoroSettings((prev: IPomodoroSettings) => {
+                    return { ...prev, pomodoro: +e.target.value };
+                  });
+                }}
               />
             </div>
             <div className="space-y-1">
@@ -51,7 +69,13 @@ function PomodoroSettings({
               <Input
                 id="short"
                 type="number"
-                defaultValue={pomodoroSettings.short}
+                value={pomodoroSettings.short}
+                onChange={(e) => {
+                  e.preventDefault();
+                  setPomodoroSettings((prev: IPomodoroSettings) => {
+                    return { ...prev, short: +e.target.value };
+                  });
+                }}
               />
             </div>
             <div className="space-y-1">
@@ -59,7 +83,13 @@ function PomodoroSettings({
               <Input
                 id="long"
                 type="number"
-                defaultValue={pomodoroSettings.long}
+                value={pomodoroSettings.long}
+                onChange={(e) => {
+                  e.preventDefault();
+                  setPomodoroSettings((prev: IPomodoroSettings) => {
+                    return { ...prev, long: +e.target.value };
+                  });
+                }}
               />
             </div>
           </div>
@@ -69,6 +99,12 @@ function PomodoroSettings({
               <Switch
                 className="cursor-pointer"
                 id="auto-pomodoro"
+                checked={pomodoroSettings.autoPomodoro}
+                onCheckedChange={(checked) => {
+                  setPomodoroSettings((prev: IPomodoroSettings) => {
+                    return { ...prev, autoPomodoro: checked };
+                  });
+                }}
                 defaultChecked={pomodoroSettings.autoPomodoro}
               />
             </div>
@@ -78,6 +114,12 @@ function PomodoroSettings({
               <Switch
                 className="cursor-pointer"
                 id="auto-break"
+                checked={pomodoroSettings.autoBreak}
+                onCheckedChange={(checked) => {
+                  setPomodoroSettings((prev: IPomodoroSettings) => {
+                    return { ...prev, autoBreak: checked };
+                  });
+                }}
                 defaultChecked={pomodoroSettings.autoPomodoro}
               />
             </div>
