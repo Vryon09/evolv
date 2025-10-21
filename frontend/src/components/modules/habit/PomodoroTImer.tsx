@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Settings, SkipForward } from "lucide-react";
 import PomodoroSettings from "./PomodoroSettings";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useOutletContext } from "react-router";
 import type { IUser } from "@/components/layout/OSLayout";
 import { cn } from "@/lib/utils";
@@ -54,6 +54,22 @@ function PomodoroTimer() {
     return () => clearInterval(interval);
   }, [timerState]);
 
+  const showNotification = useCallback(() => {
+    if (Notification.permission === "granted") {
+      if (timerType === "pomodoro") {
+        new Notification(`Hello ${user?.name}!`, {
+          body: "Time to take a break.",
+        });
+      } else {
+        new Notification(`Hello ${user?.name}!`, {
+          body: "Time to focus!.",
+        });
+      }
+    } else if (Notification.permission !== "denied") {
+      Notification.requestPermission();
+    }
+  }, [timerType, user?.name]);
+
   useEffect(() => {
     if (time === 0) {
       setTimerState(
@@ -77,10 +93,20 @@ function PomodoroTimer() {
             ? "short"
             : "pomodoro",
       );
-    }
-  }, [time, pomodoroSettings, timerType, pomodoroCount]);
 
-  //add ringtone when time === 0
+      showNotification();
+
+      const alarm = new Audio("/alarm.mp3");
+      alarm.currentTime = 0;
+      alarm.volume = 0.03;
+      alarm.play();
+
+      setTimeout(() => {
+        alarm.pause();
+        alarm.currentTime = 0;
+      }, 3000);
+    }
+  }, [time, pomodoroSettings, timerType, pomodoroCount, showNotification]);
 
   function formatTime() {
     const mins = String(Math.floor(time / 60)).padStart(2, "0");
@@ -162,6 +188,13 @@ function PomodoroTimer() {
                 setTimerState("paused");
                 return;
               }
+
+              if (Notification.permission === "default") {
+                alert("Turn on notification permission to alarm.");
+
+                Notification.requestPermission();
+              }
+
               setTimerState("running");
             }}
           >
