@@ -10,6 +10,7 @@ import Habit from "./components/modules/habit/Habit";
 import Mood from "./components/modules/mood/Mood";
 import Knowledge from "./components/modules/knowledge/Knowledge";
 import Opportunity from "./components/modules/opportunity/Opportunity";
+import { PomodoroTimerProvider } from "./contexts/PomodoroTimerContext";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,22 +22,24 @@ const queryClient = new QueryClient({
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <Routes>
-        <Route element={<AppLayout />}>
-          <Route index element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
-        </Route>
-        <Route path="/app" element={<OSLayout />}>
-          <Route path="/app/dashboard" element={<Dashboard />} />
-          <Route path="/app/habit" element={<Habit />} />
-          <Route path="/app/mood" element={<Mood />} />
-          <Route path="/app/knowledge" element={<Knowledge />} />
-          <Route path="/app/opportunity" element={<Opportunity />} />
-        </Route>
-      </Routes>
-    </QueryClientProvider>
+    <PomodoroTimerProvider>
+      <QueryClientProvider client={queryClient}>
+        <Routes>
+          <Route element={<AppLayout />}>
+            <Route index element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
+          </Route>
+          <Route path="/app" element={<OSLayout />}>
+            <Route path="/app/dashboard" element={<Dashboard />} />
+            <Route path="/app/habit" element={<Habit />} />
+            <Route path="/app/mood" element={<Mood />} />
+            <Route path="/app/knowledge" element={<Knowledge />} />
+            <Route path="/app/opportunity" element={<Opportunity />} />
+          </Route>
+        </Routes>
+      </QueryClientProvider>
+    </PomodoroTimerProvider>
   );
 }
 

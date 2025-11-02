@@ -9,6 +9,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { usePomodoroTimer } from "@/contexts/usePomodoroTimer";
 import { useUpdatePomodoroSettings } from "@/services/apiPomodoro";
 import type React from "react";
 
@@ -25,15 +26,14 @@ interface PomodoroSettingsProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   pomodoroSettings: IPomodoroSettings;
-  setPomodoroSettings: React.Dispatch<React.SetStateAction<IPomodoroSettings>>;
 }
 
 function PomodoroSettings({
   open,
   onOpenChange,
   pomodoroSettings,
-  setPomodoroSettings,
 }: PomodoroSettingsProps) {
+  const { dispatch, pomodoroSettings: pomodoroSet } = usePomodoroTimer();
   const { mutate: handleUpdatePomodoroSettings } = useUpdatePomodoroSettings();
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -59,9 +59,13 @@ function PomodoroSettings({
                 value={pomodoroSettings.pomodoro}
                 onChange={(e) => {
                   e.preventDefault();
-                  setPomodoroSettings((prev: IPomodoroSettings) => {
-                    return { ...prev, pomodoro: +e.target.value };
+                  dispatch({
+                    type: "setPomodoroSettings",
+                    payload: { ...pomodoroSet, pomodoro: +e.target.value },
                   });
+                  // setPomodoroSettings((prev: IPomodoroSettings) => {
+                  //   return { ...prev, pomodoro: +e.target.value };
+                  // });
                 }}
               />
             </div>
@@ -73,9 +77,13 @@ function PomodoroSettings({
                 value={pomodoroSettings.short}
                 onChange={(e) => {
                   e.preventDefault();
-                  setPomodoroSettings((prev: IPomodoroSettings) => {
-                    return { ...prev, short: +e.target.value };
+                  dispatch({
+                    type: "setPomodoroSettings",
+                    payload: { ...pomodoroSet, short: +e.target.value },
                   });
+                  // setPomodoroSettings((prev: IPomodoroSettings) => {
+                  //   return { ...prev, short: +e.target.value };
+                  // });
                 }}
               />
             </div>
@@ -87,9 +95,13 @@ function PomodoroSettings({
                 value={pomodoroSettings.long}
                 onChange={(e) => {
                   e.preventDefault();
-                  setPomodoroSettings((prev: IPomodoroSettings) => {
-                    return { ...prev, long: +e.target.value };
+                  dispatch({
+                    type: "setPomodoroSettings",
+                    payload: { ...pomodoroSet, long: +e.target.value },
                   });
+                  // setPomodoroSettings((prev: IPomodoroSettings) => {
+                  //   return { ...prev, long: +e.target.value };
+                  // });
                 }}
               />
             </div>
@@ -102,9 +114,13 @@ function PomodoroSettings({
                 id="auto-pomodoro"
                 checked={pomodoroSettings.autoPomodoro}
                 onCheckedChange={(checked) => {
-                  setPomodoroSettings((prev: IPomodoroSettings) => {
-                    return { ...prev, autoPomodoro: checked };
+                  dispatch({
+                    type: "setPomodoroSettings",
+                    payload: { ...pomodoroSet, autoPomodoro: checked },
                   });
+                  // setPomodoroSettings((prev: IPomodoroSettings) => {
+                  //   return { ...prev, autoPomodoro: checked };
+                  // });
                 }}
                 defaultChecked={pomodoroSettings.autoPomodoro}
               />
@@ -117,9 +133,13 @@ function PomodoroSettings({
                 id="auto-break"
                 checked={pomodoroSettings.autoBreak}
                 onCheckedChange={(checked) => {
-                  setPomodoroSettings((prev: IPomodoroSettings) => {
-                    return { ...prev, autoBreak: checked };
+                  dispatch({
+                    type: "setPomodoroSettings",
+                    payload: { ...pomodoroSet, autoBreak: checked },
                   });
+                  // setPomodoroSettings((prev: IPomodoroSettings) => {
+                  //   return { ...prev, autoBreak: checked };
+                  // });
                 }}
                 defaultChecked={pomodoroSettings.autoPomodoro}
               />
@@ -134,9 +154,16 @@ function PomodoroSettings({
                 value={pomodoroSettings.longBreakInterval}
                 onChange={(e) => {
                   e.preventDefault();
-                  setPomodoroSettings((prev: IPomodoroSettings) => {
-                    return { ...prev, longBreakInterval: +e.target.value };
+                  dispatch({
+                    type: "setPomodoroSettings",
+                    payload: {
+                      ...pomodoroSet,
+                      longBreakInterval: +e.target.value,
+                    },
                   });
+                  // setPomodoroSettings((prev: IPomodoroSettings) => {
+                  //   return { ...prev, longBreakInterval: +e.target.value };
+                  // });
                 }}
               />
             </div>

@@ -11,6 +11,7 @@ import {
   SidebarMenuItem,
 } from "./ui/sidebar";
 import { Link, useLocation, useNavigate } from "react-router";
+import { usePomodoroTimer } from "@/contexts/usePomodoroTimer";
 
 const items = [
   {
@@ -43,6 +44,7 @@ const items = [
 function AppSidebar({ username }: { username: string }) {
   const location = useLocation();
   const navigate = useNavigate();
+  const { timerState } = usePomodoroTimer();
 
   function handleLogout() {
     localStorage.removeItem("evolv_token");
@@ -77,7 +79,13 @@ function AppSidebar({ username }: { username: string }) {
                   >
                     <a
                       onClick={() => {
-                        if (location.pathname === "/app/habit") {
+                        if (location.pathname.split("/")[2] === item.url)
+                          return;
+
+                        if (
+                          location.pathname === "/app/habit" &&
+                          timerState === "running"
+                        ) {
                           const isConfirmed = confirm(
                             "Pomodoro timer will reset when you go to another module.",
                           );
