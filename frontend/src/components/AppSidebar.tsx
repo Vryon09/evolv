@@ -10,7 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "./ui/sidebar";
-import { Link, NavLink, useLocation, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 
 const items = [
   {
@@ -75,10 +75,24 @@ function AppSidebar({ username }: { username: string }) {
                         : `hover:bg-muted`
                     }
                   >
-                    <NavLink to={`/app/${item.url}`}>
+                    <a
+                      onClick={() => {
+                        if (location.pathname === "/app/habit") {
+                          const isConfirmed = confirm(
+                            "Pomodoro timer will reset when you go to another module.",
+                          );
+                          if (isConfirmed) {
+                            navigate(`/app/${item.url}`);
+                          }
+                          return;
+                        }
+
+                        navigate(`/app/${item.url}`);
+                      }}
+                    >
                       <item.icon />
                       <span>{item.title}</span>
-                    </NavLink>
+                    </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

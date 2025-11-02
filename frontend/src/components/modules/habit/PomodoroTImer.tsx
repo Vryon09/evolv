@@ -98,13 +98,13 @@ function PomodoroTimer() {
 
       const alarm = new Audio("/alarm.mp3");
       alarm.currentTime = 0;
-      alarm.volume = 0.03;
+      alarm.volume = 0.1;
       alarm.play();
 
       setTimeout(() => {
         alarm.pause();
         alarm.currentTime = 0;
-      }, 3000);
+      }, 5000);
     }
   }, [time, pomodoroSettings, timerType, pomodoroCount, showNotification]);
 
