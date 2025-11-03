@@ -13,6 +13,7 @@ import Habits from "./Habits";
 import NoHabits from "./NoHabits";
 import HabitsInsight from "./HabitsInsight";
 import PomodoroTimer from "./PomodoroTimer";
+import { Card } from "@/components/ui/card";
 export default function HabitsPage() {
   const [editingHabit, setEditingHabit] = useState<IHabit | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -86,12 +87,26 @@ export default function HabitsPage() {
             setIsDialogOpen={setIsDialogOpen}
           />
         )}
+
+        <div className="mt-8 flex flex-col gap-4 lg:flex-row">
+          <PomodoroTimer />
+          <Card className="flex w-full items-center justify-center px-4 py-2">
+            <iframe
+              className="h-full w-full"
+              src="https://www.youtube.com/embed/jfKfPfyJRdk?si=1zT5I0y41ml6zdp2"
+              title="Lofi hip-hop girl"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              // allowFullScreen
+            ></iframe>
+          </Card>
+        </div>
+
         {/* Motivational Insight */}
         {habits.length > 0 && (
           <HabitsInsight totalCompletions={totalCompletions} />
         )}
-
-        <PomodoroTimer />
       </div>
 
       {/* Add/Edit Dialog */}
