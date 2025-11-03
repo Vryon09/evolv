@@ -36,11 +36,12 @@ export default function HabitsPage() {
   const averageStreak =
     habits.length === 0
       ? "0.00"
-      : habits
-          .reduce((acc, curr) => {
-            return (acc += curr.bestStreak) / habits.length;
-          }, 0)
-          .toFixed(2);
+      : (
+          habits.reduce((acc, curr) => {
+            console.log();
+            return (acc += curr.bestStreak);
+          }, 0) / habits.length
+        ).toFixed(2);
   const longestStreak =
     habits.length === 0
       ? 0
