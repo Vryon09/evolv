@@ -5,10 +5,12 @@ import {
   Edit2,
   Trash2,
   Archive,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
+// import { Progress } from "@/components/ui/progress";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,6 +20,8 @@ import {
 import type { IHabit } from "types/habit";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import { Calendar } from "./ui/calendar";
+import { useState } from "react";
 
 interface HabitCardProps {
   habit: IHabit;
@@ -25,28 +29,35 @@ interface HabitCardProps {
   onEdit: () => void;
   onArchive: () => void;
   onDelete: (id: string) => void;
+  isCompletingHabit: boolean;
 }
 
 export function HabitCard({
   habit,
   onToggleComplete,
+  isCompletingHabit,
   onEdit,
   onArchive,
   onDelete,
 }: HabitCardProps) {
+  const [isCalendarShow, setIsCalendarShow] = useState(false);
+
   const date = new Date();
   const today = format(date, "yyyy-MM-dd'T'HH:mm:ssXXX").split("T")[0];
   const isCompletedToday = habit.completedDates.some(
     (date) => date.split("T")[0] === today,
   );
+  const calendarDatesHighlight = habit.completedDates.map(
+    (date) => new Date(date),
+  );
 
   // Calculate completion rate (last 30 days)
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-  const recentCompletions = habit.completedDates.filter(
-    (date) => new Date(date) >= thirtyDaysAgo,
-  ).length;
-  const completionRate = Math.round((recentCompletions / 30) * 100);
+  // const thirtyDaysAgo = new Date();
+  // thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  // const recentCompletions = habit.completedDates.filter(
+  //   (date) => new Date(date) >= thirtyDaysAgo,
+  // ).length;
+  // const completionRate = Math.round((recentCompletions / 30) * 100);
 
   return (
     <Card className="group relative overflow-hidden transition-all hover:shadow-lg">
@@ -75,7 +86,7 @@ export function HabitCard({
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 opacity-0 transition-opacity group-hover:opacity-100"
+                className="h-8 w-8 cursor-pointer opacity-0 transition-opacity group-hover:opacity-100"
               >
                 <MoreVertical className="h-4 w-4" />
               </Button>
@@ -111,7 +122,7 @@ export function HabitCard({
         </div>
 
         {/* Progress */}
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <div className="mb-2 flex items-center justify-between text-sm">
             <span className="text-muted-foreground">30-day completion</span>
             <span className="text-foreground font-semibold">
@@ -119,7 +130,7 @@ export function HabitCard({
             </span>
           </div>
           <Progress value={completionRate} className="h-2" />
-        </div>
+        </div> */}
 
         {/* Actions */}
         <div className="flex gap-2">
@@ -141,7 +152,28 @@ export function HabitCard({
             />
             {isCompletedToday ? "Completed Today" : "Mark as Done"}
           </Button>
+
+          <Button
+            className="cursor-pointer"
+            variant="ghost"
+            onClick={() => setIsCalendarShow(!isCalendarShow)}
+          >
+            {!isCalendarShow ? <ChevronDown /> : <ChevronUp />}
+          </Button>
         </div>
+
+        {isCalendarShow && (
+          <div className="mt-4 rounded-2xl border-1">
+            <Calendar
+              mode="multiple"
+              selected={calendarDatesHighlight}
+              className="w-full [&_button[data-selected-single=true]]:border-2 [&_button[data-selected-single=true]]:border-green-500 [&_button[data-selected-single=true]]:bg-green-500/50"
+              onSelect={() => {
+                return;
+              }}
+            />
+          </div>
+        )}
       </div>
     </Card>
   );

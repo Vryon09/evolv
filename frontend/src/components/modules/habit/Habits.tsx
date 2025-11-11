@@ -13,7 +13,8 @@ interface HabitsProps {
 }
 
 function Habits({ habits, setEditingHabit, setIsDialogOpen }: HabitsProps) {
-  const { mutate: handleCompleteHabit } = useCompleteHabit();
+  const { mutate: handleCompleteHabit, isPending: isCompletingHabit } =
+    useCompleteHabit();
   const { mutate: handleUpdateHabit } = useUpdateHabit();
   const { mutate: handleDeleteHabit } = useDeleteHabit();
 
@@ -26,6 +27,7 @@ function Habits({ habits, setEditingHabit, setIsDialogOpen }: HabitsProps) {
           onToggleComplete={(_id: string) => {
             handleCompleteHabit({ _id });
           }}
+          isCompletingHabit={isCompletingHabit}
           onEdit={() => {
             setEditingHabit(habit);
             setIsDialogOpen(true);

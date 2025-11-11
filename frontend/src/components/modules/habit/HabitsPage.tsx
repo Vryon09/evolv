@@ -36,13 +36,13 @@ export default function HabitsPage() {
         }, 0);
   const averageStreak =
     habits.length === 0
-      ? "0.00"
+      ? "0.0"
       : (
           habits.reduce((acc, curr) => {
             console.log();
             return (acc += curr.bestStreak);
           }, 0) / habits.length
-        ).toFixed(2);
+        ).toFixed(1);
   const longestStreak =
     habits.length === 0
       ? 0
@@ -70,7 +70,7 @@ export default function HabitsPage() {
               setEditingHabit(null);
               setIsDialogOpen(true);
             }}
-            className="gap-2"
+            className="cursor-pointer gap-2"
           >
             <Plus className="h-4 w-4" />
             Add Habit

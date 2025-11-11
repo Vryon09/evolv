@@ -24,7 +24,7 @@ export function HabitStats({
     },
     {
       label: "Average Streak",
-      value: `${averageStreak} days`,
+      value: `${averageStreak} ${+averageStreak > 1 ? "days" : "day"}`,
       icon: TrendingUp,
       color: "text-chart-2",
       bgColor: "bg-chart-2/10",

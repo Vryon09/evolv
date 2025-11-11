@@ -242,6 +242,7 @@ export function HabitDialog({ open, onOpenChange, habit }: HabitDialogProps) {
                       <div key={i}>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
+                          className="cursor-pointer"
                           onSelect={(e) => {
                             e.preventDefault();
                             if (formData.tags.length === 3) return;
@@ -270,10 +271,11 @@ export function HabitDialog({ open, onOpenChange, habit }: HabitDialogProps) {
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
+              className="cursor-pointer"
             >
               Cancel
             </Button>
-            <Button type="submit">
+            <Button type="submit" className="cursor-pointer">
               {habit ? "Save Changes" : "Add Habit"}
             </Button>
           </div>
