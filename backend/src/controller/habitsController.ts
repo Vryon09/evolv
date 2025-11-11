@@ -155,6 +155,8 @@ export async function completeHabit(req: Request, res: Response) {
 
     const isDuplicate = habit.completedDates.some((date) => {
       const prevDate = dayjs(date).format("DD-MM-YYYY");
+      console.log(prevDate);
+      console.log(newDate);
       return prevDate === newDate;
     });
 
@@ -186,9 +188,13 @@ export async function completeHabit(req: Request, res: Response) {
         .add(1, "day")
         .format("DD-MM-YYYY") === newDate;
 
-    if (habit.completedDates.length === 0 || isCompletedYesterday) {
+    // if (habit.completedDates.length === 0 || isCompletedYesterday) {
+    if (!isCompletedYesterday) {
+      habit.streak = 1;
+    } else {
       habit.streak++;
     }
+    // }
 
     habit.completedDates.push(now);
 
