@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import Habit from "../models/Habit.ts";
+import type { IHabit } from "../models/Habit.ts";
 import User from "../models/User.ts";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
@@ -9,37 +10,25 @@ import { bestStreakCalculator } from "../helper/BestStreakCalculator.ts";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-interface filterTypes {
-  createdAt?: number;
-  streak?: number;
-}
+// interface filterTypes {
+//   createdAt?: number;
+//   streak?: number;
+// }
 
 export async function getHabits(req: Request, res: Response) {
   try {
     const authUser = (req as any).user;
     const { sortBy } = req.query;
-    const filter: filterTypes = {};
 
     if (!authUser) {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    switch (sortBy) {
-      case "recent":
-        filter.createdAt = -1;
-        break;
-      case "streak":
-        filter.streak = -1;
-      default:
-        break;
-    }
-
     const userWithHabits = await User.findById(authUser._id)
-      .populate({
+      .populate<{ habits: IHabit[] }>({
         path: "habits",
         model: Habit,
         match: { isArchived: false },
-        options: { sort: filter },
       })
       .select("habits");
 
@@ -47,7 +36,29 @@ export async function getHabits(req: Request, res: Response) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.status(200).json(userWithHabits.habits);
+    let habits = userWithHabits.habits;
+
+    switch (sortBy) {
+      case "recent":
+        habits = habits.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+        break;
+      case "streak":
+        habits = habits.sort((a, b) => b.streak - a.streak);
+        break;
+      default:
+        habits = habits.sort(
+          (a, b) =>
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
+        break;
+    }
+
+    console.log(habits);
+
+    res.status(200).json(habits);
   } catch (error) {
     console.error("Error in getHabits controller.", error);
     res.status(500).json({ message: "Internal Server Error!" });

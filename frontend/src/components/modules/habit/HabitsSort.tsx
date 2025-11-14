@@ -27,14 +27,26 @@ function HabitsSort({ sortBy, setSortBy }: HabitSortProps) {
                 : "Default"}
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start">
-          <DropdownMenuItem onClick={() => setSortBy("default")}>
+        <DropdownMenuContent
+          align="end"
+          className="space-y-1 border-1 bg-white"
+        >
+          <DropdownMenuItem
+            className="cursor-pointer px-2 py-1 text-xs hover:bg-neutral-200"
+            onClick={() => setSortBy("default")}
+          >
             Default
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setSortBy("recent")}>
+          <DropdownMenuItem
+            className="cursor-pointer px-2 py-1 text-xs hover:bg-neutral-200"
+            onClick={() => setSortBy("recent")}
+          >
             Most Recent
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setSortBy("streak")}>
+          <DropdownMenuItem
+            className="cursor-pointer px-2 py-1 text-xs hover:bg-neutral-200"
+            onClick={() => setSortBy("streak")}
+          >
             Highest Streak
           </DropdownMenuItem>
         </DropdownMenuContent>

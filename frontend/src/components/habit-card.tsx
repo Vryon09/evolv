@@ -29,13 +29,11 @@ interface HabitCardProps {
   onEdit: () => void;
   onArchive: () => void;
   onDelete: (id: string) => void;
-  isCompletingHabit: boolean;
 }
 
 export function HabitCard({
   habit,
   onToggleComplete,
-  isCompletingHabit,
   onEdit,
   onArchive,
   onDelete,

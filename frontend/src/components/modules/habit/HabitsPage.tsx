@@ -46,7 +46,7 @@ export default function HabitsPage() {
   const longestStreak =
     habits.length === 0
       ? 0
-      : habits.sort((a, b) => b.bestStreak - a.bestStreak)[0].bestStreak;
+      : [...habits].sort((a, b) => b.bestStreak - a.bestStreak)[0].bestStreak;
 
   return (
     <div className="bg-background min-h-screen">
