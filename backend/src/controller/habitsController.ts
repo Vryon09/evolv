@@ -10,18 +10,79 @@ import { bestStreakCalculator } from "../helper/BestStreakCalculator.ts";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-// interface filterTypes {
-//   createdAt?: number;
-//   streak?: number;
+// export async function getHabits(req: Request, res: Response) {
+//   try {
+//     const authUser = (req as any).user;
+//     const { sortBy } = req.query;
+
+//     if (!authUser) {
+//       return res.status(401).json({ message: "Unauthorized" });
+//     }
+
+//     const userWithHabits = await User.findById(authUser._id)
+//       .populate<{ habits: IHabit[] }>({
+//         path: "habits",
+//         model: Habit,
+//         match: { isArchived: false },
+//       })
+//       .select("habits");
+
+//     if (!userWithHabits) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+
+//     let habits = userWithHabits.habits;
+
+//     switch (sortBy) {
+//       case "recent":
+//         habits = habits.sort(
+//           (a, b) =>
+//             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+//         );
+//         break;
+//       case "streak":
+//         habits = habits.sort((a, b) => b.streak - a.streak);
+//         break;
+//       default:
+//         habits = habits.sort(
+//           (a, b) =>
+//             new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+//         );
+//         break;
+//     }
+
+//     res.status(200).json(habits);
+//   } catch (error) {
+//     console.error("Error in getHabits controller.", error);
+//     res.status(500).json({ message: "Internal Server Error!" });
+//   }
 // }
+
+interface sortTypes {
+  createdAt?: number;
+  streak?: number;
+}
 
 export async function getHabits(req: Request, res: Response) {
   try {
     const authUser = (req as any).user;
     const { sortBy } = req.query;
+    const sortType: sortTypes = {};
 
     if (!authUser) {
       return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    switch (sortBy) {
+      case "recent":
+        sortType.createdAt = -1;
+        break;
+      case "streak":
+        sortType.streak = -1;
+        break;
+      default:
+        sortType.createdAt = 1;
+        break;
     }
 
     const userWithHabits = await User.findById(authUser._id)
@@ -29,6 +90,7 @@ export async function getHabits(req: Request, res: Response) {
         path: "habits",
         model: Habit,
         match: { isArchived: false },
+        options: { sort: sortType },
       })
       .select("habits");
 
@@ -36,27 +98,7 @@ export async function getHabits(req: Request, res: Response) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    let habits = userWithHabits.habits;
-
-    switch (sortBy) {
-      case "recent":
-        habits = habits.sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-        break;
-      case "streak":
-        habits = habits.sort((a, b) => b.streak - a.streak);
-        break;
-      default:
-        habits = habits.sort(
-          (a, b) =>
-            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        );
-        break;
-    }
-
-    res.status(200).json(habits);
+    res.status(200).json(userWithHabits.habits);
   } catch (error) {
     console.error("Error in getHabits controller.", error);
     res.status(500).json({ message: "Internal Server Error!" });
