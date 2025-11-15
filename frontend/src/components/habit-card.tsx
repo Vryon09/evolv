@@ -58,7 +58,7 @@ export function HabitCard({
   // const completionRate = Math.round((recentCompletions / 30) * 100);
 
   return (
-    <Card className="group relative overflow-hidden transition-all hover:shadow-lg">
+    <Card className="group relative h-fit overflow-hidden transition-all hover:shadow-lg">
       <div className="p-6">
         {/* Header */}
         <div className="mb-4 flex items-start justify-between">

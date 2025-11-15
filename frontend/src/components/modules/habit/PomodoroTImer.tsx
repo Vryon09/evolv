@@ -166,7 +166,7 @@ function PomodoroTimer() {
 
   return (
     <div className="w-full">
-      <Card className="px-4 py-2">
+      <Card className="h-full px-4 py-2">
         <header className="flex flex-col">
           <div className="flex w-full justify-end">
             <Button

@@ -56,8 +56,6 @@ export async function getHabits(req: Request, res: Response) {
         break;
     }
 
-    console.log(habits);
-
     res.status(200).json(habits);
   } catch (error) {
     console.error("Error in getHabits controller.", error);

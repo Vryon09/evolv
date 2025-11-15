@@ -49,7 +49,7 @@ export default function HabitsPage() {
       : [...habits].sort((a, b) => b.bestStreak - a.bestStreak)[0].bestStreak;
 
   return (
-    <div className="bg-background min-h-screen">
+    <div className="bg-background overflow-scroll overflow-x-hidden">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Stats Overview */}
         <HabitStats
@@ -90,16 +90,18 @@ export default function HabitsPage() {
 
         <div className="mt-8 flex flex-col gap-4 lg:flex-row">
           <PomodoroTimer />
-          <Card className="flex w-full items-center justify-center px-4 py-2">
-            <iframe
-              className="h-full w-full"
-              src="https://www.youtube.com/embed/jfKfPfyJRdk?si=1zT5I0y41ml6zdp2"
-              title="Lofi hip-hop girl"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-              // allowFullScreen
-            ></iframe>
+          <Card className="px-4 py-2 md:w-full">
+            <div className="aspect-video w-full">
+              <iframe
+                className="h-full w-full"
+                src="https://www.youtube.com/embed/jfKfPfyJRdk?si=1zT5I0y41ml6zdp2"
+                title="Lofi hip-hop girl"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                // allowFullScreen
+              ></iframe>
+            </div>
           </Card>
         </div>
 

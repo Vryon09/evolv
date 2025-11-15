@@ -31,7 +31,7 @@ export function HabitStats({
     },
     {
       label: "Longest Streak",
-      value: `${longestStreak} days`,
+      value: `${longestStreak} ${longestStreak > 1 ? "days" : "day"}`,
       icon: Flame,
       color: "text-chart-3",
       bgColor: "bg-chart-3/10",
