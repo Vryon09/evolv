@@ -111,7 +111,7 @@ export function HabitCard({
 
         {/* Streak */}
         <div className="mb-4 flex items-center gap-2">
-          <div className="bg-flame/10 flex items-center gap-1.5 rounded-full px-3 py-1.5">
+          <div className="bg-flame/20 flex items-center gap-1.5 rounded-full px-3 py-1.5">
             <Flame className="text-flame h-4 w-4" />
             <span className="text-flame text-sm font-semibold">
               {habit.streak} day streak

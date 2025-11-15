@@ -34,15 +34,18 @@ export default function HabitsPage() {
       : habits.reduce((acc, curr) => {
           return (acc += curr.completedDates.length);
         }, 0);
-  const averageStreak =
-    habits.length === 0
-      ? "0.0"
-      : (
-          habits.reduce((acc, curr) => {
-            console.log();
-            return (acc += curr.bestStreak);
-          }, 0) / habits.length
-        ).toFixed(1);
+
+  const todaysCompletion = habits.reduce((acc, habit) => {
+    const isCompletedToday = habit.completedDates.some(
+      (date) => date.split("T")[0] === new Date().toISOString().split("T")[0],
+    );
+
+    if (isCompletedToday) {
+      return acc + 1;
+    }
+    return acc;
+  }, 0);
+
   const longestStreak =
     habits.length === 0
       ? 0
@@ -53,8 +56,7 @@ export default function HabitsPage() {
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Stats Overview */}
         <HabitStats
-          totalCompletions={totalCompletions}
-          averageStreak={averageStreak}
+          todaysCompletion={todaysCompletion}
           longestStreak={longestStreak}
           totalHabits={habits.length}
         />

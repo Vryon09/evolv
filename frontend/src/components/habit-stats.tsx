@@ -1,52 +1,43 @@
-import { TrendingUp, Flame, Target, Calendar } from "lucide-react";
+import { Flame, Calendar } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 interface HabitStatsProps {
-  totalCompletions: number;
-  averageStreak: string;
+  todaysCompletion: number;
   longestStreak: number;
   totalHabits: number;
 }
 
 export function HabitStats({
-  totalCompletions,
-  averageStreak,
+  todaysCompletion,
   longestStreak,
   totalHabits,
 }: HabitStatsProps) {
   const stats = [
     {
-      label: "Total Completions",
-      value: totalCompletions,
-      icon: Target,
-      color: "text-chart-1",
-      bgColor: "bg-chart-1/10",
-    },
-    {
-      label: "Average Streak",
-      value: `${averageStreak} ${+averageStreak > 1 ? "days" : "day"}`,
-      icon: TrendingUp,
-      color: "text-chart-2",
-      bgColor: "bg-chart-2/10",
+      label: "Today's Completion",
+      value: `${(todaysCompletion / totalHabits) * 100}%`,
+      icon: Flame,
+      color: "text-chart-3",
+      bgColor: "bg-chart-3/20",
     },
     {
       label: "Longest Streak",
       value: `${longestStreak} ${longestStreak > 1 ? "days" : "day"}`,
       icon: Flame,
-      color: "text-chart-3",
-      bgColor: "bg-chart-3/10",
+      color: "text-flame",
+      bgColor: "bg-flame/20",
     },
     {
       label: "Active Habits",
       value: totalHabits,
       icon: Calendar,
       color: "text-chart-4",
-      bgColor: "bg-chart-4/10",
+      bgColor: "bg-chart-4/20",
     },
   ];
 
   return (
-    <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="mb-8 grid gap-4 sm:grid-cols-3 lg:grid-cols-3">
       {stats.map((stat) => {
         const Icon = stat.icon;
         return (
