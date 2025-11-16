@@ -206,8 +206,6 @@ export async function completeHabit(req: Request, res: Response) {
 
     const isDuplicate = habit.completedDates.some((date) => {
       const prevDate = dayjs(date).format("DD-MM-YYYY");
-      console.log(prevDate);
-      console.log(newDate);
       return prevDate === newDate;
     });
 

@@ -1,4 +1,4 @@
-import { Flame, Calendar } from "lucide-react";
+import { Flame, Calendar, Check } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 interface HabitStatsProps {
@@ -16,9 +16,9 @@ export function HabitStats({
     {
       label: "Today's Completion",
       value: `${(todaysCompletion / totalHabits) * 100}%`,
-      icon: Flame,
-      color: "text-chart-3",
-      bgColor: "bg-chart-3/20",
+      icon: Check,
+      color: "text-green-500",
+      bgColor: "bg-green-500/20",
     },
     {
       label: "Longest Streak",

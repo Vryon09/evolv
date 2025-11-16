@@ -17,7 +17,11 @@ function HabitsSort({ sortBy, setSortBy }: HabitSortProps) {
     <div className="z-50 flex items-center gap-2">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm" className="gap-2 bg-transparent">
+          <Button
+            variant="outline"
+            size="sm"
+            className="cursor-pointer gap-2 bg-transparent"
+          >
             <Filter className="h-4 w-4" />
             Sort by:{" "}
             {sortBy === "streak"
