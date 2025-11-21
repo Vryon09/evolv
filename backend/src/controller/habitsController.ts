@@ -209,7 +209,7 @@ export async function completeHabit(req: Request, res: Response) {
       return prevDate === newDate;
     });
 
-    //If there is duplicate
+    //If there is duplicate || already completed
     if (isDuplicate) {
       const updatedCompletedDates = habit.completedDates.filter((date) => {
         const prevDate = dayjs(date).format("DD-MM-YYYY");
@@ -230,7 +230,7 @@ export async function completeHabit(req: Request, res: Response) {
       return;
     }
 
-    //If not duplicate
+    //If not duplicate || not completed
 
     const isCompletedYesterday =
       dayjs(habit.completedDates[habit.completedDates.length - 1])

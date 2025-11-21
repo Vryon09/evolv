@@ -41,21 +41,26 @@ export function HabitCard({
   const [isCalendarShow, setIsCalendarShow] = useState(false);
 
   const date = new Date();
-  const today = format(date, "yyyy-MM-dd'T'HH:mm:ssXXX").split("T")[0];
-  const isCompletedToday = habit.completedDates.some(
-    (date) => date.split("T")[0] === today,
-  );
+  const today = date.toISOString();
+  const isCompletedToday =
+    habit.frequency === "daily"
+      ? habit.completedDates.some(
+          (date) => date.split("T")[0] === today.split("T")[0],
+        )
+      : habit.frequency === "monthly"
+        ? habit.completedDates.some((date) => {
+            const arrDate = date.split("T")[0].split("-");
+            const arrToday = today.split("T")[0].split("-");
+            const isSameMonthAndYear =
+              arrDate[0] === arrToday[0] && arrDate[1] === arrToday[1];
+            return isSameMonthAndYear;
+          })
+        : habit.completedDates.some((date) => date.split("T")[0] === today);
+
+  //create a daily, weekly, monthly conditions in this controller
   const calendarDatesHighlight = habit.completedDates.map(
     (date) => new Date(date),
   );
-
-  // Calculate completion rate (last 30 days)
-  // const thirtyDaysAgo = new Date();
-  // thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-  // const recentCompletions = habit.completedDates.filter(
-  //   (date) => new Date(date) >= thirtyDaysAgo,
-  // ).length;
-  // const completionRate = Math.round((recentCompletions / 30) * 100);
 
   return (
     <Card className="group relative h-fit overflow-hidden transition-all hover:shadow-lg">
