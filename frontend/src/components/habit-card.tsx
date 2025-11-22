@@ -18,9 +18,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { IHabit } from "types/habit";
+import dayjs from "dayjs";
+import isoWeek from "dayjs/plugin/isoWeek";
 import { cn } from "@/lib/utils";
 import { Calendar } from "./ui/calendar";
 import { useState } from "react";
+
+dayjs.extend(isoWeek);
 
 interface HabitCardProps {
   habit: IHabit;
@@ -39,27 +43,21 @@ export function HabitCard({
 }: HabitCardProps) {
   const [isCalendarShow, setIsCalendarShow] = useState(false);
 
-  const date = new Date();
-  const today = date.toLocaleDateString("en-CA");
   const isCompletedToday =
     habit.frequency === "daily"
-      ? habit.completedDates.some(
-          (date) => new Date(date).toLocaleDateString("en-CA") === today,
-        )
+      ? habit.completedDates.some((date) => dayjs(date).isSame(dayjs(), "day"))
       : habit.frequency === "monthly"
-        ? habit.completedDates.some((date) => {
-            const arrDate = date.split("T")[0].split("-");
-            const arrToday = today.split("T")[0].split("-");
-            const isSameMonthAndYear =
-              arrDate[0] === arrToday[0] && arrDate[1] === arrToday[1];
-            return isSameMonthAndYear;
-          })
-        : habit.completedDates.some((date) => date.split("T")[0] === today); //weekly
+        ? habit.completedDates.some((date) =>
+            dayjs(date).isSame(dayjs(), "month"),
+          )
+        : habit.completedDates.some((date) =>
+            dayjs(date).isSame(dayjs(), "isoWeek"),
+          );
 
   //create a daily, weekly, monthly conditions in this controller
-  const calendarDatesHighlight = habit.completedDates.map((date) => {
-    return new Date(date);
-  });
+  const calendarDatesHighlight = habit.completedDates.map(
+    (date) => new Date(date),
+  );
 
   return (
     <Card className="group relative h-fit overflow-hidden transition-all hover:shadow-lg">
