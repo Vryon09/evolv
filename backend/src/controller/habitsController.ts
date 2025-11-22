@@ -202,17 +202,20 @@ export async function completeHabit(req: Request, res: Response) {
     }
 
     const now = dayjs(new Date()).toDate();
-    const newDate = dayjs(now).format("DD-MM-YYYY");
+    const newDate = now.toISOString().split("T")[0];
+    // const newDate = dayjs(now).format("DD-MM-YYYY");
+    // console.log(newDate);
+    // console.log(now.toISOString().split("T")[0]);
 
     const isDuplicate = habit.completedDates.some((date) => {
-      const prevDate = dayjs(date).format("DD-MM-YYYY");
+      const prevDate = dayjs(date).format("YYYY-MM-DD");
       return prevDate === newDate;
     });
 
     //If there is duplicate || already completed
     if (isDuplicate) {
       const updatedCompletedDates = habit.completedDates.filter((date) => {
-        const prevDate = dayjs(date).format("DD-MM-YYYY");
+        const prevDate = dayjs(date).format("YYYY-MM-DD");
         return prevDate !== newDate;
       });
 

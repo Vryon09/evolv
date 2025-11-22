@@ -19,7 +19,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { IHabit } from "types/habit";
 import { cn } from "@/lib/utils";
-import { format } from "date-fns";
 import { Calendar } from "./ui/calendar";
 import { useState } from "react";
 
@@ -41,11 +40,11 @@ export function HabitCard({
   const [isCalendarShow, setIsCalendarShow] = useState(false);
 
   const date = new Date();
-  const today = date.toISOString();
+  const today = date.toLocaleDateString("en-CA");
   const isCompletedToday =
     habit.frequency === "daily"
       ? habit.completedDates.some(
-          (date) => date.split("T")[0] === today.split("T")[0],
+          (date) => new Date(date).toLocaleDateString("en-CA") === today,
         )
       : habit.frequency === "monthly"
         ? habit.completedDates.some((date) => {
@@ -55,12 +54,12 @@ export function HabitCard({
               arrDate[0] === arrToday[0] && arrDate[1] === arrToday[1];
             return isSameMonthAndYear;
           })
-        : habit.completedDates.some((date) => date.split("T")[0] === today);
+        : habit.completedDates.some((date) => date.split("T")[0] === today); //weekly
 
   //create a daily, weekly, monthly conditions in this controller
-  const calendarDatesHighlight = habit.completedDates.map(
-    (date) => new Date(date),
-  );
+  const calendarDatesHighlight = habit.completedDates.map((date) => {
+    return new Date(date);
+  });
 
   return (
     <Card className="group relative h-fit overflow-hidden transition-all hover:shadow-lg">
