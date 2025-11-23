@@ -110,17 +110,16 @@ export function HabitCard({
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-
+        {/*create streak for weekly and monthly*/}
         {/* Streak */}
         <div className="mb-4 flex items-center gap-2">
           <div className="bg-flame/20 flex items-center gap-1.5 rounded-full px-3 py-1.5">
             <Flame className="text-flame h-4 w-4" />
             <span className="text-flame text-sm font-semibold">
-              {habit.streak} day streak
+              {`${habit.streak} ${habit.frequency === "daily" ? "day" : habit.frequency === "weekly" ? "week" : "month"} streak`}
             </span>
           </div>
         </div>
-
         {/* Progress */}
         {/* <div className="mb-4">
           <div className="mb-2 flex items-center justify-between text-sm">
@@ -131,7 +130,6 @@ export function HabitCard({
           </div>
           <Progress value={completionRate} className="h-2" />
         </div> */}
-
         {/* Actions */}
         <div className="flex gap-2">
           <Button
@@ -143,6 +141,9 @@ export function HabitCard({
                 : "border-accent border",
             )}
             variant={isCompletedToday ? "default" : "outline"}
+            disabled={
+              isCompletedToday && habit.frequency !== "daily" ? true : false
+            }
           >
             <Check
               className={cn(
@@ -161,7 +162,6 @@ export function HabitCard({
             {!isCalendarShow ? <ChevronDown /> : <ChevronUp />}
           </Button>
         </div>
-
         {isCalendarShow && (
           <div className="mt-4 rounded-2xl border-1">
             <Calendar

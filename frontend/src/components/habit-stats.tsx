@@ -15,7 +15,7 @@ export function HabitStats({
   const stats = [
     {
       label: "Today's Completion",
-      value: `${(todaysCompletion / totalHabits) * 100}%`,
+      value: `${((todaysCompletion / totalHabits) * 100).toFixed(1)}%`,
       icon: Check,
       color: "text-green-500",
       bgColor: "bg-green-500/20",
