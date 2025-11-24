@@ -41,6 +41,8 @@ export default function HabitsPage() {
         }, 0);
 
   const todaysCompletion = habits.reduce((acc, habit) => {
+    if (habit.completedDates.length === 0) return acc;
+
     const last = dayjs(
       Math.max(...habit.completedDates.map((date) => new Date(date).getTime())),
     );
@@ -64,21 +66,10 @@ export default function HabitsPage() {
 
     return acc;
   }, 0);
-  // const todaysCompletion = habits.reduce((acc, habit) => {
-  //   const isCompletedToday = habit.completedDates.some(
-  //     (date) => date.split("T")[0] === new Date().toISOString().split("T")[0],
-  //   );
 
-  //   if (isCompletedToday) {
-  //     return acc + 1;
-  //   }
-  //   return acc;
-  // }, 0);
-
-  const longestStreak =
-    habits.length === 0
-      ? 0
-      : [...habits].sort((a, b) => b.bestStreak - a.bestStreak)[0].bestStreak;
+  const longestStreak = [...habits].sort(
+    (a, b) => b.bestStreak - a.bestStreak,
+  )[0];
 
   return (
     <div className="bg-background overflow-scroll overflow-x-hidden">

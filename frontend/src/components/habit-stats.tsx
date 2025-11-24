@@ -1,9 +1,10 @@
 import { Flame, Calendar, Check } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import type { IHabit } from "types/habit";
 
 interface HabitStatsProps {
   todaysCompletion: number;
-  longestStreak: number;
+  longestStreak: IHabit;
   totalHabits: number;
 }
 
@@ -15,14 +16,14 @@ export function HabitStats({
   const stats = [
     {
       label: "Today's Completion",
-      value: `${((todaysCompletion / totalHabits) * 100).toFixed(1)}%`,
+      value: `${!todaysCompletion ? "0%" : `${((todaysCompletion / totalHabits) * 100).toFixed(0)}%`}`,
       icon: Check,
       color: "text-green-500",
       bgColor: "bg-green-500/20",
     },
     {
       label: "Longest Streak",
-      value: `${longestStreak} ${longestStreak > 1 ? "days" : "day"}`,
+      value: `${!longestStreak ? "0" : `${longestStreak.bestStreak} ${longestStreak.frequency === "daily" ? "day" : longestStreak.frequency === "weekly" ? "week" : "month"}${longestStreak.bestStreak > 1 ? "s" : ""}`}`,
       icon: Flame,
       color: "text-flame",
       bgColor: "bg-flame/20",
