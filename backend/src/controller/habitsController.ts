@@ -230,7 +230,7 @@ export async function completeHabit(req: Request, res: Response) {
           streakCalculator({
             dates: habit.completedDates,
             frequency: habit.frequency,
-            actionType: "mark",
+            actionType: "unmark",
           }) || 0;
 
         habit.bestStreak = bestStreakCalculator({

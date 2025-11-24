@@ -18,11 +18,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { IHabit } from "types/habit";
-import dayjs from "dayjs";
-import isoWeek from "dayjs/plugin/isoWeek";
 import { cn } from "@/lib/utils";
 import { Calendar } from "./ui/calendar";
 import { useState } from "react";
+import dayjs from "dayjs";
+import isoWeek from "dayjs/plugin/isoWeek";
 
 dayjs.extend(isoWeek);
 

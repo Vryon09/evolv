@@ -25,6 +25,7 @@ export function streakCalculator({
 
   if (frequency === "daily") {
     if (actionType === "unmark") {
+      console.log("unmark");
       if (!isCompletedYesterday) {
         return 0;
       }

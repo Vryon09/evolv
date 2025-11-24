@@ -14,6 +14,11 @@ import NoHabits from "./NoHabits";
 import HabitsInsight from "./HabitsInsight";
 import PomodoroTimer from "./PomodoroTimer";
 import { Card } from "@/components/ui/card";
+import dayjs from "dayjs";
+import isoWeek from "dayjs/plugin/isoWeek";
+
+dayjs.extend(isoWeek);
+
 export default function HabitsPage() {
   const [editingHabit, setEditingHabit] = useState<IHabit | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -36,15 +41,39 @@ export default function HabitsPage() {
         }, 0);
 
   const todaysCompletion = habits.reduce((acc, habit) => {
-    const isCompletedToday = habit.completedDates.some(
-      (date) => date.split("T")[0] === new Date().toISOString().split("T")[0],
+    const last = dayjs(
+      Math.max(...habit.completedDates.map((date) => new Date(date).getTime())),
     );
+    const isCompletedToday = last.isSame(dayjs(), "day");
+    const isCompletedThisWeek = last.isSame(dayjs(), "isoWeek");
+    const isCompletedThisMonth = last.isSame(dayjs(), "month");
 
-    if (isCompletedToday) {
-      return acc + 1;
+    switch (habit.frequency) {
+      case "daily":
+        if (isCompletedToday) acc++;
+        break;
+      case "weekly":
+        if (isCompletedThisWeek) acc++;
+        break;
+      case "monthly":
+        if (isCompletedThisMonth) acc++;
+        break;
+      default:
+        break;
     }
+
     return acc;
   }, 0);
+  // const todaysCompletion = habits.reduce((acc, habit) => {
+  //   const isCompletedToday = habit.completedDates.some(
+  //     (date) => date.split("T")[0] === new Date().toISOString().split("T")[0],
+  //   );
+
+  //   if (isCompletedToday) {
+  //     return acc + 1;
+  //   }
+  //   return acc;
+  // }, 0);
 
   const longestStreak =
     habits.length === 0
