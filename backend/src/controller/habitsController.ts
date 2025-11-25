@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
 import isoWeek from "dayjs/plugin/isoWeek.js";
 import timezone from "dayjs/plugin/timezone.js";
-import { bestStreakCalculator } from "../helper/BestStreakCalculator.ts";
+import { longestStreakCalculator } from "../helper/LongesrStreakCalculator.ts";
 import { streakCalculator } from "../helper/StreakCalculator.ts";
 
 dayjs.extend(utc);
@@ -233,12 +233,13 @@ export async function completeHabit(req: Request, res: Response) {
             actionType: "unmark",
           }) || 0;
 
-        habit.bestStreak = bestStreakCalculator({
+        habit.bestStreak = longestStreakCalculator({
           dates: habit.completedDates,
+          frequency: habit.frequency,
         });
       }
-      if (habit.frequency === "weekly") {
-      }
+      // if (habit.frequency === "weekly") {
+      // }
 
       const savedHabit = await habit.save();
       res.status(200).json(savedHabit);
@@ -268,7 +269,10 @@ export async function completeHabit(req: Request, res: Response) {
         actionType: "mark",
       }) || 0;
 
-    habit.bestStreak = bestStreakCalculator({ dates: habit.completedDates });
+    habit.bestStreak = longestStreakCalculator({
+      dates: habit.completedDates,
+      frequency: habit.frequency,
+    });
 
     const savedHabit = await habit.save();
 
