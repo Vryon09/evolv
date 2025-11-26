@@ -75,8 +75,6 @@ export default function HabitsPage() {
     <div className="bg-background overflow-scroll overflow-x-hidden">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Stats Overview */}
-        count longest streak of weekly and monthly differently from daily
-        frequency
         <HabitStats
           todaysCompletion={todaysCompletion}
           longestStreak={longestStreak}
