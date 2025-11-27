@@ -153,7 +153,7 @@ export function HabitDialog({ open, onOpenChange, habit }: HabitDialogProps) {
                   setFormData({ ...formData, frequency: value as Frequency })
                 }
               >
-                <SelectTrigger id="frequency">
+                <SelectTrigger id="frequency" className="cursor-pointer">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
