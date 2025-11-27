@@ -12,6 +12,7 @@ import {
 } from "./ui/sidebar";
 import { Link, useLocation, useNavigate } from "react-router";
 import { usePomodoroTimer } from "@/contexts/usePomodoroTimer";
+import { cn } from "@/lib/utils";
 
 const items = [
   {
@@ -71,11 +72,12 @@ function AppSidebar({ username }: { username: string }) {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
-                    className={
+                    className={cn(
+                      "hover:bg-muted cursor-pointer",
                       location.pathname.split("/")[2] === item.url
-                        ? `bg-muted hover:bg-muted`
-                        : `hover:bg-muted`
-                    }
+                        ? `bg-muted`
+                        : ``,
+                    )}
                   >
                     <a
                       onClick={() => {
