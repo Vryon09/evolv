@@ -1,4 +1,4 @@
-import { HabitCard } from "@/components/habit-card";
+import { HabitCard } from "@/components/modules/habit/HabitCard";
 import {
   useCompleteHabit,
   useDeleteHabit,

@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { IHabit } from "types/habit";
 import { cn } from "@/lib/utils";
-import { Calendar } from "./ui/calendar";
+import { Calendar } from "../../ui/calendar";
 import { useState } from "react";
 import dayjs from "dayjs";
 import isoWeek from "dayjs/plugin/isoWeek";
@@ -61,7 +61,7 @@ export function HabitCard({
 
   return (
     <Card className="group relative h-fit overflow-hidden transition-all hover:shadow-lg">
-      <div className="p-6">
+      <div className="px-6 py-4">
         {/* Header */}
         <div className="mb-4 flex items-start justify-between">
           <div className="flex-1">
