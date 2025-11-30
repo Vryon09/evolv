@@ -2,18 +2,47 @@ import { Card } from "@/components/ui/card";
 import { useState } from "react";
 import MoodChoice from "./MoodChoice";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const moods = [
-  { emoji: "😭", label: "miserable" },
-  { emoji: "😞", label: "bad" },
-  { emoji: "😕", label: "displeased" },
-  { emoji: "😐", label: "okay" },
-  { emoji: "😀", label: "good" },
-  { emoji: "😁", label: "happy" },
-  { emoji: "😆", label: "joyful" },
+  {
+    emoji: "😭",
+    label: "miserable",
+    description: "Feeling awful, very sad, stressed, hopeless",
+  },
+  {
+    emoji: "😞",
+    label: "bad",
+    description: "Feeling down, frustrated, annoyed",
+  },
+  {
+    emoji: "😕",
+    label: "displeased",
+    description: "Slightly off, a bit irritable or tired",
+  },
+  {
+    emoji: "😐",
+    label: "okay",
+    description: "Neither good nor bad, just normal",
+  },
+  {
+    emoji: "😀",
+    label: "good",
+    description: "Mildly happy, content, satisfied",
+  },
+  { emoji: "😁", label: "happy", description: "Cheerful, positive, motivated" },
+  {
+    emoji: "😆",
+    label: "joyful",
+    description: "Excited, joyful, energetic, very satisfied",
+  },
 ];
 
-type IMood = (typeof moods)[number]["label"];
+export interface IMood {
+  emoji: string;
+  label: string;
+  description: string;
+}
 
 function MoodForm() {
   const [selectedMood, setSelectedMood] = useState<IMood | undefined>(
@@ -22,25 +51,35 @@ function MoodForm() {
 
   return (
     <Card className="w-full p-4">
-      <p className="text-2xl font-semibold">What's your mood today?</p>
+      <p className="text-2xl font-semibold select-none">
+        What's your mood today?
+      </p>
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7">
         {moods.map((mood, i) => (
           <MoodChoice
-            emoji={mood.emoji}
-            label={mood.label}
+            mood={mood}
             selectedMood={selectedMood}
-            handleSelectMood={(label) => {
-              if (label === selectedMood) {
+            handleSelectMood={(selMood) => {
+              if (selMood.label === selectedMood?.label) {
                 setSelectedMood(undefined);
                 return;
               }
-              setSelectedMood(label);
+              setSelectedMood(selMood);
             }}
             key={i}
           />
         ))}
       </div>
-      <div className="flex justify-end">
+      <div
+        className={cn(
+          "flex",
+          !selectedMood ? "justify-end" : "justify-between",
+        )}
+      >
+        {" "}
+        {selectedMood && (
+          <p className="font-semibold">{selectedMood.description}</p>
+        )}
         <Button
           disabled={selectedMood === undefined}
           className="cursor-pointer px-8 py-4 text-lg"

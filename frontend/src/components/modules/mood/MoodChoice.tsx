@@ -1,28 +1,27 @@
 import { cn } from "@/lib/utils";
+import type { IMood } from "./MoodForm";
 
 function MoodChoice({
-  emoji,
-  label,
+  mood,
   selectedMood,
   handleSelectMood,
 }: {
-  emoji: string;
-  label: string;
-  selectedMood: string | undefined;
-  handleSelectMood: (label: string) => void;
+  mood: IMood;
+  selectedMood: IMood | undefined;
+  handleSelectMood: (selMood: IMood) => void;
 }) {
   return (
     <div
       className={cn(
         "flex cursor-pointer flex-col items-center gap-2 rounded-2xl py-2 font-semibold select-none",
-        selectedMood === label
+        selectedMood?.label === mood.label
           ? "bg-neutral-900 text-white hover:bg-neutral-800 active:bg-neutral-700"
           : "bg-neutral-200 text-black hover:bg-neutral-300 active:bg-neutral-900 active:text-white",
       )}
-      onClick={() => handleSelectMood(label)}
+      onClick={() => handleSelectMood(mood)}
     >
-      <span className="text-4xl">{emoji}</span>
-      <p className="capitalize">{label}</p>
+      <span className="text-4xl">{mood.emoji}</span>
+      <p className="capitalize">{mood.label}</p>
     </div>
   );
 }
