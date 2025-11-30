@@ -73,7 +73,7 @@ function AppSidebar({ username }: { username: string }) {
                   <SidebarMenuButton
                     asChild
                     className={cn(
-                      "hover:bg-muted cursor-pointer",
+                      "hover:bg-muted active:bg-accent cursor-pointer",
                       location.pathname.split("/")[2] === item.url
                         ? `bg-muted`
                         : ``,
@@ -101,7 +101,7 @@ function AppSidebar({ username }: { username: string }) {
                       }}
                     >
                       <item.icon />
-                      <span>{item.title}</span>
+                      <span className="select-none">{item.title}</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -112,11 +112,11 @@ function AppSidebar({ username }: { username: string }) {
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenuItem>
-          <SidebarMenuButton className="hover:bg-muted cursor-pointer">
-            {username}
+          <SidebarMenuButton className="hover:bg-muted active:bg-accent cursor-pointer">
+            <span className="select-none">{username}</span>
           </SidebarMenuButton>
           <SidebarMenuButton
-            className="hover:bg-muted cursor-pointer"
+            className="hover:bg-muted active:bg-accent cursor-pointer"
             onClick={handleLogout}
           >
             <LogOut />

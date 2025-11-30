@@ -22,7 +22,6 @@ import type { IHabit } from "types/habit";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Check, Plus, X } from "lucide-react";
@@ -177,7 +176,7 @@ export function HabitDialog({ open, onOpenChange, habit }: HabitDialogProps) {
                       key={i}
                       className="group bg-accent flex items-center justify-between gap-2 rounded-xl px-1.5 py-0.5 text-xs capitalize"
                     >
-                      <span>{tag}</span>
+                      <span className="cursor-default select-none">{tag}</span>
                       <button
                         onClick={(e) => {
                           e.preventDefault();
@@ -188,7 +187,7 @@ export function HabitDialog({ open, onOpenChange, habit }: HabitDialogProps) {
                             };
                           });
                         }}
-                        className="hover:bg-accent-foreground/20 hidden h-4 w-4 items-center justify-center rounded-full group-hover:flex"
+                        className="hover:bg-accent-foreground/20 hidden h-4 w-4 cursor-pointer items-center justify-center rounded-full group-hover:flex"
                       >
                         <X className="h-3 w-3" strokeWidth={3} />
                       </button>
@@ -206,7 +205,7 @@ export function HabitDialog({ open, onOpenChange, habit }: HabitDialogProps) {
                     <Plus /> <span className="text-sm">Add Tag</span>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="border">
+                <DropdownMenuContent align="start" className="border p-0">
                   {isCreatingTag ? (
                     <div className="p-2">
                       <div className="flex gap-2">
@@ -239,8 +238,11 @@ export function HabitDialog({ open, onOpenChange, habit }: HabitDialogProps) {
                   {tags.map((tag, i) => {
                     if (formData.tags.includes(tag.toLowerCase())) return;
                     return (
-                      <div key={i}>
-                        <DropdownMenuSeparator />
+                      <div
+                        key={i}
+                        className="flex cursor-pointer border-b-1 p-1"
+                      >
+                        {/* <DropdownMenuSeparator /> */}
                         <DropdownMenuItem
                           className="cursor-pointer"
                           onSelect={(e) => {

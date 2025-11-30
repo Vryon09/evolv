@@ -77,7 +77,7 @@ export function HabitCard({
                   habit.tags.map((tag, i) => (
                     <p
                       key={i}
-                      className="bg-muted text-muted-foreground rounded-full px-3 py-1.5 text-xs font-medium capitalize"
+                      className="bg-muted text-muted-foreground cursor-default rounded-full px-3 py-1.5 text-xs font-medium capitalize"
                     >
                       {tag}
                     </p>
@@ -116,9 +116,9 @@ export function HabitCard({
           {/*create streak for weekly and monthly*/}
           {/* Streak */}
           <div className="mb-4 flex items-center gap-2">
-            <div className="bg-flame/20 flex items-center gap-1.5 rounded-full px-3 py-1.5">
+            <div className="bg-flame/20 flex cursor-default items-center gap-1.5 rounded-full px-3 py-1.5">
               <Flame className="text-flame h-4 w-4" />
-              <span className="text-flame text-sm font-semibold">
+              <span className="text-flame text-sm font-semibold select-none">
                 {`${habit.streak} ${habit.frequency === "daily" ? "day" : habit.frequency === "weekly" ? "week" : "month"} streak`}
               </span>
             </div>
@@ -138,7 +138,7 @@ export function HabitCard({
             <Button
               onClick={() => onToggleComplete(habit._id)}
               className={cn(
-                "hover:bg-success/90 hover:text-primary-foreground flex-1 cursor-pointer gap-2 transition-all",
+                "no-select hover:bg-success/90 hover:text-primary-foreground flex-1 cursor-pointer gap-2 transition-all",
                 isCompletedToday
                   ? "text-primary-foreground bg-success"
                   : "border-accent border",
