@@ -41,7 +41,12 @@ function MoodForm() {
         ))}
       </div>
       <div className="flex justify-end">
-        <Button className="cursor-pointer px-8 py-4 text-lg">Submit</Button>
+        <Button
+          disabled={selectedMood === undefined}
+          className="cursor-pointer px-8 py-4 text-lg"
+        >
+          Submit
+        </Button>
       </div>
     </Card>
   );
