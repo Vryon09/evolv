@@ -23,7 +23,7 @@ function MoodForm() {
   return (
     <Card className="w-full p-4">
       <p className="text-2xl font-semibold">What's your mood today?</p>
-      <div className="grid grid-cols-7 gap-2">
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7">
         {moods.map((mood, i) => (
           <MoodChoice
             emoji={mood.emoji}
