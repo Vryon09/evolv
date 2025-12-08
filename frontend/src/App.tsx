@@ -10,6 +10,7 @@ import Habit from "./components/modules/habit/Habit";
 import Mood from "./components/modules/mood/Mood";
 import Knowledge from "./components/modules/knowledge/Knowledge";
 import Opportunity from "./components/modules/opportunity/Opportunity";
+import Finance from "./components/modules/finance/Finance";
 import { PomodoroTimerProvider } from "./contexts/PomodoroTimerContext";
 
 const queryClient = new QueryClient({
@@ -36,6 +37,7 @@ function App() {
             <Route path="/app/mood" element={<Mood />} />
             <Route path="/app/knowledge" element={<Knowledge />} />
             <Route path="/app/opportunity" element={<Opportunity />} />
+            <Route path="/app/finance" element={<Finance />} />
           </Route>
         </Routes>
       </QueryClientProvider>

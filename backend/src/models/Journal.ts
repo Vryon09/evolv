@@ -16,15 +16,22 @@ const journalSchema = new Schema(
     },
     content: {
       type: String,
-      required: true,
       trim: true,
       maxlength: 5000,
+      default: "",
     },
     tags: { type: String, default: [] },
     mood: {
       type: String,
-      enum: ["happy", "sad", "neutral", "angry", "excited"],
-      default: "neutral",
+      enum: [
+        "miserable",
+        "bad",
+        "displeased",
+        "okay",
+        "good",
+        "happy",
+        "joyful",
+      ],
     },
     isFavorite: {
       type: Boolean,
