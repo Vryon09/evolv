@@ -11,7 +11,6 @@ import { HabitStats } from "@/components/habit-stats";
 import HabitsSort from "./HabitsSort";
 import Habits from "./Habits";
 import NoHabits from "./NoHabits";
-import HabitsInsight from "./HabitsInsight";
 import PomodoroTimer from "./PomodoroTimer";
 import { Card } from "@/components/ui/card";
 import dayjs from "dayjs";
@@ -32,13 +31,6 @@ export default function HabitsPage() {
   });
 
   if (isHabitsLoading) return <p>Loading...</p>;
-
-  const totalCompletions =
-    habits.length === 0
-      ? 0
-      : habits.reduce((acc, curr) => {
-          return (acc += curr.completedDates.length);
-        }, 0);
 
   const todaysCompletion = habits.reduce((acc, habit) => {
     if (habit.completedDates.length === 0) return acc;
@@ -124,10 +116,6 @@ export default function HabitsPage() {
             </div>
           </Card>
         </div>
-        {/* Motivational Insight */}
-        {habits.length > 0 && (
-          <HabitsInsight totalCompletions={totalCompletions} />
-        )}
       </div>
 
       {/* Add/Edit Dialog */}
