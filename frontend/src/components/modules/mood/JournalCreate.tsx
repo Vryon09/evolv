@@ -5,6 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus } from "lucide-react";
@@ -14,7 +15,7 @@ function JournalCreate() {
   const [isCreating, setIsCreating] = useState(false);
 
   return (
-    <div className="mb-8">
+    <div className="md:col-start-2 lg:col-span-3">
       <div className="flex w-full justify-end">
         <Button
           className="cursor-pointer"
@@ -35,9 +36,10 @@ function JournalCreate() {
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="title">Title</Label>
-              <Textarea
+              <Input
                 id="title"
-                className="field-sizing-fixed resize-y text-xl"
+                className="field-sizing-fixed w-full text-base"
+                type="text"
               />
             </div>
 
@@ -45,7 +47,7 @@ function JournalCreate() {
               <Label htmlFor="content">Content</Label>
               <Textarea
                 title="content"
-                className="field-sizing-fixed resize-y"
+                className="field-sizing-fixed min-h-72 w-full resize-none text-sm"
               />
             </div>
             <Button className="w-full cursor-pointer">Submit</Button>

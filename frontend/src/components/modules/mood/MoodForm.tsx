@@ -1,8 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { useState } from "react";
 import MoodChoice from "./MoodChoice";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 const moods = [
   {
@@ -50,7 +48,7 @@ function MoodForm() {
   );
 
   return (
-    <Card className="w-full p-4">
+    <Card className="w-full p-4 md:col-span-2 lg:col-span-3">
       <p className="text-2xl font-semibold select-none">
         What's your mood today?
       </p>
@@ -70,22 +68,16 @@ function MoodForm() {
           />
         ))}
       </div>
-      <div
-        className={cn(
-          "flex",
-          !selectedMood ? "justify-end" : "justify-between",
-        )}
-      >
-        {" "}
-        {selectedMood && (
-          <p className="font-semibold">{selectedMood.description}</p>
-        )}
-        <Button
+      <div>
+        <p>
+          {selectedMood ? selectedMood.description : "Select your mood today."}
+        </p>
+        {/* <Button
           disabled={selectedMood === undefined}
           className="cursor-pointer px-8 py-4 text-lg"
         >
           Submit
-        </Button>
+        </Button> */}
       </div>
     </Card>
   );

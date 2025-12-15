@@ -1,0 +1,44 @@
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+
+const sleepQualityLevels = ["poor", "fair", "good", "great"];
+
+function SleepForm() {
+  return (
+    <Card className="p-4 md:col-span-2 lg:col-span-1">
+      <div>
+        <p className="mb-4 text-xl font-semibold">How long did you sleep?</p>
+        <div className="space-y-4">
+          <div className="flex flex-col gap-2">
+            <Label>What time did you sleep?</Label>
+            <Input type="time" />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Label>What time did you wake up?</Label>
+            <Input type="time" />
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <p className="mb-4 text-xl font-semibold">How is your sleep?</p>
+        <RadioGroup className="flex justify-between">
+          {sleepQualityLevels.map((level, i) => (
+            <div key={i} className="flex gap-2">
+              <RadioGroupItem
+                value={level}
+                className="cursor-pointer border-neutral-400"
+              />
+              <Label className="capitalize">{level}</Label>
+            </div>
+          ))}
+        </RadioGroup>
+      </div>
+    </Card>
+  );
+}
+
+export default SleepForm;
