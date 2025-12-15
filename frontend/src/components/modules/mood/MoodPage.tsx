@@ -1,6 +1,7 @@
 import JournalCreate from "./JournalCreate";
 import MoodForm from "./MoodForm";
 import SleepForm from "./SleepForm";
+import StressForm from "./StressForm";
 
 function MoodPage() {
   return (
@@ -9,6 +10,7 @@ function MoodPage() {
         <JournalCreate />
         <MoodForm />
         <SleepForm />
+        <StressForm />
       </div>
     </div>
   );

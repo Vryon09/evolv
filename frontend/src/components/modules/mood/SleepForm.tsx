@@ -7,9 +7,9 @@ const sleepQualityLevels = ["poor", "fair", "good", "great"];
 
 function SleepForm() {
   return (
-    <Card className="p-4 md:col-span-2 lg:col-span-1">
+    <Card className="p-4 md:col-span-2 lg:col-span-1 lg:flex">
       <div>
-        <p className="mb-4 text-xl font-semibold">How long did you sleep?</p>
+        <p className="mb-8 text-xl font-semibold">How long did you sleep?</p>
         <div className="space-y-4">
           <div className="flex flex-col gap-2">
             <Label>What time did you sleep?</Label>
@@ -24,7 +24,7 @@ function SleepForm() {
       </div>
 
       <div>
-        <p className="mb-4 text-xl font-semibold">How is your sleep?</p>
+        <p className="mb-8 text-xl font-semibold">How is your sleep?</p>
         <RadioGroup className="flex justify-between">
           {sleepQualityLevels.map((level, i) => (
             <div key={i} className="flex gap-2">
