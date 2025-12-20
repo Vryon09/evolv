@@ -23,6 +23,7 @@ import { Calendar } from "../../ui/calendar";
 import { useState } from "react";
 import dayjs from "dayjs";
 import isoWeek from "dayjs/plugin/isoWeek";
+import isCompletedToday from "@/helper/isCompletedToday";
 
 dayjs.extend(isoWeek);
 
@@ -43,16 +44,7 @@ export function HabitCard({
 }: HabitCardProps) {
   const [isCalendarShow, setIsCalendarShow] = useState(false);
 
-  const isCompletedToday =
-    habit.frequency === "daily"
-      ? habit.completedDates.some((date) => dayjs(date).isSame(dayjs(), "day"))
-      : habit.frequency === "monthly"
-        ? habit.completedDates.some((date) =>
-            dayjs(date).isSame(dayjs(), "month"),
-          )
-        : habit.completedDates.some((date) =>
-            dayjs(date).isSame(dayjs(), "isoWeek"),
-          );
+  const isComplete = isCompletedToday(habit);
 
   //create a daily, weekly, monthly conditions in this controller
   const calendarDatesHighlight = habit.completedDates.map(
@@ -123,38 +115,25 @@ export function HabitCard({
               </span>
             </div>
           </div>
-          {/* Progress */}
-          {/* <div className="mb-4">
-          <div className="mb-2 flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">30-day completion</span>
-            <span className="text-foreground font-semibold">
-              {completionRate}%
-            </span>
-          </div>
-          <Progress value={completionRate} className="h-2" />
-        </div> */}
           {/* Actions */}
           <div className="flex gap-2">
             <Button
               onClick={() => onToggleComplete(habit._id)}
               className={cn(
                 "no-select hover:bg-success/90 hover:text-primary-foreground flex-1 cursor-pointer gap-2 transition-all",
-                isCompletedToday
+                isComplete
                   ? "text-primary-foreground bg-success"
                   : "border-accent border",
               )}
-              variant={isCompletedToday ? "default" : "outline"}
+              variant={isComplete ? "default" : "outline"}
               disabled={
-                isCompletedToday && habit.frequency !== "daily" ? true : false
+                isComplete && habit.frequency !== "daily" ? true : false
               }
             >
               <Check
-                className={cn(
-                  "h-4 w-4",
-                  isCompletedToday && "animate-in zoom-in-50",
-                )}
+                className={cn("h-4 w-4", isComplete && "animate-in zoom-in-50")}
               />
-              {isCompletedToday ? "Completed Today" : "Mark as Done"}
+              {isComplete ? "Completed Today" : "Mark as Done"}
             </Button>
 
             <Button
