@@ -12,6 +12,7 @@ import Knowledge from "./components/modules/knowledge/Knowledge";
 import Opportunity from "./components/modules/opportunity/Opportunity";
 import Finance from "./components/modules/finance/Finance";
 import { PomodoroTimerProvider } from "./contexts/PomodoroTimerContext";
+import { MoodProvider } from "./contexts/MoodContext";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,25 +24,27 @@ const queryClient = new QueryClient({
 
 function App() {
   return (
-    <PomodoroTimerProvider>
-      <QueryClientProvider client={queryClient}>
-        <Routes>
-          <Route element={<AppLayout />}>
-            <Route index element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<SignUp />} />
-          </Route>
-          <Route path="/app" element={<OSLayout />}>
-            <Route path="/app/dashboard" element={<Dashboard />} />
-            <Route path="/app/habit" element={<Habit />} />
-            <Route path="/app/mood" element={<Mood />} />
-            <Route path="/app/knowledge" element={<Knowledge />} />
-            <Route path="/app/opportunity" element={<Opportunity />} />
-            <Route path="/app/finance" element={<Finance />} />
-          </Route>
-        </Routes>
-      </QueryClientProvider>
-    </PomodoroTimerProvider>
+    <MoodProvider>
+      <PomodoroTimerProvider>
+        <QueryClientProvider client={queryClient}>
+          <Routes>
+            <Route element={<AppLayout />}>
+              <Route index element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<SignUp />} />
+            </Route>
+            <Route path="/app" element={<OSLayout />}>
+              <Route path="/app/dashboard" element={<Dashboard />} />
+              <Route path="/app/habit" element={<Habit />} />
+              <Route path="/app/mood" element={<Mood />} />
+              <Route path="/app/knowledge" element={<Knowledge />} />
+              <Route path="/app/opportunity" element={<Opportunity />} />
+              <Route path="/app/finance" element={<Finance />} />
+            </Route>
+          </Routes>
+        </QueryClientProvider>
+      </PomodoroTimerProvider>
+    </MoodProvider>
   );
 }
 

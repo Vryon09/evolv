@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
-import { useState } from "react";
+// import { useState } from "react";
 import MoodChoice from "./MoodChoice";
+import { useMood } from "@/contexts/useMood";
 
 const moods = [
   {
@@ -36,17 +37,8 @@ const moods = [
   },
 ];
 
-export interface IMood {
-  emoji: string;
-  label: string;
-  description: string;
-}
-
 function MoodForm() {
-  const [selectedMood, setSelectedMood] = useState<IMood | undefined>(
-    undefined,
-  );
-
+  const { selectedMood, dispatch } = useMood();
   return (
     <Card className="w-full p-4 md:col-span-2 lg:col-span-3">
       <p className="text-2xl font-semibold select-none">
@@ -59,10 +51,10 @@ function MoodForm() {
             selectedMood={selectedMood}
             handleSelectMood={(selMood) => {
               if (selMood.label === selectedMood?.label) {
-                setSelectedMood(undefined);
+                dispatch({ type: "setSelectedMood", payload: undefined });
                 return;
               }
-              setSelectedMood(selMood);
+              dispatch({ type: "setSelectedMood", payload: selMood });
             }}
             key={i}
           />

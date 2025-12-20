@@ -11,12 +11,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 
-function JournalCreate() {
+function JournalButtons() {
   const [isCreating, setIsCreating] = useState(false);
 
   return (
     <div className="md:col-start-2 lg:col-span-3">
-      <div className="flex w-full justify-end">
+      <div className="flex w-full justify-end gap-2">
+        <Button className="cursor-pointer">My Journals</Button>
         <Button
           className="cursor-pointer"
           onClick={() => setIsCreating(!isCreating)}
@@ -58,4 +59,4 @@ function JournalCreate() {
   );
 }
 
-export default JournalCreate;
+export default JournalButtons;

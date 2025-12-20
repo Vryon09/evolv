@@ -21,18 +21,6 @@ const journalSchema = new Schema(
       default: "",
     },
     tags: { type: String, default: [] },
-    mood: {
-      type: String,
-      enum: [
-        "miserable",
-        "bad",
-        "displeased",
-        "okay",
-        "good",
-        "happy",
-        "joyful",
-      ],
-    },
     isFavorite: {
       type: Boolean,
       default: false,
