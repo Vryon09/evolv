@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export interface IMood {
+export interface MoodType {
   emoji: string;
   label: string;
   description: string;
@@ -11,9 +11,9 @@ function MoodChoice({
   selectedMood,
   handleSelectMood,
 }: {
-  mood: IMood;
-  selectedMood: IMood | undefined;
-  handleSelectMood: (selMood: IMood) => void;
+  mood: MoodType;
+  selectedMood: MoodType | undefined;
+  handleSelectMood: (selMood: MoodType) => void;
 }) {
   return (
     <div

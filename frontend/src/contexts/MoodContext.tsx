@@ -1,6 +1,6 @@
 import { createContext, useReducer } from "react";
 
-type Mood =
+export type Mood =
   | {
       label: string;
       emoji: string;
@@ -9,7 +9,7 @@ type Mood =
   | undefined;
 
 type MoodState = {
-  selectedMood: Mood;
+  mood: Mood;
   sleep: { bedTime: string; wakeTime: string; quality: string };
   stressLevel: number;
 };
@@ -31,7 +31,7 @@ type MoodContextType = MoodState & {
 const MoodContext = createContext({} as MoodContextType);
 
 const initialState: MoodState = {
-  selectedMood: undefined,
+  mood: undefined,
   sleep: { bedTime: "", wakeTime: "", quality: "poor" },
   stressLevel: 1,
 };
@@ -39,7 +39,7 @@ const initialState: MoodState = {
 function reducer(state: MoodState, action: MoodAction): MoodState {
   switch (action.type) {
     case "setSelectedMood":
-      return { ...state, selectedMood: action.payload };
+      return { ...state, mood: action.payload };
     case "setBedTime":
       return {
         ...state,

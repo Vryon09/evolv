@@ -65,6 +65,12 @@ const userSchema = new Schema(
         ref: "Habit",
       },
     ],
+    moods: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Mood",
+      },
+    ],
     journals: [
       {
         type: Schema.Types.ObjectId,

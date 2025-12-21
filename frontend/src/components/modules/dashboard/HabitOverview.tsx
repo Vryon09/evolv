@@ -33,6 +33,7 @@ function HabitOverview() {
           habits.map((habit) => {
             return (
               <div
+                key={habit._id}
                 className={cn(
                   "w-full border",
                   isCompletedToday(habit) ? "bg-green-500" : "bg-neutral-600",

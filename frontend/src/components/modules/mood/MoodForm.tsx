@@ -38,7 +38,7 @@ const moods = [
 ];
 
 function MoodForm() {
-  const { selectedMood, dispatch } = useMood();
+  const { mood: moodState, dispatch } = useMood();
   return (
     <Card className="w-full p-4 md:col-span-2 lg:col-span-3">
       <p className="text-2xl font-semibold select-none">
@@ -48,9 +48,9 @@ function MoodForm() {
         {moods.map((mood, i) => (
           <MoodChoice
             mood={mood}
-            selectedMood={selectedMood}
+            selectedMood={moodState}
             handleSelectMood={(selMood) => {
-              if (selMood.label === selectedMood?.label) {
+              if (selMood.label === moodState?.label) {
                 dispatch({ type: "setSelectedMood", payload: undefined });
                 return;
               }
@@ -61,9 +61,7 @@ function MoodForm() {
         ))}
       </div>
       <div>
-        <p>
-          {selectedMood ? selectedMood.description : "Select your mood today."}
-        </p>
+        <p>{moodState ? moodState.description : "Select your mood today."}</p>
         {/* <Button
           disabled={selectedMood === undefined}
           className="cursor-pointer px-8 py-4 text-lg"

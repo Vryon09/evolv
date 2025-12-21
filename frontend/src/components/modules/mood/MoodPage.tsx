@@ -6,12 +6,18 @@ import { handleGetHabits } from "@/services/apiHabits";
 import isCompletedToday from "@/helper/isCompletedToday";
 import type { IHabit } from "types/habit";
 import JournalButtons from "./JournalButtons";
+import { Button } from "@/components/ui/button";
+import { useAddMood } from "@/services/apiMoods";
+import { useMood } from "@/contexts/useMood";
 
 function MoodPage() {
   const { data: habits = [], isPending: isHabitsLoading } = useQuery<IHabit[]>({
     queryFn: () => handleGetHabits("default"),
     queryKey: ["habits", "default"],
   });
+
+  const { mood, sleep, stressLevel } = useMood();
+  const { mutate: handleAddMood } = useAddMood();
 
   return (
     <div className="bg-background overflow-scroll overflow-x-hidden">
@@ -37,6 +43,14 @@ function MoodPage() {
         <MoodForm />
         <SleepForm />
         <StressForm />
+        <Button
+          onClick={() => {
+            handleAddMood({ mood: mood?.label ?? "", sleep, stressLevel });
+          }}
+          className="col-span-3 cursor-pointer"
+        >
+          Submit
+        </Button>
       </div>
     </div>
   );

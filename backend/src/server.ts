@@ -4,6 +4,7 @@ import cors from "cors";
 import { connectDB } from "./config/db.ts";
 import authRoutes from "./routes/authRoutes.ts";
 import habitRoutes from "./routes/habitRoutes.ts";
+import moodRoutes from "./routes/moodRoutes.ts";
 import tagRoutes from "./routes/tagRoutes.ts";
 import pomodoroRoutes from "./routes/pomodoroRoutes.ts";
 
@@ -20,6 +21,7 @@ app.use((req, res, next) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/habits", habitRoutes);
+app.use("/api/moods", moodRoutes);
 app.use("/api/tags", tagRoutes);
 app.use("/api/pomodoro", pomodoroRoutes);
 
