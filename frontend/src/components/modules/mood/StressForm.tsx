@@ -1,9 +1,9 @@
 import { Card } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
-import { useState } from "react";
+import { useMood } from "@/contexts/useMood";
 
 function StressForm() {
-  const [stressLevel, setStressLevel] = useState(1);
+  const { stressLevel, dispatch } = useMood();
 
   return (
     <Card className="h-fit p-4">
@@ -15,7 +15,9 @@ function StressForm() {
               value={[stressLevel]}
               max={5}
               min={1}
-              onValueChange={(e) => setStressLevel(e[0])}
+              onValueChange={(value) =>
+                dispatch({ type: "setStressLevel", payload: value[0] })
+              }
             />
             <div className="flex justify-between">
               <p>Low</p>

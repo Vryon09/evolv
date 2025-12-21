@@ -1,5 +1,10 @@
 import { cn } from "@/lib/utils";
-import type { IMood } from "./MoodForm";
+
+export interface IMood {
+  emoji: string;
+  label: string;
+  description: string;
+}
 
 function MoodChoice({
   mood,
