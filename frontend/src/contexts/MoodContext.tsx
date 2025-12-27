@@ -17,7 +17,8 @@ type MoodAction =
   | { type: "setBedTime"; payload: string }
   | { type: "setWakeTime"; payload: string }
   | { type: "setSleepQuality"; payload: number }
-  | { type: "setStressLevel"; payload: number };
+  | { type: "setStressLevel"; payload: number }
+  | { type: "reset" };
 
 type MoodContextType = MoodState & {
   dispatch: React.Dispatch<MoodAction>;
@@ -55,6 +56,8 @@ function reducer(state: MoodState, action: MoodAction): MoodState {
         ...state,
         stressLevel: action.payload,
       };
+    case "reset":
+      return initialState;
     default:
       throw new Error("Unknown Type.");
   }

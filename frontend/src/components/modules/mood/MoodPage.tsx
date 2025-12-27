@@ -16,8 +16,15 @@ function MoodPage() {
     queryKey: ["habits", "default"],
   });
 
-  const { mood, sleep, stressLevel } = useMood();
+  const { mood, sleep, stressLevel, dispatch } = useMood();
   const { mutate: handleAddMood } = useAddMood();
+
+  function handleSubmit() {
+    handleAddMood(
+      { mood: mood ?? "", sleep, stressLevel },
+      { onSuccess: () => dispatch({ type: "reset" }) },
+    );
+  }
 
   return (
     <div className="bg-background overflow-scroll overflow-x-hidden">
@@ -43,12 +50,7 @@ function MoodPage() {
         <MoodForm />
         <SleepForm />
         <StressForm />
-        <Button
-          onClick={() => {
-            handleAddMood({ mood: mood ?? "", sleep, stressLevel });
-          }}
-          className="col-span-3 cursor-pointer"
-        >
+        <Button onClick={handleSubmit} className="col-span-3 cursor-pointer">
           Submit
         </Button>
       </div>
