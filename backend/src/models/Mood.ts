@@ -36,9 +36,10 @@ const moodSchema = new Schema(
         min: 0,
       },
       quality: {
-        type: String,
-        enum: ["poor", "fair", "good", "great"],
-        default: "poor",
+        type: Number,
+        min: 1,
+        max: 4,
+        required: true,
       },
     },
     isFavorite: {

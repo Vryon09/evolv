@@ -41,16 +41,16 @@ function SleepForm() {
       <div>
         <p className="mb-8 text-xl font-semibold">How is your sleep?</p>
         <RadioGroup
-          value={sleep.quality}
+          value={`${sleep.quality}`}
           onValueChange={(value) =>
-            dispatch({ type: "setSleepQuality", payload: value })
+            dispatch({ type: "setSleepQuality", payload: +value })
           }
           className="flex justify-between"
         >
           {sleepQualityLevels.map((level, i) => (
             <div key={i} className="flex gap-2">
               <RadioGroupItem
-                value={level}
+                value={`${i + 1}`}
                 className="cursor-pointer border-neutral-400"
               />
               <Label className="capitalize">{level}</Label>

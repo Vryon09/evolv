@@ -5,7 +5,7 @@ export type Mood = MoodKey | undefined;
 
 type MoodState = {
   mood: Mood;
-  sleep: { bedTime: string; wakeTime: string; quality: string };
+  sleep: { bedTime: string; wakeTime: string; quality: number };
   stressLevel: number;
 };
 
@@ -16,7 +16,7 @@ type MoodAction =
     }
   | { type: "setBedTime"; payload: string }
   | { type: "setWakeTime"; payload: string }
-  | { type: "setSleepQuality"; payload: string }
+  | { type: "setSleepQuality"; payload: number }
   | { type: "setStressLevel"; payload: number };
 
 type MoodContextType = MoodState & {
@@ -27,7 +27,7 @@ const MoodContext = createContext({} as MoodContextType);
 
 const initialState: MoodState = {
   mood: undefined,
-  sleep: { bedTime: "", wakeTime: "", quality: "poor" },
+  sleep: { bedTime: "", wakeTime: "", quality: 1 },
   stressLevel: 1,
 };
 

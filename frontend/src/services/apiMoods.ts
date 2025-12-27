@@ -25,7 +25,7 @@ async function handleAddMood({
   stressLevel,
 }: {
   mood: string;
-  sleep: { bedTime: string; wakeTime: string; quality: string };
+  sleep: { bedTime: string; wakeTime: string; quality: number };
   stressLevel: number;
 }) {
   const token = localStorage.getItem("evolv_token");
