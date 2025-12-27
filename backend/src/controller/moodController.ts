@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 import Mood from "../models/Mood.ts";
 import type { IMood } from "../models/Mood.ts";
 import User from "../models/User.ts";
-
+//update the mood schema make the mood also get the emoji and description of the mood
 export async function getMood(req: Request, res: Response) {
   try {
     const authUser = (req as any).user;

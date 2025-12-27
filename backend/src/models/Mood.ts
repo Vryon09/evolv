@@ -11,15 +11,15 @@ const moodSchema = new Schema(
     mood: {
       type: String,
       enum: [
-        "miserable",
-        "bad",
-        "displeased",
-        "okay",
-        "good",
-        "happy",
-        "joyful",
+        "MISERABLE",
+        "BAD",
+        "DISPLEASED",
+        "OKAY",
+        "GOOD",
+        "HAPPY",
+        "JOYFUL",
       ],
-      default: "miserable",
+      required: true,
     },
     stressLevel: { type: Number, min: 1, max: 5, default: 1 },
     sleep: {

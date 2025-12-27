@@ -1,3 +1,4 @@
+import { MOODS, type MoodKey } from "@/constants/moods";
 import { handleGetMoods } from "@/services/apiMoods";
 import { useQuery } from "@tanstack/react-query";
 import type { IMood } from "types/mood";
@@ -12,7 +13,12 @@ function MoodOverview() {
   return (
     <div>
       {moods.map((mood) => (
-        <div key={mood._id}>{mood.mood}</div>
+        <div key={mood._id}>
+          <p>{MOODS[mood.mood as MoodKey].label}</p>
+          <p>{MOODS[mood.mood as MoodKey].emoji}</p>
+          <p>{MOODS[mood.mood as MoodKey].description}</p>
+          <p>{mood.sleep.duration}hrs</p>
+        </div>
       ))}
     </div>
   );

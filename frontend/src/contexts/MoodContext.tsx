@@ -1,12 +1,7 @@
+import type { MoodKey } from "@/constants/moods";
 import { createContext, useReducer } from "react";
 
-export type Mood =
-  | {
-      label: string;
-      emoji: string;
-      description: string;
-    }
-  | undefined;
+export type Mood = MoodKey | undefined;
 
 type MoodState = {
   mood: Mood;

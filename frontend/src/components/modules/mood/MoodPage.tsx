@@ -45,7 +45,7 @@ function MoodPage() {
         <StressForm />
         <Button
           onClick={() => {
-            handleAddMood({ mood: mood?.label ?? "", sleep, stressLevel });
+            handleAddMood({ mood: mood ?? "", sleep, stressLevel });
           }}
           className="col-span-3 cursor-pointer"
         >

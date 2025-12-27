@@ -2,40 +2,43 @@ import { Card } from "@/components/ui/card";
 // import { useState } from "react";
 import MoodChoice from "./MoodChoice";
 import { useMood } from "@/contexts/useMood";
+import { MOODS, type MoodKey } from "@/constants/moods";
 
-const moods = [
-  {
-    emoji: "😭",
-    label: "miserable",
-    description: "Feeling awful, very sad, stressed, hopeless",
-  },
-  {
-    emoji: "😞",
-    label: "bad",
-    description: "Feeling down, frustrated, annoyed",
-  },
-  {
-    emoji: "😕",
-    label: "displeased",
-    description: "Slightly off, a bit irritable or tired",
-  },
-  {
-    emoji: "😐",
-    label: "okay",
-    description: "Neither good nor bad, just normal",
-  },
-  {
-    emoji: "😀",
-    label: "good",
-    description: "Mildly happy, content, satisfied",
-  },
-  { emoji: "😁", label: "happy", description: "Cheerful, positive, motivated" },
-  {
-    emoji: "😆",
-    label: "joyful",
-    description: "Excited, joyful, energetic, very satisfied",
-  },
-];
+// const moods = [
+//   {
+//     emoji: "😭",
+//     label: "miserable",
+//     description: "Feeling awful, very sad, stressed, hopeless",
+//   },
+//   {
+//     emoji: "😞",
+//     label: "bad",
+//     description: "Feeling down, frustrated, annoyed",
+//   },
+//   {
+//     emoji: "😕",
+//     label: "displeased",
+//     description: "Slightly off, a bit irritable or tired",
+//   },
+//   {
+//     emoji: "😐",
+//     label: "okay",
+//     description: "Neither good nor bad, just normal",
+//   },
+//   {
+//     emoji: "😀",
+//     label: "good",
+//     description: "Mildly happy, content, satisfied",
+//   },
+//   { emoji: "😁", label: "happy", description: "Cheerful, positive, motivated" },
+//   {
+//     emoji: "😆",
+//     label: "joyful",
+//     description: "Excited, joyful, energetic, very satisfied",
+//   },
+// ];
+
+// Object.entries(MOODS).map(([key, mood]) => console.log(key, mood));
 
 function MoodForm() {
   const { mood: moodState, dispatch } = useMood();
@@ -45,7 +48,22 @@ function MoodForm() {
         What's your mood today?
       </p>
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7">
-        {moods.map((mood, i) => (
+        {Object.entries(MOODS).map(([key, mood]) => (
+          <MoodChoice
+            key={key}
+            moodKey={key as MoodKey}
+            mood={mood}
+            selectedMood={moodState}
+            handleSelectMood={() => {
+              if (moodState === key) {
+                dispatch({ type: "setSelectedMood", payload: undefined });
+                return;
+              }
+              dispatch({ type: "setSelectedMood", payload: key as MoodKey });
+            }}
+          />
+        ))}
+        {/* {moods.map((mood, i) => (
           <MoodChoice
             mood={mood}
             selectedMood={moodState}
@@ -58,10 +76,12 @@ function MoodForm() {
             }}
             key={i}
           />
-        ))}
+        ))} */}
       </div>
       <div>
-        <p>{moodState ? moodState.description : "Select your mood today."}</p>
+        <p>
+          {moodState ? MOODS[moodState].description : "Select your mood today."}
+        </p>
         {/* <Button
           disabled={selectedMood === undefined}
           className="cursor-pointer px-8 py-4 text-lg"
