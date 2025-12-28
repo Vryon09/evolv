@@ -2,9 +2,8 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { SLEEPQUALITIES } from "@/constants/sleepQualities";
 import { useMood } from "@/contexts/useMood";
-
-const sleepQualityLevels = ["poor", "fair", "good", "great"];
 
 function SleepForm() {
   const { sleep, dispatch } = useMood();
@@ -47,13 +46,13 @@ function SleepForm() {
           }
           className="flex justify-between"
         >
-          {sleepQualityLevels.map((level, i) => (
-            <div key={i} className="flex gap-2">
+          {Object.entries(SLEEPQUALITIES).map(([key, level]) => (
+            <div key={key} className="flex gap-2">
               <RadioGroupItem
-                value={`${i + 1}`}
+                value={`${key}`}
                 className="cursor-pointer border-neutral-400"
               />
-              <Label className="capitalize">{level}</Label>
+              <Label className="capitalize">{level.label}</Label>
             </div>
           ))}
         </RadioGroup>
