@@ -7,6 +7,7 @@ type MoodState = {
   mood: Mood;
   sleep: { bedTime: string; wakeTime: string; quality: number };
   stressLevel: number;
+  physicalActivity: number;
 };
 
 type MoodAction =
@@ -18,6 +19,7 @@ type MoodAction =
   | { type: "setWakeTime"; payload: string }
   | { type: "setSleepQuality"; payload: number }
   | { type: "setStressLevel"; payload: number }
+  | { type: "setPhysicalActivity"; payload: number }
   | { type: "reset" };
 
 type MoodContextType = MoodState & {
@@ -30,6 +32,7 @@ const initialState: MoodState = {
   mood: undefined,
   sleep: { bedTime: "", wakeTime: "", quality: 1 },
   stressLevel: 1,
+  physicalActivity: 1,
 };
 
 function reducer(state: MoodState, action: MoodAction): MoodState {
@@ -55,6 +58,11 @@ function reducer(state: MoodState, action: MoodAction): MoodState {
       return {
         ...state,
         stressLevel: action.payload,
+      };
+    case "setPhysicalActivity":
+      return {
+        ...state,
+        physicalActivity: action.payload,
       };
     case "reset":
       return initialState;

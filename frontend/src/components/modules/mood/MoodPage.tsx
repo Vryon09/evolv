@@ -9,6 +9,8 @@ import JournalButtons from "./JournalButtons";
 import { Button } from "@/components/ui/button";
 import { useAddMood } from "@/services/apiMoods";
 import { useMood } from "@/contexts/useMood";
+import PhysicalActivityForm from "./PhysicalActivityForm";
+import PerHabitImpactForm from "./PerHabitImpactForm";
 
 function MoodPage() {
   const { data: habits = [], isPending: isHabitsLoading } = useQuery<IHabit[]>({
@@ -16,12 +18,12 @@ function MoodPage() {
     queryKey: ["habits", "default"],
   });
 
-  const { mood, sleep, stressLevel, dispatch } = useMood();
+  const { mood, sleep, stressLevel, physicalActivity, dispatch } = useMood();
   const { mutate: handleAddMood } = useAddMood();
 
   function handleSubmit() {
     handleAddMood(
-      { mood: mood ?? "", sleep, stressLevel },
+      { mood: mood ?? "", sleep, stressLevel, physicalActivity },
       { onSuccess: () => dispatch({ type: "reset" }) },
     );
   }
@@ -49,7 +51,11 @@ function MoodPage() {
         <JournalButtons />
         <MoodForm />
         <SleepForm />
-        <StressForm />
+        <div>
+          <StressForm />
+          <PhysicalActivityForm />
+        </div>
+        <PerHabitImpactForm habits={habits} isHabitsLoading={isHabitsLoading} />
         <Button onClick={handleSubmit} className="col-span-3 cursor-pointer">
           Submit
         </Button>

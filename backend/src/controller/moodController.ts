@@ -32,7 +32,7 @@ export async function getMood(req: Request, res: Response) {
 
 export async function addMood(req: Request, res: Response) {
   try {
-    const { mood, sleep, stressLevel } = req.body;
+    const { mood, sleep, stressLevel, physicalActivity } = req.body;
     const authUser = (req as any).user;
 
     const newMood = new Mood({
@@ -40,6 +40,7 @@ export async function addMood(req: Request, res: Response) {
       mood,
       sleep,
       stressLevel,
+      physicalActivity,
     });
 
     const savedMood = await newMood.save();

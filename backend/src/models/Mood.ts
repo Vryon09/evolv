@@ -21,7 +21,8 @@ const moodSchema = new Schema(
       ],
       required: true,
     },
-    stressLevel: { type: Number, min: 1, max: 5, default: 1 },
+    stressLevel: { type: Number, min: 1, max: 5, required: true },
+    physicalActivity: { type: Number, min: 1, max: 4, required: true },
     sleep: {
       bedTime: {
         type: Date,
