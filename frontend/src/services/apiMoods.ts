@@ -1,3 +1,4 @@
+import { useMood } from "@/contexts/useMood";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -42,13 +43,19 @@ async function handleAddMood({
     console.log(res.data);
   } catch (error) {
     console.log(error);
+    throw error;
   }
 }
 
 export function useAddMood() {
   const queryClient = useQueryClient();
+  const { dispatch } = useMood();
+
   return useMutation({
     mutationFn: handleAddMood,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["moods"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["moods"] });
+      dispatch({ type: "reset" });
+    },
   });
 }

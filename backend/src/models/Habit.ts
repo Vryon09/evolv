@@ -31,6 +31,9 @@ const habitSchema = new Schema(
       type: Number,
       default: 0,
     },
+    bestStreakAchievedAt: {
+      type: Date,
+    },
     startDate: {
       type: Date,
       default: Date.now,

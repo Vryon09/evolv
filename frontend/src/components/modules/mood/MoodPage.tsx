@@ -18,14 +18,14 @@ function MoodPage() {
     queryKey: ["habits", "default"],
   });
 
-  const { mood, sleep, stressLevel, physicalActivity, dispatch } = useMood();
+  const { mood, sleep, stressLevel, physicalActivity } = useMood();
   const { mutate: handleAddMood } = useAddMood();
 
   function handleSubmit() {
-    handleAddMood(
-      { mood: mood ?? "", sleep, stressLevel, physicalActivity },
-      { onSuccess: () => dispatch({ type: "reset" }) },
-    );
+    // change sliders, radio inputs to better input types
+    if (mood === "" || sleep.bedTime === "" || sleep.wakeTime === "") return;
+
+    handleAddMood({ mood: mood, sleep, stressLevel, physicalActivity });
   }
 
   return (
