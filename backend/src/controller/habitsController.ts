@@ -8,6 +8,7 @@ import isoWeek from "dayjs/plugin/isoWeek.js";
 import timezone from "dayjs/plugin/timezone.js";
 import { longestStreakCalculator } from "../helper/LongesrStreakCalculator.ts";
 import { streakCalculator } from "../helper/StreakCalculator.ts";
+import { recalcBestStreakDate } from "../helper/RecalcBestHistory.ts";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -184,14 +185,75 @@ export async function completeHabit(req: Request, res: Response) {
 
         habit.completedDates = updatedCompletedDates;
 
+        if (
+          habit.streak === habit.bestStreak &&
+          habit.completedDates.length > 0 &&
+          dayjs(habit.bestStreakAchievedAt).isSame(dayjs(), frequency)
+        ) {
+          habit.bestStreakAchievedAt = recalcBestStreakDate({
+            dates: habit.completedDates,
+            frequency: habit.frequency,
+          });
+
+          habit.bestStreak--;
+        }
+
         habit.streak--;
 
         if (dayjs(habit.bestStreakAchievedAt).isSame(dayjs(), frequency))
           habit.bestStreak--;
-      }
+      } else if (habit.frequency === "weekly") {
+        const updatedCompletedWeekly = habit.completedDates.filter(
+          (date) => !dayjs(date).isSame(dayjs(), "isoWeek")
+        );
 
-      if (habit.completedDates.length === 0) {
-        habit.bestStreakAchievedAt = null;
+        habit.completedDates = updatedCompletedWeekly;
+
+        if (
+          habit.streak === habit.bestStreak &&
+          habit.completedDates.length > 0 &&
+          dayjs(habit.bestStreakAchievedAt).isSame(dayjs(), frequency)
+        ) {
+          habit.bestStreakAchievedAt = recalcBestStreakDate({
+            dates: habit.completedDates,
+            frequency: habit.frequency,
+          });
+
+          habit.bestStreak--;
+        }
+
+        habit.streak--;
+
+        if (dayjs(habit.bestStreakAchievedAt).isSame(dayjs(), frequency))
+          habit.bestStreak--;
+      } else if (habit.frequency === "monthly") {
+        const updatedCompletedMonthly = habit.completedDates.filter(
+          (date) => !dayjs(date).isSame(dayjs(), "month")
+        );
+
+        habit.completedDates = updatedCompletedMonthly;
+
+        if (
+          habit.streak === habit.bestStreak &&
+          habit.completedDates.length > 0 &&
+          dayjs(habit.bestStreakAchievedAt).isSame(dayjs(), frequency)
+        ) {
+          habit.bestStreakAchievedAt = recalcBestStreakDate({
+            dates: habit.completedDates,
+            frequency: habit.frequency,
+          });
+
+          habit.bestStreak--;
+        }
+
+        habit.streak--;
+
+        if (dayjs(habit.bestStreakAchievedAt).isSame(dayjs(), frequency))
+          habit.bestStreak--;
+
+        if (habit.completedDates.length === 0) {
+          habit.bestStreakAchievedAt = null;
+        }
       }
 
       const savedHabit = await habit.save();

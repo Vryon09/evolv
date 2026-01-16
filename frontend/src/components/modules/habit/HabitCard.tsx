@@ -126,9 +126,9 @@ export function HabitCard({
                   : "border-accent border",
               )}
               variant={isComplete ? "default" : "outline"}
-              disabled={
-                isComplete && habit.frequency !== "daily" ? true : false
-              }
+              // disabled={
+              //   isComplete && habit.frequency !== "daily" ? true : false
+              // }
             >
               <Check
                 className={cn("h-4 w-4", isComplete && "animate-in zoom-in-50")}
