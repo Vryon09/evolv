@@ -175,7 +175,7 @@ export async function completeHabit(req: Request, res: Response) {
         ? "isoWeek"
         : "month";
 
-    //If there is duplicate || already completed
+    //If there is duplicate || already completed ||unmark
     if (isDuplicate) {
       if (habit.frequency === "daily") {
         const updatedCompletedDates = habit.completedDates.filter((date) => {
@@ -199,10 +199,9 @@ export async function completeHabit(req: Request, res: Response) {
         }
 
         habit.streak--;
+      }
 
-        if (dayjs(habit.bestStreakAchievedAt).isSame(dayjs(), frequency))
-          habit.bestStreak--;
-      } else if (habit.frequency === "weekly") {
+      if (habit.frequency === "weekly") {
         const updatedCompletedWeekly = habit.completedDates.filter(
           (date) => !dayjs(date).isSame(dayjs(), "isoWeek")
         );
@@ -223,10 +222,9 @@ export async function completeHabit(req: Request, res: Response) {
         }
 
         habit.streak--;
+      }
 
-        if (dayjs(habit.bestStreakAchievedAt).isSame(dayjs(), frequency))
-          habit.bestStreak--;
-      } else if (habit.frequency === "monthly") {
+      if (habit.frequency === "monthly") {
         const updatedCompletedMonthly = habit.completedDates.filter(
           (date) => !dayjs(date).isSame(dayjs(), "month")
         );
@@ -248,9 +246,6 @@ export async function completeHabit(req: Request, res: Response) {
 
         habit.streak--;
 
-        if (dayjs(habit.bestStreakAchievedAt).isSame(dayjs(), frequency))
-          habit.bestStreak--;
-
         if (habit.completedDates.length === 0) {
           habit.bestStreakAchievedAt = null;
         }
@@ -261,32 +256,45 @@ export async function completeHabit(req: Request, res: Response) {
       return;
     }
 
-    //If not duplicate || not completed
+    //If not duplicate || not completed || mark
     if (habit.completedDates.length === 0) {
       habit.streak++;
     }
 
-    if (
-      habit.frequency === "daily" &&
-      dayjs(habit.completedDates[habit.completedDates.length - 1])
-        .add(1, "day")
-        .isSame(now, "day")
-    ) {
-      habit.streak++;
-    } else if (
-      habit.frequency === "weekly" &&
-      dayjs(habit.completedDates[habit.completedDates.length - 1])
-        .add(1, "week")
-        .isSame(now, "isoWeek")
-    ) {
-      habit.streak++;
-    } else if (
-      habit.frequency === "monthly" &&
-      dayjs(habit.completedDates[habit.completedDates.length - 1])
-        .add(1, "month")
-        .isSame(now, "month")
-    ) {
-      habit.streak++;
+    if (habit.frequency === "daily") {
+      if (
+        dayjs(habit.completedDates[habit.completedDates.length - 1])
+          .add(1, "day")
+          .isSame(now, "day")
+      ) {
+        habit.streak++;
+      } else {
+        habit.streak = 1;
+      }
+    }
+
+    if (habit.frequency === "weekly") {
+      if (
+        dayjs(habit.completedDates[habit.completedDates.length - 1])
+          .add(1, "week")
+          .isSame(now, "isoWeek")
+      ) {
+        habit.streak++;
+      } else {
+        habit.streak = 1;
+      }
+    }
+
+    if (habit.frequency === "monthly") {
+      if (
+        dayjs(habit.completedDates[habit.completedDates.length - 1])
+          .add(1, "month")
+          .isSame(now, "month")
+      ) {
+        habit.streak++;
+      } else {
+        habit.streak = 1;
+      }
     }
 
     habit.completedDates.push(now);
