@@ -3,6 +3,7 @@ import isoWeek from "dayjs/plugin/isoWeek.js";
 
 dayjs.extend(isoWeek);
 
+//NOT USED
 //when i incomplete a habit, it will check if yesterday is completed
 //if not, return 0
 //if completed, calculate the streak

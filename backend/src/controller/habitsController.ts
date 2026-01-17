@@ -6,9 +6,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
 import isoWeek from "dayjs/plugin/isoWeek.js";
 import timezone from "dayjs/plugin/timezone.js";
-import { longestStreakCalculator } from "../helper/LongesrStreakCalculator.ts";
-import { streakCalculator } from "../helper/StreakCalculator.ts";
-import { recalcBestStreakDate } from "../helper/RecalcBestHistory.ts";
+import { recalcBestStreakDate } from "../helper/RecalcBestStreakDate.ts";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -126,7 +124,7 @@ export async function deleteHabit(req: Request, res: Response) {
     }
 
     const updatedUserHabit = authUser.habits.filter(
-      (habit: string) => habit.toString() !== id
+      (habit: string) => habit.toString() !== id,
     );
 
     const habitUser = await User.findById(authUser._id);
@@ -157,98 +155,53 @@ export async function completeHabit(req: Request, res: Response) {
       return;
     }
 
-    const now = dayjs(new Date()).toDate();
-    const newDate = now.toISOString().split("T")[0];
-
     const isDuplicate = habit.completedDates.some((date) =>
       habit.frequency === "daily"
         ? dayjs(date).isSame(dayjs(), "day")
         : habit.frequency === "weekly"
-        ? dayjs(date).isSame(dayjs(), "isoWeek")
-        : dayjs(date).isSame(dayjs(), "month")
+          ? dayjs(date).isSame(dayjs(), "isoWeek")
+          : dayjs(date).isSame(dayjs(), "month"),
     );
 
-    const frequency =
+    const timeUnit =
       habit.frequency === "daily"
         ? "day"
         : habit.frequency === "weekly"
-        ? "isoWeek"
-        : "month";
+          ? "week"
+          : "month";
 
-    //If there is duplicate || already completed ||unmark
+    const frequencyUnit =
+      habit.frequency === "daily"
+        ? "day"
+        : habit.frequency === "weekly"
+          ? "isoWeek"
+          : "month";
+
+    //If there is duplicate || already completed || unmark
     if (isDuplicate) {
-      if (habit.frequency === "daily") {
-        const updatedCompletedDates = habit.completedDates.filter((date) => {
-          const prevDate = dayjs(date).format("YYYY-MM-DD");
-          return prevDate !== newDate;
+      const updatedCompletedDates = habit.completedDates.filter(
+        (date) => !dayjs(date).isSame(dayjs(), frequencyUnit),
+      );
+
+      habit.completedDates = updatedCompletedDates;
+
+      if (
+        habit.streak === habit.bestStreak &&
+        habit.completedDates.length > 0 &&
+        dayjs(habit.bestStreakAchievedAt).isSame(dayjs(), frequencyUnit)
+      ) {
+        habit.bestStreakAchievedAt = recalcBestStreakDate({
+          dates: habit.completedDates,
+          frequency: habit.frequency,
         });
 
-        habit.completedDates = updatedCompletedDates;
-
-        if (
-          habit.streak === habit.bestStreak &&
-          habit.completedDates.length > 0 &&
-          dayjs(habit.bestStreakAchievedAt).isSame(dayjs(), frequency)
-        ) {
-          habit.bestStreakAchievedAt = recalcBestStreakDate({
-            dates: habit.completedDates,
-            frequency: habit.frequency,
-          });
-
-          habit.bestStreak--;
-        }
-
-        habit.streak--;
+        habit.bestStreak--;
       }
 
-      if (habit.frequency === "weekly") {
-        const updatedCompletedWeekly = habit.completedDates.filter(
-          (date) => !dayjs(date).isSame(dayjs(), "isoWeek")
-        );
+      habit.streak--;
 
-        habit.completedDates = updatedCompletedWeekly;
-
-        if (
-          habit.streak === habit.bestStreak &&
-          habit.completedDates.length > 0 &&
-          dayjs(habit.bestStreakAchievedAt).isSame(dayjs(), frequency)
-        ) {
-          habit.bestStreakAchievedAt = recalcBestStreakDate({
-            dates: habit.completedDates,
-            frequency: habit.frequency,
-          });
-
-          habit.bestStreak--;
-        }
-
-        habit.streak--;
-      }
-
-      if (habit.frequency === "monthly") {
-        const updatedCompletedMonthly = habit.completedDates.filter(
-          (date) => !dayjs(date).isSame(dayjs(), "month")
-        );
-
-        habit.completedDates = updatedCompletedMonthly;
-
-        if (
-          habit.streak === habit.bestStreak &&
-          habit.completedDates.length > 0 &&
-          dayjs(habit.bestStreakAchievedAt).isSame(dayjs(), frequency)
-        ) {
-          habit.bestStreakAchievedAt = recalcBestStreakDate({
-            dates: habit.completedDates,
-            frequency: habit.frequency,
-          });
-
-          habit.bestStreak--;
-        }
-
-        habit.streak--;
-
-        if (habit.completedDates.length === 0) {
-          habit.bestStreakAchievedAt = null;
-        }
+      if (habit.completedDates.length === 0) {
+        habit.bestStreakAchievedAt = null;
       }
 
       const savedHabit = await habit.save();
@@ -261,43 +214,17 @@ export async function completeHabit(req: Request, res: Response) {
       habit.streak++;
     }
 
-    if (habit.frequency === "daily") {
-      if (
-        dayjs(habit.completedDates[habit.completedDates.length - 1])
-          .add(1, "day")
-          .isSame(now, "day")
-      ) {
-        habit.streak++;
-      } else {
-        habit.streak = 1;
-      }
+    if (
+      dayjs(habit.completedDates[habit.completedDates.length - 1])
+        .add(1, timeUnit)
+        .isSame(dayjs(), frequencyUnit)
+    ) {
+      habit.streak++;
+    } else {
+      habit.streak = 1;
     }
 
-    if (habit.frequency === "weekly") {
-      if (
-        dayjs(habit.completedDates[habit.completedDates.length - 1])
-          .add(1, "week")
-          .isSame(now, "isoWeek")
-      ) {
-        habit.streak++;
-      } else {
-        habit.streak = 1;
-      }
-    }
-
-    if (habit.frequency === "monthly") {
-      if (
-        dayjs(habit.completedDates[habit.completedDates.length - 1])
-          .add(1, "month")
-          .isSame(now, "month")
-      ) {
-        habit.streak++;
-      } else {
-        habit.streak = 1;
-      }
-    }
-
-    habit.completedDates.push(now);
+    habit.completedDates.push(dayjs().toDate());
 
     if (habit.bestStreak < habit.streak) {
       habit.bestStreak = habit.streak;
@@ -479,3 +406,28 @@ export async function completeHabit(req: Request, res: Response) {
 //     res.status(500).json({ message: "Internal Server Error!" });
 //   }
 // }
+
+// const updatedCompletedDates = habit.completedDates.filter(
+//           (date) => !dayjs(date).isSame(dayjs(), "day"),
+//         );
+
+//         habit.completedDates = updatedCompletedDates;
+
+//         if (
+//           habit.streak === habit.bestStreak &&
+//           habit.completedDates.length > 0 &&
+//           dayjs(habit.bestStreakAchievedAt).isSame(dayjs(), frequency)
+//         ) {
+//           habit.bestStreakAchievedAt = recalcBestStreakDate({
+//             dates: habit.completedDates,
+//             frequency: habit.frequency,
+//           });
+
+//           habit.bestStreak--;
+//         }
+
+//         habit.streak--;
+
+//         if (habit.completedDates.length === 0) {
+//           habit.bestStreakAchievedAt = null;
+//         }

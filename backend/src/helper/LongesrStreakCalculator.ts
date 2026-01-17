@@ -3,6 +3,7 @@ import isoWeek from "dayjs/plugin/isoWeek.js";
 
 dayjs.extend(isoWeek);
 
+//NOT USED
 export function longestStreakCalculator({
   dates,
   frequency,
