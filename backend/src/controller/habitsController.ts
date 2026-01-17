@@ -155,6 +155,10 @@ export async function completeHabit(req: Request, res: Response) {
       return;
     }
 
+    const sortedDates = [...habit.completedDates].sort(
+      (a, b) => new Date(a).getTime() - new Date(b).getTime(),
+    );
+
     const isDuplicate = habit.completedDates.some((date) =>
       habit.frequency === "daily"
         ? dayjs(date).isSame(dayjs(), "day")
@@ -179,7 +183,7 @@ export async function completeHabit(req: Request, res: Response) {
 
     //If there is duplicate || already completed || unmark
     if (isDuplicate) {
-      const updatedCompletedDates = habit.completedDates.filter(
+      const updatedCompletedDates = sortedDates.filter(
         (date) => !dayjs(date).isSame(dayjs(), frequencyUnit),
       );
 
@@ -191,7 +195,7 @@ export async function completeHabit(req: Request, res: Response) {
         dayjs(habit.bestStreakAchievedAt).isSame(dayjs(), frequencyUnit)
       ) {
         habit.bestStreakAchievedAt = recalcBestStreakDate({
-          dates: habit.completedDates,
+          dates: updatedCompletedDates,
           frequency: habit.frequency,
         });
 
@@ -215,7 +219,7 @@ export async function completeHabit(req: Request, res: Response) {
     }
 
     if (
-      dayjs(habit.completedDates[habit.completedDates.length - 1])
+      dayjs(sortedDates[habit.completedDates.length - 1])
         .add(1, timeUnit)
         .isSame(dayjs(), frequencyUnit)
     ) {
@@ -239,195 +243,3 @@ export async function completeHabit(req: Request, res: Response) {
     res.status(500).json({ message: "Internal Server Error!" });
   }
 }
-
-// export async function completeHabit(req: Request, res: Response) {
-//   try {
-//     const { id } = req.params;
-//     const habit = await Habit.findById(id);
-
-//     if (!habit) {
-//       res.status(401).json({ message: "Habit not found" });
-//       return;
-//     }
-
-//     const now = dayjs(new Date()).toDate();
-//     const newDate = now.toISOString().split("T")[0];
-
-//     const isDuplicate = habit.completedDates.some((date) =>
-//       habit.frequency === "daily"
-//         ? dayjs(date).isSame(dayjs(), "day")
-//         : habit.frequency === "weekly"
-//         ? dayjs(date).isSame(dayjs(), "isoWeek")
-//         : dayjs(date).isSame(dayjs(), "month")
-//     );
-
-//     //If there is duplicate || already completed
-//     //add all frequency logics
-//     if (isDuplicate) {
-//       if (habit.frequency === "daily") {
-//         const updatedCompletedDates = habit.completedDates.filter((date) => {
-//           const prevDate = dayjs(date).format("YYYY-MM-DD");
-//           return prevDate !== newDate;
-//         });
-
-//         habit.completedDates = updatedCompletedDates;
-
-//         habit.streak =
-//           streakCalculator({
-//             dates: habit.completedDates,
-//             frequency: habit.frequency,
-//             actionType: "unmark",
-//           }) || 0;
-
-//         habit.bestStreak = longestStreakCalculator({
-//           dates: habit.completedDates,
-//           frequency: habit.frequency,
-//         });
-//       }
-//       // if (habit.frequency === "weekly") {
-//       // }
-
-//       const savedHabit = await habit.save();
-//       res.status(200).json(savedHabit);
-//       return;
-//     }
-
-//     //If not duplicate || not completed
-//     // const isCompletedYesterday =
-//     //   dayjs(habit.completedDates[habit.completedDates.length - 1])
-//     //     .add(1, "day")
-//     //     .format("DD-MM-YYYY") === newDate;
-
-//     // if (habit.completedDates.length === 0 || isCompletedYesterday) {
-//     // if (!isCompletedYesterday) {
-//     //   habit.streak = 1;
-//     // } else {
-//     //   habit.streak++;
-//     // }
-//     // }
-
-//     habit.completedDates.push(now);
-
-//     habit.streak =
-//       streakCalculator({
-//         dates: habit.completedDates,
-//         frequency: habit.frequency,
-//         actionType: "mark",
-//       }) || 0;
-
-//     habit.bestStreak = longestStreakCalculator({
-//       dates: habit.completedDates,
-//       frequency: habit.frequency,
-//     });
-
-//     const savedHabit = await habit.save();
-
-//     res.status(200).json(savedHabit);
-//   } catch (error) {
-//     console.log("Error in completeHabit controller", error);
-//     res.status(500).json({ message: "Internal Server Error!" });
-//   }
-// }
-
-// export async function completeHabit(req: Request, res: Response) {
-//   try {
-//     const { id } = req.params;
-//     const habit = await Habit.findById(id);
-
-//     if (!habit) {
-//       res.status(401).json({ message: "Habit not found" });
-//       return;
-//     }
-
-//     const now = dayjs(new Date()).toDate();
-//     const newDate = now.toISOString().split("T")[0];
-
-//     const isDuplicate = habit.completedDates.some((date) =>
-//       habit.frequency === "daily"
-//         ? dayjs(date).isSame(dayjs(), "day")
-//         : habit.frequency === "weekly"
-//         ? dayjs(date).isSame(dayjs(), "isoWeek")
-//         : dayjs(date).isSame(dayjs(), "month")
-//     );
-
-//     //If there is duplicate || already completed
-//     //add all frequency logics
-//     if (isDuplicate) {
-//       if (habit.frequency === "daily") {
-//         const updatedCompletedDates = habit.completedDates.filter((date) => {
-//           const prevDate = dayjs(date).format("YYYY-MM-DD");
-//           return prevDate !== newDate;
-//         });
-
-//         habit.completedDates = updatedCompletedDates;
-
-//         if (habit.streak > 0) {
-//           habit.streak--;
-//         }
-
-//         habit.bestStreak = bestStreakCalculator({
-//           dates: habit.completedDates,
-//         });
-
-//         const savedHabit = await habit.save();
-
-//         res.status(200).json(savedHabit);
-//         return;
-//       }
-//       if (habit.frequency === "weekly") {
-
-//       }
-//       return;
-//     }
-
-//     //If not duplicate || not completed
-//     const isCompletedYesterday =
-//       dayjs(habit.completedDates[habit.completedDates.length - 1])
-//         .add(1, "day")
-//         .format("DD-MM-YYYY") === newDate;
-
-//     // if (habit.completedDates.length === 0 || isCompletedYesterday) {
-//     if (!isCompletedYesterday) {
-//       habit.streak = 1;
-//     } else {
-//       habit.streak++;
-//     }
-//     // }
-
-//     habit.completedDates.push(now);
-
-//     habit.bestStreak = bestStreakCalculator({ dates: habit.completedDates });
-
-//     const savedHabit = await habit.save();
-
-//     res.status(200).json(savedHabit);
-//   } catch (error) {
-//     console.log("Error in completeHabit controller", error);
-//     res.status(500).json({ message: "Internal Server Error!" });
-//   }
-// }
-
-// const updatedCompletedDates = habit.completedDates.filter(
-//           (date) => !dayjs(date).isSame(dayjs(), "day"),
-//         );
-
-//         habit.completedDates = updatedCompletedDates;
-
-//         if (
-//           habit.streak === habit.bestStreak &&
-//           habit.completedDates.length > 0 &&
-//           dayjs(habit.bestStreakAchievedAt).isSame(dayjs(), frequency)
-//         ) {
-//           habit.bestStreakAchievedAt = recalcBestStreakDate({
-//             dates: habit.completedDates,
-//             frequency: habit.frequency,
-//           });
-
-//           habit.bestStreak--;
-//         }
-
-//         habit.streak--;
-
-//         if (habit.completedDates.length === 0) {
-//           habit.bestStreakAchievedAt = null;
-//         }
