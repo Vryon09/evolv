@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import type { InferSchemaType } from "mongoose";
+import type { IHabit } from "../models/Habit.ts";
 
 const moodSchema = new Schema(
   {
@@ -43,6 +44,12 @@ const moodSchema = new Schema(
         required: true,
       },
     },
+    habits: [
+      {
+        habitId: { type: mongoose.Schema.Types.ObjectId, ref: "Habit" },
+        isCompleted: { type: Boolean },
+      },
+    ],
     isFavorite: {
       type: Boolean,
       default: false,
@@ -52,7 +59,7 @@ const moodSchema = new Schema(
       default: false,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 moodSchema.pre("save", function (next) {

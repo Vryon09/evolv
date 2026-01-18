@@ -9,6 +9,7 @@ export interface IMood {
     duration: number;
     quality: string;
   };
+  habits: { habitId: string; isCompleted: boolean }[];
   isArchived: boolean;
   isFavorite: boolean;
   createdAt: string;

@@ -1,15 +1,21 @@
 import { Button } from "@/components/ui/button";
 import { MOODS, type MoodKey } from "@/constants/moods";
+import { handleGetHabits } from "@/services/apiHabits";
 import { handleGetMoods } from "@/services/apiMoods";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router";
+import type { IHabit } from "types/habit";
 import type { IMood } from "types/mood";
 
 function MoodOverview() {
   const { data: moods = [] } = useQuery<IMood[]>({
     queryFn: handleGetMoods,
     queryKey: ["moods"],
+  });
+  const { data: habits = [] } = useQuery<IHabit[]>({
+    queryFn: () => handleGetHabits("default"),
+    queryKey: ["habits"],
   });
 
   const navigate = useNavigate();
@@ -33,6 +39,17 @@ function MoodOverview() {
           <p>{MOODS[mood.mood as MoodKey].description}</p>
           <p>{mood.sleep.duration}hrs</p>
           <p>{mood.sleep.quality}</p>
+          <p>
+            {mood.habits.map((habit) => {
+              const habitData = habits.find((h) => h._id === habit.habitId);
+              return (
+                <>
+                  <p>{habitData?.title}</p>
+                  <p>Is it completed? {habit.isCompleted ? "Yes" : "No"}</p>
+                </>
+              );
+            })}
+          </p>
         </div>
       ))}
     </div>

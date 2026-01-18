@@ -3,7 +3,6 @@ import MoodForm from "./MoodForm";
 import SleepForm from "./SleepForm";
 import StressForm from "./StressForm";
 import { handleGetHabits } from "@/services/apiHabits";
-import isCompletedToday from "@/helper/isCompletedToday";
 import type { IHabit } from "types/habit";
 import JournalButtons from "./JournalButtons";
 import { Button } from "@/components/ui/button";
@@ -11,6 +10,7 @@ import { useAddMood } from "@/services/apiMoods";
 import { useMood } from "@/contexts/useMood";
 import PhysicalActivityForm from "./PhysicalActivityForm";
 import PerHabitImpactForm from "./PerHabitImpactForm";
+import isCompletedToday from "@/helper/isCompletedToday";
 
 function MoodPage() {
   const { data: habits = [], isPending: isHabitsLoading } = useQuery<IHabit[]>({
@@ -20,12 +20,32 @@ function MoodPage() {
 
   const { mood, sleep, stressLevel, physicalActivity } = useMood();
   const { mutate: handleAddMood } = useAddMood();
+  const dailyHabits = habits.reduce(
+    (acc: { habitId: string; isCompleted: boolean }[], curr) => {
+      if (curr.frequency !== "daily") return acc;
+
+      return [
+        ...acc,
+        {
+          habitId: curr._id,
+          isCompleted: isCompletedToday(curr),
+        },
+      ];
+    },
+    [],
+  );
 
   function handleSubmit() {
     // change sliders, radio inputs to better input types
     if (mood === "" || sleep.bedTime === "" || sleep.wakeTime === "") return;
 
-    handleAddMood({ mood: mood, sleep, stressLevel, physicalActivity });
+    handleAddMood({
+      mood,
+      sleep,
+      stressLevel,
+      physicalActivity,
+      habits: dailyHabits,
+    });
   }
 
   return (
@@ -37,8 +57,7 @@ function MoodPage() {
             <div>loading...</div>
           ) : (
             habits.map((habit, i) => {
-              if (!isCompletedToday(habit) || habit.frequency !== "daily")
-                return;
+              if (habit.frequency !== "daily") return;
 
               return (
                 <div key={i}>
