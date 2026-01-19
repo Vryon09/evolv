@@ -15,6 +15,9 @@ import PomodoroTimer from "./PomodoroTimer";
 import { Card } from "@/components/ui/card";
 import dayjs from "dayjs";
 import isoWeek from "dayjs/plugin/isoWeek";
+import type { IMood } from "types/mood";
+import { handleGetMoods } from "@/services/apiMoods";
+import { MOODS, type MoodKey } from "@/constants/moods";
 
 dayjs.extend(isoWeek);
 
@@ -29,6 +32,15 @@ export default function HabitsPage() {
     queryFn: () => handleGetHabits(sortBy),
     queryKey: ["habits", sortBy],
   });
+
+  const { data: moods = [] } = useQuery<IMood[]>({
+    queryFn: handleGetMoods,
+    queryKey: ["moods"],
+  });
+
+  const moodToday = moods.find((mood) =>
+    dayjs(mood.createdAt).isSame(dayjs(), "day"),
+  );
 
   if (isHabitsLoading) return <p>Loading...</p>;
 
@@ -66,6 +78,7 @@ export default function HabitsPage() {
   return (
     <div className="bg-background overflow-scroll overflow-x-hidden">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <p>Mood Today: {MOODS[moodToday?.mood as MoodKey].emoji}</p>
         {/* Stats Overview */}
         <HabitStats
           todaysCompletion={todaysCompletion}
