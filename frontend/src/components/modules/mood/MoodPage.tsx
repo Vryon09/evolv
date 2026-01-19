@@ -6,16 +6,23 @@ import { handleGetHabits } from "@/services/apiHabits";
 import type { IHabit } from "types/habit";
 import JournalButtons from "./JournalButtons";
 import { Button } from "@/components/ui/button";
-import { useAddMood } from "@/services/apiMoods";
+import { handleGetMoods, useAddMood } from "@/services/apiMoods";
 import { useMood } from "@/contexts/useMood";
 import PhysicalActivityForm from "./PhysicalActivityForm";
 import PerHabitImpactForm from "./PerHabitImpactForm";
 import isCompletedToday from "@/helper/isCompletedToday";
+import type { IMood } from "types/mood";
+import dayjs from "dayjs";
 
 function MoodPage() {
   const { data: habits = [], isPending: isHabitsLoading } = useQuery<IHabit[]>({
     queryFn: () => handleGetHabits("default"),
     queryKey: ["habits", "default"],
+  });
+
+  const { data: moods = [] } = useQuery<IMood[]>({
+    queryFn: handleGetMoods,
+    queryKey: ["moods"],
   });
 
   const { mood, sleep, stressLevel, physicalActivity } = useMood();
@@ -33,6 +40,10 @@ function MoodPage() {
       ];
     },
     [],
+  );
+
+  const isSubmittedToday = moods.some((mood) =>
+    dayjs(mood.createdAt).isSame(dayjs(), "day"),
   );
 
   function handleSubmit() {
@@ -75,7 +86,11 @@ function MoodPage() {
           <PhysicalActivityForm />
         </div>
         <PerHabitImpactForm habits={habits} isHabitsLoading={isHabitsLoading} />
-        <Button onClick={handleSubmit} className="col-span-3 cursor-pointer">
+        <Button
+          disabled={isSubmittedToday}
+          onClick={handleSubmit}
+          className="col-span-3 cursor-pointer"
+        >
           Submit
         </Button>
       </div>
