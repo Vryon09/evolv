@@ -7,6 +7,7 @@ import habitRoutes from "./routes/habitRoutes.ts";
 import moodRoutes from "./routes/moodRoutes.ts";
 import tagRoutes from "./routes/tagRoutes.ts";
 import pomodoroRoutes from "./routes/pomodoroRoutes.ts";
+import journalRoutes from "./routes/journalRoutes.ts";
 
 const app = express();
 
@@ -24,9 +25,10 @@ app.use("/api/habits", habitRoutes);
 app.use("/api/moods", moodRoutes);
 app.use("/api/tags", tagRoutes);
 app.use("/api/pomodoro", pomodoroRoutes);
+app.use("/api/journals", journalRoutes);
 
 connectDB();
 
 app.listen(process.env.PORT, () =>
-  console.log("Listening to PORT: " + process.env.PORT)
+  console.log("Listening to PORT: " + process.env.PORT),
 );

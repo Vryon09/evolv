@@ -78,7 +78,15 @@ export default function HabitsPage() {
   return (
     <div className="bg-background overflow-scroll overflow-x-hidden">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <p>Mood Today: {MOODS[moodToday?.mood as MoodKey].emoji}</p>
+        {moodToday && (
+          <p>
+            Mood Today:{" "}
+            <span className="capitalize">
+              {MOODS[moodToday?.mood as MoodKey].label}
+            </span>
+            {MOODS[moodToday?.mood as MoodKey].emoji}{" "}
+          </p>
+        )}
         {/* Stats Overview */}
         <HabitStats
           todaysCompletion={todaysCompletion}
