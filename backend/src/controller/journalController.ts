@@ -12,9 +12,11 @@ export async function getJournals(req: Request, res: Response) {
     }
 
     const journals = await User.findById(authUser._id)
-      .populate<{
-        journals: IJournal[];
-      }>({ path: "journals", model: Journal, match: { isArchived: false } })
+      .populate<{ journals: IJournal[] }>({
+        path: "journals",
+        model: Journal,
+        match: { isArchived: false },
+      })
       .select("journals");
 
     if (!journals) {
@@ -24,6 +26,27 @@ export async function getJournals(req: Request, res: Response) {
     res.status(200).json(journals.journals);
   } catch (error) {
     console.error("Error in getJournals controller: " + error);
+    res.status(500).json({ message: "Internal Server Error!" });
+  }
+}
+
+//create addJournal controller
+export async function addJournal(req: Request, res: Response) {
+  try {
+    const { title, content } = req.body;
+    const authUser = (req as any).user;
+
+    const newJournal = new Journal({ user: authUser.user, title, content });
+
+    const savedJournal = await newJournal.save();
+
+    await authUser.findByIdAndUpdate(authUser._id, {
+      $push: { journals: savedJournal._id },
+    });
+
+    res.status(200).json(savedJournal);
+  } catch (error) {
+    console.error("Error in addJournal controller: " + error);
     res.status(500).json({ message: "Internal Server Error!" });
   }
 }
