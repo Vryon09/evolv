@@ -8,12 +8,8 @@ function Mood() {
   const pathname = location.pathname
     .split("/")
     .filter((name) => name !== "" && name !== "app")
-    .map((name) => {
-      const nameArr = name.split("");
-      const firstLetter = nameArr.shift()?.toUpperCase();
-      return firstLetter + nameArr.join("");
-    })
-    .join("/");
+    .map((segment) => segment[0].toUpperCase() + segment.slice(1))
+    .join(" / ");
 
   return (
     <ModuleLayout>

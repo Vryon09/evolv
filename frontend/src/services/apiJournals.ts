@@ -3,6 +3,20 @@ import axios from "axios";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
+export async function handleGetJournals() {
+  const token = localStorage.getItem("evolv_token");
+
+  try {
+    const res = await axios.get(`${API_BASE_URL}/api/journals`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return res.data || [];
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 async function handleAddJournal({
   title,
   content,
