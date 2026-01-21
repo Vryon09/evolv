@@ -36,11 +36,11 @@ export async function addJournal(req: Request, res: Response) {
     const { title, content } = req.body;
     const authUser = (req as any).user;
 
-    const newJournal = new Journal({ user: authUser.user, title, content });
+    const newJournal = new Journal({ user: authUser._id, title, content });
 
     const savedJournal = await newJournal.save();
 
-    await authUser.findByIdAndUpdate(authUser._id, {
+    await User.findByIdAndUpdate(authUser._id, {
       $push: { journals: savedJournal._id },
     });
 

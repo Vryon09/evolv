@@ -20,7 +20,7 @@ const journalSchema = new Schema(
       maxlength: 5000,
       default: "",
     },
-    tags: { type: String, default: [] },
+    tags: [{ type: String, default: [] }],
     isFavorite: {
       type: Boolean,
       default: false,
@@ -30,7 +30,7 @@ const journalSchema = new Schema(
       default: false,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export type IJournal = InferSchemaType<typeof journalSchema>;
