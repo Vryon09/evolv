@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAddJournal } from "@/services/apiJournals";
 import { Plus } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 function JournalButtons() {
   const [isCreating, setIsCreating] = useState(false);
@@ -30,10 +31,17 @@ function JournalButtons() {
     setJournalForm({ title: "", content: "" });
   }
 
+  const navigate = useNavigate();
+
   return (
     <div className="md:col-start-2 lg:col-span-3">
       <div className="flex w-full justify-end gap-2">
-        <Button className="cursor-pointer">My Journals</Button>
+        <Button
+          className="cursor-pointer"
+          onClick={() => navigate("/app/mood/journals")}
+        >
+          My Journals
+        </Button>
         <Button
           className="cursor-pointer"
           onClick={() => setIsCreating(!isCreating)}

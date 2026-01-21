@@ -13,6 +13,8 @@ import Opportunity from "./components/modules/opportunity/Opportunity";
 import Finance from "./components/modules/finance/Finance";
 import { PomodoroTimerProvider } from "./contexts/PomodoroTimerContext";
 import { MoodProvider } from "./contexts/MoodContext";
+import Journals from "./components/modules/mood/Journals";
+import MoodPage from "./components/modules/mood/MoodPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -36,7 +38,10 @@ function App() {
             <Route path="/app" element={<OSLayout />}>
               <Route path="/app/dashboard" element={<Dashboard />} />
               <Route path="/app/habit" element={<Habit />} />
-              <Route path="/app/mood" element={<Mood />} />
+              <Route path="/app/mood" element={<Mood />}>
+                <Route path="/app/mood/" element={<MoodPage />} />
+                <Route path="/app/mood/journals" element={<Journals />} />
+              </Route>
               <Route path="/app/knowledge" element={<Knowledge />} />
               <Route path="/app/opportunity" element={<Opportunity />} />
               <Route path="/app/finance" element={<Finance />} />
