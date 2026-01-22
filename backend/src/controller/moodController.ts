@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import Mood from "../models/Mood.ts";
 import type { IMood } from "../models/Mood.ts";
 import User from "../models/User.ts";
+import type { IUser } from "../models/User.ts";
 //update the mood schema make the mood also get the emoji and description of the mood
 export async function getMood(req: Request, res: Response) {
   try {
@@ -51,6 +52,39 @@ export async function addMood(req: Request, res: Response) {
     });
 
     res.status(201).json(savedMood);
+  } catch (error) {
+    console.error("Error in addMood controller.", error);
+    res.status(500).json({ message: "Internal Server Error!" });
+  }
+}
+
+//finish this
+export async function deleteMood(req: Request, res: Response) {
+  try {
+    const { id } = req.params;
+    const deletedMood = await Mood.findByIdAndDelete(id);
+
+    const authUser = (req as any).user;
+
+    if (!authUser) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const user = await User.findById(authUser._id);
+
+    if (!user) {
+      return res.status(401).json({ message: "No user found." });
+    }
+
+    const updatedUserMoods = authUser.moods.filter(
+      (mood: string) => mood.toString() !== id,
+    );
+
+    user.moods = updatedUserMoods;
+
+    await user.save();
+
+    res.status(200).json(deletedMood);
   } catch (error) {
     console.error("Error in addMood controller.", error);
     res.status(500).json({ message: "Internal Server Error!" });
