@@ -15,7 +15,7 @@ function MoodChoice({
 }: {
   moodKey: MoodKey;
   mood: MoodType;
-  selectedMood: MoodKey | undefined;
+  selectedMood: string | undefined;
   handleSelectMood: () => void;
 }) {
   return (

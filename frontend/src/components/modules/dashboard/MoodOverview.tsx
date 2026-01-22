@@ -20,7 +20,6 @@ function MoodOverview() {
 
   const navigate = useNavigate();
 
-  console.log(moods);
   return (
     <div>
       <div className="flex justify-end">
@@ -39,17 +38,17 @@ function MoodOverview() {
           <p>{MOODS[mood.mood as MoodKey].description}</p>
           <p>{mood.sleep.duration}hrs</p>
           <p>{mood.sleep.quality}</p>
-          <p>
+          <div>
             {mood.habits.map((habit) => {
               const habitData = habits.find((h) => h._id === habit.habitId);
               return (
-                <>
+                <div key={habit.habitId}>
                   <p>{habitData?.title}</p>
                   <p>Is it completed? {habit.isCompleted ? "Yes" : "No"}</p>
-                </>
+                </div>
               );
             })}
-          </p>
+          </div>
         </div>
       ))}
     </div>

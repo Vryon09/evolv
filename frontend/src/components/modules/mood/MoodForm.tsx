@@ -1,46 +1,16 @@
 import { Card } from "@/components/ui/card";
-// import { useState } from "react";
 import MoodChoice from "./MoodChoice";
 import { useMood } from "@/contexts/useMood";
 import { MOODS, type MoodKey } from "@/constants/moods";
+import type { IMood } from "types/mood";
 
-// const moods = [
-//   {
-//     emoji: "😭",
-//     label: "miserable",
-//     description: "Feeling awful, very sad, stressed, hopeless",
-//   },
-//   {
-//     emoji: "😞",
-//     label: "bad",
-//     description: "Feeling down, frustrated, annoyed",
-//   },
-//   {
-//     emoji: "😕",
-//     label: "displeased",
-//     description: "Slightly off, a bit irritable or tired",
-//   },
-//   {
-//     emoji: "😐",
-//     label: "okay",
-//     description: "Neither good nor bad, just normal",
-//   },
-//   {
-//     emoji: "😀",
-//     label: "good",
-//     description: "Mildly happy, content, satisfied",
-//   },
-//   { emoji: "😁", label: "happy", description: "Cheerful, positive, motivated" },
-//   {
-//     emoji: "😆",
-//     label: "joyful",
-//     description: "Excited, joyful, energetic, very satisfied",
-//   },
-// ];
-
-// Object.entries(MOODS).map(([key, mood]) => console.log(key, mood));
-
-function MoodForm() {
+function MoodForm({
+  isSubmittedToday,
+  moodToday,
+}: {
+  isSubmittedToday: boolean;
+  moodToday: IMood | undefined;
+}) {
   const { mood: moodState, dispatch } = useMood();
   return (
     <Card className="w-full p-4 md:col-span-2 lg:col-span-3">
@@ -53,8 +23,9 @@ function MoodForm() {
             key={key}
             moodKey={key as MoodKey}
             mood={mood}
-            selectedMood={moodState}
+            selectedMood={isSubmittedToday ? moodToday?.mood : moodState}
             handleSelectMood={() => {
+              if (isSubmittedToday) return;
               if (moodState === key) {
                 dispatch({ type: "setSelectedMood", payload: undefined });
                 return;
@@ -63,31 +34,11 @@ function MoodForm() {
             }}
           />
         ))}
-        {/* {moods.map((mood, i) => (
-          <MoodChoice
-            mood={mood}
-            selectedMood={moodState}
-            handleSelectMood={(selMood) => {
-              if (selMood.label === moodState?.label) {
-                dispatch({ type: "setSelectedMood", payload: undefined });
-                return;
-              }
-              dispatch({ type: "setSelectedMood", payload: selMood });
-            }}
-            key={i}
-          />
-        ))} */}
       </div>
       <div>
         <p>
           {moodState ? MOODS[moodState].description : "Select your mood today."}
         </p>
-        {/* <Button
-          disabled={selectedMood === undefined}
-          className="cursor-pointer px-8 py-4 text-lg"
-        >
-          Submit
-        </Button> */}
       </div>
     </Card>
   );

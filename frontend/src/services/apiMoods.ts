@@ -1,4 +1,4 @@
-import { useMood } from "@/contexts/useMood";
+// import { useMood } from "@/contexts/useMood";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -51,13 +51,13 @@ async function handleAddMood({
 
 export function useAddMood() {
   const queryClient = useQueryClient();
-  const { dispatch } = useMood();
+  // const { dispatch } = useMood();
 
   return useMutation({
     mutationFn: handleAddMood,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["moods"] });
-      dispatch({ type: "reset" });
+      // dispatch({ type: "reset" });
     },
   });
 }

@@ -1,9 +1,10 @@
+import type { MoodKey } from "@/constants/moods";
 import { createContext, useReducer } from "react";
 
 // export type Mood = MoodKey | undefined;
 
 type MoodState = {
-  mood: string;
+  mood: MoodKey | undefined;
   sleep: { bedTime: string; wakeTime: string; quality: number };
   stressLevel: number;
   physicalActivity: number;
@@ -12,7 +13,7 @@ type MoodState = {
 type MoodAction =
   | {
       type: "setSelectedMood";
-      payload: string;
+      payload: MoodKey | undefined;
     }
   | { type: "setBedTime"; payload: string }
   | { type: "setWakeTime"; payload: string }
@@ -28,7 +29,7 @@ type MoodContextType = MoodState & {
 const MoodContext = createContext({} as MoodContextType);
 
 const initialState: MoodState = {
-  mood: "",
+  mood: undefined,
   sleep: { bedTime: "", wakeTime: "", quality: 1 },
   stressLevel: 1,
   physicalActivity: 1,

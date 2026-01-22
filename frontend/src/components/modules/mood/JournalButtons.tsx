@@ -8,10 +8,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useAddJournal } from "@/services/apiJournals";
+import { handleGetJournals, useAddJournal } from "@/services/apiJournals";
+import { useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import type { IJournal } from "types/journal";
 
 function JournalButtons() {
   const [isCreating, setIsCreating] = useState(false);
@@ -20,6 +22,10 @@ function JournalButtons() {
     content: string;
   }>({ title: "", content: "" });
 
+  const { data: journals } = useQuery<IJournal[]>({
+    queryFn: handleGetJournals,
+    queryKey: ["journals"],
+  });
   const { mutate: handleAddJournal } = useAddJournal();
 
   function handleSubmit() {
@@ -40,7 +46,7 @@ function JournalButtons() {
           className="cursor-pointer"
           onClick={() => navigate("/app/mood/journals")}
         >
-          My Journals
+          My Journals ({journals?.length})
         </Button>
         <Button
           className="cursor-pointer"

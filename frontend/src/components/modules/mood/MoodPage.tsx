@@ -46,9 +46,14 @@ function MoodPage() {
     dayjs(mood.createdAt).isSame(dayjs(), "day"),
   );
 
+  const moodToday = moods.find((mood) =>
+    dayjs(mood.createdAt).isSame(dayjs(), "day"),
+  );
+
   function handleSubmit() {
     // change sliders, radio inputs to better input types
-    if (mood === "" || sleep.bedTime === "" || sleep.wakeTime === "") return;
+    if (mood === undefined || sleep.bedTime === "" || sleep.wakeTime === "")
+      return;
 
     handleAddMood({
       mood,
@@ -79,19 +84,30 @@ function MoodPage() {
           )}
         </div>
         <JournalButtons />
-        <MoodForm />
-        <SleepForm />
+        <MoodForm isSubmittedToday={isSubmittedToday} moodToday={moodToday} />
+        <SleepForm isSubmittedToday={isSubmittedToday} moodToday={moodToday} />
         <div>
-          <StressForm />
-          <PhysicalActivityForm />
+          <StressForm
+            isSubmittedToday={isSubmittedToday}
+            moodToday={moodToday}
+          />
+          <PhysicalActivityForm
+            isSubmittedToday={isSubmittedToday}
+            moodToday={moodToday}
+          />
         </div>
         <PerHabitImpactForm habits={habits} isHabitsLoading={isHabitsLoading} />
         <Button
-          disabled={isSubmittedToday}
-          onClick={handleSubmit}
+          onClick={() => {
+            if (isSubmittedToday) {
+              console.log("Unsubmit");
+              return;
+            }
+            handleSubmit();
+          }}
           className="col-span-3 cursor-pointer"
         >
-          Submit
+          {!isSubmittedToday ? "Submit" : "Unsubmit"}
         </Button>
       </div>
     </div>

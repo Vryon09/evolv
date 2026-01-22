@@ -4,8 +4,16 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { SLEEPQUALITIES } from "@/constants/sleepQualities";
 import { useMood } from "@/contexts/useMood";
+import dayjs from "dayjs";
+import type { IMood } from "types/mood";
 
-function SleepForm() {
+function SleepForm({
+  isSubmittedToday,
+  moodToday,
+}: {
+  isSubmittedToday: boolean;
+  moodToday: IMood | undefined;
+}) {
   const { sleep, dispatch } = useMood();
 
   return (
@@ -17,10 +25,15 @@ function SleepForm() {
             <Label>What time did you sleep?</Label>
             <Input
               type="datetime-local"
-              value={sleep.bedTime}
-              onChange={(e) =>
-                dispatch({ type: "setBedTime", payload: e.target.value })
+              value={
+                isSubmittedToday
+                  ? dayjs(moodToday?.sleep.bedTime).format("YYYY-MM-DDTHH:mm")
+                  : sleep.bedTime
               }
+              onChange={(e) => {
+                if (isSubmittedToday) return;
+                dispatch({ type: "setBedTime", payload: e.target.value });
+              }}
             />
           </div>
 
@@ -28,10 +41,15 @@ function SleepForm() {
             <Label>What time did you wake up?</Label>
             <Input
               type="datetime-local"
-              value={sleep.wakeTime}
-              onChange={(e) =>
-                dispatch({ type: "setWakeTime", payload: e.target.value })
+              value={
+                isSubmittedToday
+                  ? dayjs(moodToday?.sleep.wakeTime).format("YYYY-MM-DDTHH:mm")
+                  : sleep.wakeTime
               }
+              onChange={(e) => {
+                if (isSubmittedToday) return;
+                dispatch({ type: "setWakeTime", payload: e.target.value });
+              }}
             />
           </div>
         </div>
@@ -40,10 +58,15 @@ function SleepForm() {
       <div>
         <p className="mb-8 text-xl font-semibold">How is your sleep?</p>
         <RadioGroup
-          value={`${sleep.quality}`}
-          onValueChange={(value) =>
-            dispatch({ type: "setSleepQuality", payload: +value })
+          value={
+            isSubmittedToday
+              ? `${moodToday?.sleep.quality}`
+              : `${sleep.quality}`
           }
+          onValueChange={(value) => {
+            if (isSubmittedToday) return;
+            dispatch({ type: "setSleepQuality", payload: +value });
+          }}
           className="flex justify-between"
         >
           {Object.entries(SLEEPQUALITIES).map(([key, level]) => (
