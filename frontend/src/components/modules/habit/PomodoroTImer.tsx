@@ -21,7 +21,7 @@ function PomodoroTimer() {
   const { user }: { user?: IUser } = useOutletContext();
 
   useEffect(() => {
-    dispatch({ type: "setTimerState", payload: "idle" });
+    // dispatch({ type: "setTimerState", payload: "idle" });
 
     dispatch({
       type: "setPomodoroSettings",
