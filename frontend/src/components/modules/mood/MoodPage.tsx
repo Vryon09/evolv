@@ -6,7 +6,7 @@ import { handleGetHabits } from "@/services/apiHabits";
 import type { IHabit } from "types/habit";
 import JournalButtons from "./JournalButtons";
 import { Button } from "@/components/ui/button";
-import { handleGetMoods, useAddMood } from "@/services/apiMoods";
+import { handleGetMoods, useAddMood, useDeleteMood } from "@/services/apiMoods";
 import { useMood } from "@/contexts/useMood";
 import PhysicalActivityForm from "./PhysicalActivityForm";
 import PerHabitImpactForm from "./PerHabitImpactForm";
@@ -25,8 +25,9 @@ function MoodPage() {
     queryKey: ["moods"],
   });
 
-  const { mood, sleep, stressLevel, physicalActivity } = useMood();
+  const { dispatch, mood, sleep, stressLevel, physicalActivity } = useMood();
   const { mutate: handleAddMood } = useAddMood();
+  const { mutate: handleDeleteMood } = useDeleteMood();
   const dailyHabits = habits.reduce(
     (acc: { habitId: string; isCompleted: boolean }[], curr) => {
       if (curr.frequency !== "daily") return acc;
@@ -62,6 +63,12 @@ function MoodPage() {
       physicalActivity,
       habits: dailyHabits,
     });
+  }
+
+  function handleUnsubmit() {
+    if (!moodToday) return;
+    handleDeleteMood({ id: moodToday._id });
+    dispatch({ type: "reset" });
   }
 
   return (
@@ -100,7 +107,7 @@ function MoodPage() {
         <Button
           onClick={() => {
             if (isSubmittedToday) {
-              console.log("Unsubmit");
+              handleUnsubmit();
               return;
             }
             handleSubmit();

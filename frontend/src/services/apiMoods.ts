@@ -61,3 +61,25 @@ export function useAddMood() {
     },
   });
 }
+
+async function handleDeleteMood({ id }: { id: string }) {
+  try {
+    const token = localStorage.getItem("evolv_token");
+
+    const res = await axios.delete(`${API_BASE_URL}/api/moods/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return res.data || [];
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export function useDeleteMood() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: handleDeleteMood,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["moods"] }),
+  });
+}
