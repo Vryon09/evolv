@@ -21,8 +21,6 @@ function PomodoroTimer() {
   const { user }: { user?: IUser } = useOutletContext();
 
   useEffect(() => {
-    // dispatch({ type: "setTimerState", payload: "idle" });
-
     dispatch({
       type: "setPomodoroSettings",
       payload: user?.pomodoroSettings || {
@@ -34,16 +32,6 @@ function PomodoroTimer() {
         longBreakInterval: 0,
       },
     });
-    // setPomodoroSettings(
-    //   user?.pomodoroSettings || {
-    //     pomodoro: 0,
-    //     short: 0,
-    //     long: 0,
-    //     autoPomodoro: false,
-    //     autoBreak: false,
-    //     longBreakInterval: 0,
-    //   },
-    // );
 
     dispatch({
       type: "setTime",
@@ -51,18 +39,12 @@ function PomodoroTimer() {
         (user?.pomodoroSettings && user?.pomodoroSettings[timerType] * 60) ||
         25 * 60,
     });
-
-    // setTime(
-    //   (user?.pomodoroSettings && user?.pomodoroSettings[timerType] * 60) ||
-    //     25 * 60,
-    // );
   }, [user, timerType, dispatch]);
 
   useEffect(() => {
     if (timerState === "idle" || timerState === "paused") return;
     const interval = setInterval(() => {
       dispatch({ type: "setTime", payload: time - 1 });
-      // setTime((prev) => prev - 1);
     }, 1000);
     return () => clearInterval(interval);
   }, [timerState, dispatch, time]);
@@ -95,24 +77,12 @@ function PomodoroTimer() {
             : "idle",
       });
 
-      // setTimerState(
-      //   (timerType === "pomodoro" && pomodoroSettings.autoBreak) ||
-      //     (timerType === "short" && pomodoroSettings.autoPomodoro) ||
-      //     (timerType === "long" && pomodoroSettings.autoPomodoro)
-      //     ? "running"
-      //     : "idle",
-      // );
-
       dispatch({ type: "setTime", payload: pomodoroSettings[timerType] * 60 });
-
-      // setTime(pomodoroSettings[timerType] * 60);
 
       dispatch({
         type: "setPomodoroCount",
         payload: timerType === "pomodoro" ? pomodoroCount + 1 : pomodoroCount,
       });
-
-      // setPomodoroCount((prev) => (timerType === "pomodoro" ? prev + 1 : prev));
 
       dispatch({
         type: "setTimerType",
@@ -125,16 +95,6 @@ function PomodoroTimer() {
               ? "short"
               : "pomodoro",
       });
-
-      // setTimerType((prev) =>
-      //   prev === "pomodoro" &&
-      //   pomodoroCount % pomodoroSettings.longBreakInterval === 0
-      //     ? "long"
-      //     : prev === "pomodoro" &&
-      //         pomodoroCount % pomodoroSettings.longBreakInterval !== 0
-      //       ? "short"
-      //       : "pomodoro",
-      // );
 
       showNotification();
 
@@ -186,8 +146,6 @@ function PomodoroTimer() {
                 if (timerType === "pomodoro") return;
                 dispatch({ type: "setTimerType", payload: "pomodoro" });
                 dispatch({ type: "setTimerState", payload: "idle" });
-                // setTimerType("pomodoro");
-                // setTimerState("idle");
               }}
               className={cn(
                 "cursor-pointer",
@@ -203,8 +161,6 @@ function PomodoroTimer() {
                 if (timerType === "short") return;
                 dispatch({ type: "setTimerType", payload: "short" });
                 dispatch({ type: "setTimerState", payload: "idle" });
-                // setTimerType("short");
-                // setTimerState("idle");
               }}
               className={cn(
                 "cursor-pointer",
@@ -220,8 +176,6 @@ function PomodoroTimer() {
                 if (timerType === "long") return;
                 dispatch({ type: "setTimerType", payload: "long" });
                 dispatch({ type: "setTimerState", payload: "idle" });
-                // setTimerType("long");
-                // setTimerState("idle");
               }}
               className={cn(
                 "cursor-pointer",
@@ -243,7 +197,6 @@ function PomodoroTimer() {
             onClick={() => {
               if (timerState === "running") {
                 dispatch({ type: "setTimerState", payload: "paused" });
-                // setTimerState("paused");
                 return;
               }
 
@@ -254,7 +207,6 @@ function PomodoroTimer() {
               }
 
               dispatch({ type: "setTimerState", payload: "running" });
-              // setTimerState("running");
             }}
           >
             {timerState === "idle" || timerState === "paused"

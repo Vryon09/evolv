@@ -37,7 +37,11 @@ function MoodForm({
       </div>
       <div>
         <p>
-          {moodState ? MOODS[moodState].description : "Select your mood today."}
+          {isSubmittedToday && moodToday?.mood !== undefined
+            ? MOODS[moodToday?.mood as MoodKey].description
+            : moodState
+              ? MOODS[moodState].description
+              : "Select your mood today."}
         </p>
       </div>
     </Card>
