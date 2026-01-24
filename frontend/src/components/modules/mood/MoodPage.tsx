@@ -25,7 +25,14 @@ function MoodPage() {
     queryKey: ["moods"],
   });
 
-  const { dispatch, mood, sleep, stressLevel, physicalActivity } = useMood();
+  const {
+    dispatch,
+    mood,
+    sleep,
+    stressLevel,
+    physicalActivity,
+    selectedHabits,
+  } = useMood();
   const { mutate: handleAddMood } = useAddMood();
   const { mutate: handleDeleteMood } = useDeleteMood();
   const dailyHabits = habits.reduce(
@@ -62,6 +69,9 @@ function MoodPage() {
       stressLevel,
       physicalActivity,
       habits: dailyHabits,
+      habitsMoodImpact: selectedHabits.map((habit) => {
+        return { habitId: habit._id, moodImpact: habit.moodImpact };
+      }),
     });
   }
 

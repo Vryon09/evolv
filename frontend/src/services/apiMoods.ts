@@ -26,17 +26,26 @@ async function handleAddMood({
   stressLevel,
   physicalActivity,
   habits,
+  habitsMoodImpact,
 }: {
   mood: string;
   sleep: { bedTime: string; wakeTime: string; quality: number };
   stressLevel: number;
   physicalActivity: number;
   habits: { habitId: string; isCompleted: boolean }[];
+  habitsMoodImpact: { habitId: string; moodImpact: number }[];
 }) {
   const token = localStorage.getItem("evolv_token");
 
   try {
-    const newMood = { mood, sleep, stressLevel, physicalActivity, habits };
+    const newMood = {
+      mood,
+      sleep,
+      stressLevel,
+      physicalActivity,
+      habits,
+      habitsMoodImpact,
+    };
     const res = await axios.post(`${API_BASE_URL}/api/moods`, newMood, {
       headers: {
         Authorization: `Bearer ${token}`,

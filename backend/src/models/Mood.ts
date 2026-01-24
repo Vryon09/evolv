@@ -50,6 +50,12 @@ const moodSchema = new Schema(
         isCompleted: { type: Boolean },
       },
     ],
+    habitsMoodImpact: [
+      {
+        habitId: { type: mongoose.Schema.Types.ObjectId, ref: "Habit" },
+        moodImpact: { type: Number },
+      },
+    ],
     isFavorite: {
       type: Boolean,
       default: false,
