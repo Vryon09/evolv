@@ -14,11 +14,16 @@ import { DialogTitle } from "@radix-ui/react-dialog";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import type { IHabit } from "types/habit";
+import type { IMood } from "types/mood";
 
 function PerHabitImpactForm({
+  isSubmittedToday,
+  moodToday,
   habits,
   isHabitsLoading,
 }: {
+  isSubmittedToday: boolean;
+  moodToday: IMood | undefined;
   habits: IHabit[];
   isHabitsLoading: boolean;
 }) {
@@ -53,19 +58,35 @@ function PerHabitImpactForm({
         <div className="space-y-8">
           <div className="flex justify-between">
             <p className="text-xl font-semibold">Per habit impact</p>
-            <Button
-              size="icon-sm"
-              className="cursor-pointer"
-              onClick={() =>
-                setIsSelectingHabits((isSelecting) => !isSelecting)
-              }
-            >
-              <span>
-                <Plus />
-              </span>
-            </Button>
+            {!isSubmittedToday && (
+              <Button
+                size="icon-sm"
+                className="cursor-pointer"
+                onClick={() =>
+                  setIsSelectingHabits((isSelecting) => !isSelecting)
+                }
+              >
+                <span>
+                  <Plus />
+                </span>
+              </Button>
+            )}
           </div>
-          {!selectedHabits.length ? (
+          {isSubmittedToday ? (
+            moodToday?.habitsMoodImpact.map((habit) => (
+              <div className="flex gap-4" key={habit.habitId}>
+                <div className="flex-1 space-y-2">
+                  <p>{habit.title}</p>
+                  <Slider max={2} min={-2} value={[habit.moodImpact]} />
+                  <div className="flex justify-between">
+                    <p>Worse</p>
+                    <p className="font-semibold">{habit.moodImpact}</p>
+                    <p>Better</p>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : !selectedHabits.length ? (
             <div className="flex items-center justify-center">
               <p>Click + icon to select habits</p>
             </div>

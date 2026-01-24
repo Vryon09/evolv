@@ -15,7 +15,11 @@ function StressForm({
   return (
     <Card className="h-fit p-4">
       <div className="space-y-8">
-        <p className="text-xl font-semibold">How stress are you?</p>
+        <p className="text-xl font-semibold">
+          {isSubmittedToday
+            ? "This is how stress are you!"
+            : "How stress are you?"}
+        </p>
         <div className="flex gap-4">
           <div className="flex-1 space-y-2">
             <Slider

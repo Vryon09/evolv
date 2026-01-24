@@ -33,7 +33,7 @@ async function handleAddMood({
   stressLevel: number;
   physicalActivity: number;
   habits: { habitId: string; isCompleted: boolean }[];
-  habitsMoodImpact: { habitId: string; moodImpact: number }[];
+  habitsMoodImpact: { habitId: string; moodImpact: number; title: string }[];
 }) {
   const token = localStorage.getItem("evolv_token");
 

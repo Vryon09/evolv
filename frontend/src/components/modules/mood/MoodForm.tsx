@@ -15,7 +15,9 @@ function MoodForm({
   return (
     <Card className="w-full p-4 md:col-span-2 lg:col-span-3">
       <p className="text-2xl font-semibold select-none">
-        What's your mood today?
+        {isSubmittedToday
+          ? "This is your mood today!"
+          : "What's your mood today?"}
       </p>
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7">
         {Object.entries(MOODS).map(([key, mood]) => (

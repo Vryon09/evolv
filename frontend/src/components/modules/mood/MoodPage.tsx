@@ -70,7 +70,11 @@ function MoodPage() {
       physicalActivity,
       habits: dailyHabits,
       habitsMoodImpact: selectedHabits.map((habit) => {
-        return { habitId: habit._id, moodImpact: habit.moodImpact };
+        return {
+          habitId: habit._id,
+          moodImpact: habit.moodImpact,
+          title: habit.title,
+        };
       }),
     });
   }
@@ -113,7 +117,12 @@ function MoodPage() {
             moodToday={moodToday}
           />
         </div>
-        <PerHabitImpactForm habits={habits} isHabitsLoading={isHabitsLoading} />
+        <PerHabitImpactForm
+          isSubmittedToday={isSubmittedToday}
+          moodToday={moodToday}
+          habits={habits}
+          isHabitsLoading={isHabitsLoading}
+        />
         <Button
           onClick={() => {
             if (isSubmittedToday) {

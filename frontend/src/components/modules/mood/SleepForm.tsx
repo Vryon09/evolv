@@ -19,7 +19,11 @@ function SleepForm({
   return (
     <Card className="p-4 md:col-span-2 lg:col-span-1 lg:flex">
       <div>
-        <p className="mb-8 text-xl font-semibold">How long did you sleep?</p>
+        <p className="mb-8 text-xl font-semibold">
+          {isSubmittedToday
+            ? "This is how you sleep today!"
+            : "How long did you sleep?"}
+        </p>
         <div className="space-y-4">
           <div className="flex flex-col gap-2">
             <Label>What time did you sleep?</Label>

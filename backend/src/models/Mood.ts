@@ -54,6 +54,7 @@ const moodSchema = new Schema(
       {
         habitId: { type: mongoose.Schema.Types.ObjectId, ref: "Habit" },
         moodImpact: { type: Number },
+        title: { type: String },
       },
     ],
     isFavorite: {
