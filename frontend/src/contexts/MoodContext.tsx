@@ -1,13 +1,15 @@
 import type { MoodKey } from "@/constants/moods";
 import { createContext, useReducer } from "react";
+import type { IHabit } from "types/habit";
 
-// export type Mood = MoodKey | undefined;
+//Add mood impact in Mood Schema
 
 type MoodState = {
   mood: MoodKey | undefined;
   sleep: { bedTime: string; wakeTime: string; quality: number };
   stressLevel: number;
   physicalActivity: number;
+  selectedHabits: (IHabit & { moodImpact: number })[] | [];
 };
 
 type MoodAction =
@@ -20,6 +22,12 @@ type MoodAction =
   | { type: "setSleepQuality"; payload: number }
   | { type: "setStressLevel"; payload: number }
   | { type: "setPhysicalActivity"; payload: number }
+  | { type: "addSelectedHabit"; payload: IHabit & { moodImpact: number } }
+  | { type: "deleteSelectedHabit"; payload: string }
+  | {
+      type: "setHabitMoodImpact";
+      payload: { id: string; value: number };
+    }
   | { type: "reset" };
 
 type MoodContextType = MoodState & {
@@ -33,9 +41,12 @@ const initialState: MoodState = {
   sleep: { bedTime: "", wakeTime: "", quality: 1 },
   stressLevel: 1,
   physicalActivity: 1,
+  selectedHabits: [],
 };
 
 function reducer(state: MoodState, action: MoodAction): MoodState {
+  let updatedSelectedHabits = state.selectedHabits;
+
   switch (action.type) {
     case "setSelectedMood":
       return { ...state, mood: action.payload };
@@ -64,6 +75,28 @@ function reducer(state: MoodState, action: MoodAction): MoodState {
         ...state,
         physicalActivity: action.payload,
       };
+    case "addSelectedHabit":
+      return {
+        ...state,
+        selectedHabits: [...state.selectedHabits, action.payload],
+      };
+    case "deleteSelectedHabit":
+      if (state.selectedHabits) {
+        updatedSelectedHabits = state.selectedHabits.filter(
+          (habit) => habit._id !== action.payload,
+        );
+      }
+      return {
+        ...state,
+        selectedHabits: updatedSelectedHabits,
+      };
+    case "setHabitMoodImpact":
+      updatedSelectedHabits = state.selectedHabits.map((habit) =>
+        habit._id === action.payload.id
+          ? { ...habit, moodImpact: action.payload.value }
+          : habit,
+      );
+      return { ...state, selectedHabits: updatedSelectedHabits };
     case "reset":
       return initialState;
     default:

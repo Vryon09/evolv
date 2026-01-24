@@ -49,7 +49,7 @@ const habitSchema = new Schema(
       default: false,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export type IHabit = InferSchemaType<typeof habitSchema>;

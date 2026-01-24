@@ -8,6 +8,7 @@ import {
   DialogHeader,
 } from "@/components/ui/dialog";
 import { Slider } from "@/components/ui/slider";
+import { useMood } from "@/contexts/useMood";
 import isCompletedToday from "@/helper/isCompletedToday";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { Plus } from "lucide-react";
@@ -22,27 +23,27 @@ function PerHabitImpactForm({
   isHabitsLoading: boolean;
 }) {
   const [isSelectingHabits, setIsSelectingHabits] = useState<boolean>(false);
-  const [selectedHabits, setSelectedHabits] = useState<IHabit[]>([]);
+  // const [selectedHabits, setSelectedHabits] = useState<IHabit[]>([]);
+  const { dispatch, selectedHabits } = useMood();
 
   if (isHabitsLoading) return <p>Loading...</p>;
 
-  const completedHabits = habits.filter(
-    (habit) => isCompletedToday(habit) && habit.frequency === "daily",
-  );
+  const completedHabits: (IHabit & { moodImpact: number })[] = habits
+    .filter((habit) => isCompletedToday(habit) && habit.frequency === "daily")
+    .map((habit) => {
+      return { ...habit, moodImpact: -2 };
+    });
 
   //Fix handletoggle
-  function handleToggle(toggledHabit: IHabit) {
+  function handleToggle(toggledHabit: IHabit & { moodImpact: number }) {
     const isDuplicated = [...selectedHabits].some(
       (habit) => habit._id === toggledHabit._id,
     );
 
     if (isDuplicated) {
-      const updatedSelectedHabits = [...selectedHabits].filter(
-        (habit) => habit._id !== toggledHabit._id,
-      );
-      setSelectedHabits(updatedSelectedHabits);
+      dispatch({ type: "deleteSelectedHabit", payload: toggledHabit._id });
     } else {
-      setSelectedHabits((prev) => [...prev, toggledHabit]);
+      dispatch({ type: "addSelectedHabit", payload: toggledHabit });
     }
   }
 
@@ -64,26 +65,34 @@ function PerHabitImpactForm({
               </span>
             </Button>
           </div>
-          {/* <div>
-          {completedHabits.map((habit, i) => (
-            <p key={i}>{habit.title}</p>
-          ))}
-        </div> */}
           {!selectedHabits.length ? (
             <div className="flex items-center justify-center">
               <p>Click + icon to select habits</p>
             </div>
           ) : (
-            <div className="flex gap-4">
-              <div className="flex-1 space-y-2">
-                <Slider max={2} min={-2} />
-                <div className="flex justify-between">
-                  <p>Worse</p>
-                  <p className="font-semibold">{-2}</p>
-                  <p>Better</p>
+            selectedHabits.map((habit) => (
+              <div className="flex gap-4" key={habit._id}>
+                <div className="flex-1 space-y-2">
+                  <p>{habit.title}</p>
+                  <Slider
+                    max={2}
+                    min={-2}
+                    value={[habit.moodImpact]}
+                    onValueChange={(value) =>
+                      dispatch({
+                        type: "setHabitMoodImpact",
+                        payload: { id: habit._id, value: value[0] },
+                      })
+                    }
+                  />
+                  <div className="flex justify-between">
+                    <p>Worse</p>
+                    <p className="font-semibold">{habit.moodImpact}</p>
+                    <p>Better</p>
+                  </div>
                 </div>
               </div>
-            </div>
+            ))
           )}
         </div>
       </Card>
@@ -114,8 +123,12 @@ function PerHabitImpactForm({
                 </div>
               ))}
             </div>
-            <Button className="mt-4 w-full" size="sm">
-              Add
+            <Button
+              className="mt-4 w-full cursor-pointer"
+              size="sm"
+              onClick={() => setIsSelectingHabits(false)}
+            >
+              Done
             </Button>
           </div>
         </DialogContent>
