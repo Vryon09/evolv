@@ -12,11 +12,11 @@ function JournalCard({
   return (
     <div
       onClick={() => setSelectedJournal(journal)}
-      className="cursor-pointer rounded-md bg-neutral-200 p-4 hover:bg-neutral-300 active:bg-neutral-400"
+      className="flex cursor-pointer items-center justify-between rounded-md bg-neutral-200 px-2 py-1 hover:bg-neutral-300 active:bg-neutral-400"
     >
-      <p className="font-semibold">{journal.title}</p>
-      <p className="text-sm">
-        {dayjs(journal.createdAt).format("MMM D, YYYY dddd")}
+      <p className="text-sm">{journal.title}</p>
+      <p className="text-xs">
+        {dayjs(journal.createdAt).format("ddd MMM D, YYYY")}
       </p>
     </div>
   );

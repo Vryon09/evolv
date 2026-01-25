@@ -1,11 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { MOODS, type MoodKey } from "@/constants/moods";
-import { handleGetHabits } from "@/services/apiHabits";
 import { handleGetMoods } from "@/services/apiMoods";
 import { useQuery } from "@tanstack/react-query";
+import dayjs from "dayjs";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router";
-import type { IHabit } from "types/habit";
 import type { IMood } from "types/mood";
 
 function MoodOverview() {
@@ -13,10 +12,10 @@ function MoodOverview() {
     queryFn: handleGetMoods,
     queryKey: ["moods"],
   });
-  const { data: habits = [] } = useQuery<IHabit[]>({
-    queryFn: () => handleGetHabits("default"),
-    queryKey: ["habits"],
-  });
+
+  const todaysMood = [...moods].find((mood) =>
+    dayjs(mood.createdAt).isSame(dayjs(), "day"),
+  );
 
   const navigate = useNavigate();
 
@@ -31,26 +30,22 @@ function MoodOverview() {
           <ArrowRight />
         </Button>
       </div>
-      {moods.map((mood) => (
-        <div key={mood._id}>
-          <p>{MOODS[mood.mood as MoodKey].label}</p>
-          <p>{MOODS[mood.mood as MoodKey].emoji}</p>
-          <p>{MOODS[mood.mood as MoodKey].description}</p>
-          <p>{mood.sleep.duration}hrs</p>
-          <p>{mood.sleep.quality}</p>
-          <div>
-            {mood.habits.map((habit) => {
-              const habitData = habits.find((h) => h._id === habit.habitId);
-              return (
-                <div key={habit.habitId}>
-                  <p>{habitData?.title}</p>
-                  <p>Is it completed? {habit.isCompleted ? "Yes" : "No"}</p>
-                </div>
-              );
-            })}
-          </div>
+      {todaysMood ? (
+        <div>
+          <p>
+            Today's Mood:
+            <span className="text-2xl">
+              {MOODS[todaysMood?.mood as MoodKey].emoji}
+            </span>
+          </p>
+          <p>{MOODS[todaysMood?.mood as MoodKey].label}</p>
+          <p>{MOODS[todaysMood?.mood as MoodKey].description}</p>
+          <p>{todaysMood?.sleep.duration}hrs</p>
+          <p>SleepQuality: {todaysMood?.sleep.quality}/4</p>
         </div>
-      ))}
+      ) : (
+        <p>Click "Go to Mood" to submit a mood today!</p>
+      )}
     </div>
   );
 }

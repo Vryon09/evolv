@@ -30,8 +30,8 @@ function Journals() {
   if (journals?.length === 0) return <p>No journal</p>;
 
   return (
-    <>
-      <div>
+    <div className="bg-background overflow-scroll overflow-x-hidden">
+      <div className="mx-auto max-w-7xl p-4 sm:px-6 lg:px-8">
         <div className="flex justify-between">
           <Button
             size="icon-lg"
@@ -42,7 +42,7 @@ function Journals() {
           </Button>
           <CreateJournalButton />
         </div>
-        <div className="mt-4 flex gap-2">
+        <div className="mt-4 flex flex-col gap-2">
           {journals?.map((journal) => (
             <JournalCard
               journal={journal}
@@ -65,14 +65,14 @@ function Journals() {
             <DialogTitle>{selectedJournal?.title}</DialogTitle>
             <DialogDescription>
               {dayjs(selectedJournal?.createdAt).format(
-                "MMM D, YYYY ddd hh:mm:ssA",
+                "ddd MMM D, YYYY hh:mm:ssA",
               )}
             </DialogDescription>
           </DialogHeader>
           <p>{selectedJournal?.content}</p>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 }
 

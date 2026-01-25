@@ -87,23 +87,7 @@ function MoodPage() {
 
   return (
     <div className="bg-background overflow-scroll overflow-x-hidden">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 py-8 sm:px-6 md:grid-cols-2 lg:grid-cols-3 lg:px-8">
-        <div>
-          <p className="font-semibold">Completed daily habits</p>
-          {isHabitsLoading ? (
-            <div>loading...</div>
-          ) : (
-            habits.map((habit, i) => {
-              if (habit.frequency !== "daily") return;
-
-              return (
-                <div key={i}>
-                  <p>{habit.title}</p>
-                </div>
-              );
-            })
-          )}
-        </div>
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 p-4 sm:px-6 md:grid-cols-2 lg:grid-cols-3 lg:px-8">
         <JournalButtons />
         <MoodForm isSubmittedToday={isSubmittedToday} moodToday={moodToday} />
         <SleepForm isSubmittedToday={isSubmittedToday} moodToday={moodToday} />
