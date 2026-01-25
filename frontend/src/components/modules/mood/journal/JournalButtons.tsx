@@ -1,41 +1,15 @@
-import { Dialog, DialogContent } from "@/components/dialog";
 import { Button } from "@/components/ui/button";
-import {
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { handleGetJournals, useAddJournal } from "@/services/apiJournals";
+import { handleGetJournals } from "@/services/apiJournals";
 import { useQuery } from "@tanstack/react-query";
-import { Plus } from "lucide-react";
-import { useState } from "react";
 import { useNavigate } from "react-router";
 import type { IJournal } from "types/journal";
+import CreateJournalButton from "./CreateJournalButton";
 
 function JournalButtons() {
-  const [isCreating, setIsCreating] = useState(false);
-  const [journalForm, setJournalForm] = useState<{
-    title: string;
-    content: string;
-  }>({ title: "", content: "" });
-
   const { data: journals } = useQuery<IJournal[]>({
     queryFn: handleGetJournals,
     queryKey: ["journals"],
   });
-  const { mutate: handleAddJournal } = useAddJournal();
-
-  function handleSubmit() {
-    handleAddJournal({
-      title: journalForm.title,
-      content: journalForm.content,
-    });
-
-    setJournalForm({ title: "", content: "" });
-  }
 
   const navigate = useNavigate();
 
@@ -48,57 +22,8 @@ function JournalButtons() {
         >
           My Journals ({journals?.length})
         </Button>
-        <Button
-          className="cursor-pointer"
-          onClick={() => setIsCreating(!isCreating)}
-        >
-          <Plus /> <span>Create journal</span>
-        </Button>
+        <CreateJournalButton />
       </div>
-
-      <Dialog open={isCreating} onOpenChange={() => setIsCreating(!isCreating)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Create Journal</DialogTitle>
-            <DialogDescription>
-              Write your feelings, emotions, or thoughts.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="title">Title</Label>
-              <Input
-                id="title"
-                className="field-sizing-fixed w-full text-base"
-                type="text"
-                value={journalForm.title}
-                onChange={(e) =>
-                  setJournalForm((prev) => {
-                    return { ...prev, title: e.target.value };
-                  })
-                }
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="content">Content</Label>
-              <Textarea
-                title="content"
-                className="field-sizing-fixed min-h-72 w-full resize-none text-sm"
-                value={journalForm.content}
-                onChange={(e) =>
-                  setJournalForm((prev) => {
-                    return { ...prev, content: e.target.value };
-                  })
-                }
-              />
-            </div>
-            <Button className="w-full cursor-pointer" onClick={handleSubmit}>
-              Submit
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

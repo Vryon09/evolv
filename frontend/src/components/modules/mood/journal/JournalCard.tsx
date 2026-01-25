@@ -14,8 +14,10 @@ function JournalCard({
       onClick={() => setSelectedJournal(journal)}
       className="cursor-pointer rounded-md bg-neutral-200 p-4 hover:bg-neutral-300 active:bg-neutral-400"
     >
-      <p>{dayjs(journal.createdAt).format("MMM D, YYYY dddd")}</p>
-      <p>{journal.title}</p>
+      <p className="font-semibold">{journal.title}</p>
+      <p className="text-sm">
+        {dayjs(journal.createdAt).format("MMM D, YYYY dddd")}
+      </p>
     </div>
   );
 }

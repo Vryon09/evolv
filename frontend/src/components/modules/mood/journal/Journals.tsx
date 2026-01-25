@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { useState } from "react";
 import dayjs from "dayjs";
+import CreateJournalButton from "./CreateJournalButton";
 
 function Journals() {
   const [selectedJournal, setSelectedJournal] = useState<IJournal | null>(null);
@@ -31,13 +32,16 @@ function Journals() {
   return (
     <>
       <div>
-        <Button
-          size="icon-lg"
-          className="cursor-pointer"
-          onClick={() => navigate("/app/mood")}
-        >
-          <MoveLeftIcon />
-        </Button>
+        <div className="flex justify-between">
+          <Button
+            size="icon-lg"
+            className="cursor-pointer"
+            onClick={() => navigate("/app/mood")}
+          >
+            <MoveLeftIcon />
+          </Button>
+          <CreateJournalButton />
+        </div>
         <div className="mt-4 flex gap-2">
           {journals?.map((journal) => (
             <JournalCard
@@ -60,7 +64,9 @@ function Journals() {
           <DialogHeader>
             <DialogTitle>{selectedJournal?.title}</DialogTitle>
             <DialogDescription>
-              {dayjs(selectedJournal?.createdAt).format("MMM D, YYYY ddd")}
+              {dayjs(selectedJournal?.createdAt).format(
+                "MMM D, YYYY ddd hh:mm:ssA",
+              )}
             </DialogDescription>
           </DialogHeader>
           <p>{selectedJournal?.content}</p>
