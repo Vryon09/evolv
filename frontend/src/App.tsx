@@ -13,7 +13,7 @@ import Opportunity from "./components/modules/opportunity/Opportunity";
 import Finance from "./components/modules/finance/Finance";
 import { PomodoroTimerProvider } from "./contexts/PomodoroTimerContext";
 import { MoodProvider } from "./contexts/MoodContext";
-import Journals from "./components/modules/mood/Journals";
+import Journals from "./components/modules/mood/journal/Journals";
 import MoodPage from "./components/modules/mood/MoodPage";
 
 const queryClient = new QueryClient({
