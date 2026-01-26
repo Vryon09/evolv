@@ -48,3 +48,24 @@ export function useAddJournal() {
     },
   });
 }
+
+async function handleDeleteJournal({ id }: { id: string }) {
+  try {
+    const token = localStorage.getItem("evolv_token");
+
+    await axios.delete(`${API_BASE_URL}/api/journals/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export function useDeleteJournal() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: handleDeleteJournal,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["journals"] }),
+  });
+}

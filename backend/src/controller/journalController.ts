@@ -50,3 +50,35 @@ export async function addJournal(req: Request, res: Response) {
     res.status(500).json({ message: "Internal Server Error!" });
   }
 }
+
+export async function deleteJournal(req: Request, res: Response) {
+  try {
+    const { id } = req.body;
+    const authUser = (req as any).user;
+
+    if (!authUser) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const user = await User.findById(authUser._id);
+
+    if (!user) {
+      return res.status(401).json({ message: "No user found" });
+    }
+
+    const deletedJournal = await Journal.findByIdAndDelete(id);
+
+    const updatedUserMoods = authUser.habits.filter(
+      (habit: string) => habit.toString() !== id,
+    );
+
+    user.habits = updatedUserMoods;
+
+    await user.save();
+
+    res.status(200).json(deletedJournal);
+  } catch (error) {
+    console.error("Error in deleteJournal controller: " + error);
+    res.status(500).json({ message: "Internal Server Error!" });
+  }
+}

@@ -1,6 +1,7 @@
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import dayjs from "dayjs";
@@ -21,7 +22,7 @@ function JournalCard({
         e.stopPropagation();
         setSelectedJournal(journal);
       }}
-      className="group flex cursor-pointer items-center justify-between rounded-md bg-neutral-200 px-2 py-1"
+      className="flex cursor-pointer items-center justify-between rounded-md bg-neutral-200 px-2 py-1 hover:bg-neutral-300 has-[button:hover]:bg-neutral-200"
     >
       <p className="text-sm">{journal.title}</p>
       <div className="flex items-center gap-2">
@@ -30,11 +31,19 @@ function JournalCard({
         </p>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button>
+            <button className="cursor-pointer">
               <EllipsisVertical size={16} />
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent>hello</DropdownMenuContent>
+          <DropdownMenuContent>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
         </DropdownMenu>
       </div>
     </div>
