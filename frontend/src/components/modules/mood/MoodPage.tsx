@@ -25,14 +25,8 @@ function MoodPage() {
     queryKey: ["moods"],
   });
 
-  const {
-    dispatch,
-    mood,
-    sleep,
-    stressLevel,
-    physicalActivity,
-    selectedHabits,
-  } = useMood();
+  const { mood, sleep, stressLevel, physicalActivity, selectedHabits } =
+    useMood();
   const { mutate: handleAddMood } = useAddMood();
   const { mutate: handleDeleteMood } = useDeleteMood();
   const dailyHabits = habits.reduce(
@@ -82,7 +76,6 @@ function MoodPage() {
   function handleUnsubmit() {
     if (!moodToday) return;
     handleDeleteMood({ id: moodToday._id });
-    dispatch({ type: "reset" });
   }
 
   return (
