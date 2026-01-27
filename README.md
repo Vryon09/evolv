@@ -1,2 +1,2 @@
 # eVolV
-eVolV is a full-stack MERN Application that is for your self-improvement. Focus, Task, Moodtracking, journaling, notes, and more.
+eVolV is a full-stack MERN Application that is for your self-improvement. Focus, Task, Mood tracking, journaling, notes, finance and more.
