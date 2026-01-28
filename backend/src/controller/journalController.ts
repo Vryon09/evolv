@@ -53,7 +53,7 @@ export async function addJournal(req: Request, res: Response) {
 
 export async function deleteJournal(req: Request, res: Response) {
   try {
-    const { id } = req.body;
+    const { id } = req.params;
     const authUser = (req as any).user;
 
     if (!authUser) {

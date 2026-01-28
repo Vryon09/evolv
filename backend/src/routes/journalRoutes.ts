@@ -10,6 +10,6 @@ const router = Router();
 
 router.get("/", protect, getJournals);
 router.post("/", protect, addJournal);
-router.post("/:id", protect, deleteJournal);
+router.delete("/:id", protect, deleteJournal);
 
 export default router;
