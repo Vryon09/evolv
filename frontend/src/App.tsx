@@ -15,6 +15,7 @@ import { PomodoroTimerProvider } from "./contexts/PomodoroTimerContext";
 import { MoodProvider } from "./contexts/MoodContext";
 import Journals from "./components/modules/mood/journal/Journals";
 import MoodPage from "./components/modules/mood/MoodPage";
+import MoodCalendar from "./components/modules/mood/MoodCalendar";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -41,6 +42,7 @@ function App() {
               <Route path="/app/mood" element={<Mood />}>
                 <Route path="/app/mood/" element={<MoodPage />} />
                 <Route path="/app/mood/journals" element={<Journals />} />
+                <Route path="/app/mood/calendar" element={<MoodCalendar />} />
               </Route>
               <Route path="/app/knowledge" element={<Knowledge />} />
               <Route path="/app/opportunity" element={<Opportunity />} />

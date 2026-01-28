@@ -3,7 +3,6 @@ import { handleGetJournals } from "@/services/apiJournals";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import type { IJournal } from "types/journal";
-import CreateJournalButton from "./CreateJournalButton";
 
 function JournalButtons() {
   const { data: journals } = useQuery<IJournal[]>({
@@ -22,7 +21,14 @@ function JournalButtons() {
         >
           My Journals ({journals?.length})
         </Button>
-        <CreateJournalButton />
+        <Button
+          className="cursor-pointer"
+          onClick={() => {
+            navigate("/app/mood/calendar");
+          }}
+        >
+          Calendar
+        </Button>
       </div>
     </div>
   );

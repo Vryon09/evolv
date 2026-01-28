@@ -4,7 +4,7 @@ import SleepForm from "./SleepForm";
 import StressForm from "./StressForm";
 import { handleGetHabits } from "@/services/apiHabits";
 import type { IHabit } from "types/habit";
-import JournalButtons from "./journal/JournalButtons";
+import JournalButtons from "./MoodButtons";
 import { Button } from "@/components/ui/button";
 import { handleGetMoods, useAddMood, useDeleteMood } from "@/services/apiMoods";
 import { useMood } from "@/contexts/useMood";
