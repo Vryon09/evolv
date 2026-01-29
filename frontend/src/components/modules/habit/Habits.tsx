@@ -12,10 +12,6 @@ interface HabitsProps {
   setIsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-// 1. Finalize the habit module, if there is a bug fix it
-// 2. Start the mood module, create 1 mood component
-// 3. Finalize that component
-
 function Habits({ habits, setEditingHabit, setIsDialogOpen }: HabitsProps) {
   const { mutate: handleCompleteHabit } = useCompleteHabit();
   const { mutate: handleUpdateHabit } = useUpdateHabit();

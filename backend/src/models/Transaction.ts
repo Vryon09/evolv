@@ -1,18 +1,23 @@
 import mongoose, { Schema } from "mongoose";
 import type { InferSchemaType } from "mongoose";
 
-const noteSchema = new Schema(
+const transactionSchema = new Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    title: {
+    type: {
       type: String,
+      enum: ["Expense", "Income"],
       required: true,
-      maxlength: 100,
-      trim: true,
+    },
+    amount: {
+      type: Number,
+      required: true,
+      min: 0.01,
+      max: 1_000_000_000,
     },
     description: {
       type: String,
@@ -35,6 +40,6 @@ const noteSchema = new Schema(
   },
 );
 
-export type INote = InferSchemaType<typeof noteSchema>;
+export type ITransaction = InferSchemaType<typeof transactionSchema>;
 
-export default mongoose.model<INote>("Note", noteSchema);
+export default mongoose.model<ITransaction>("Transaction", transactionSchema);

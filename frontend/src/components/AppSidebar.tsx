@@ -39,6 +39,11 @@ const items = [
     icon: Meh,
   },
   {
+    title: "Finance",
+    url: "finance",
+    icon: Banknote,
+  },
+  {
     title: "Knowledge",
     url: "knowledge",
     icon: Brain,
@@ -47,11 +52,6 @@ const items = [
     title: "Opportunity",
     url: "opportunity",
     icon: Network,
-  },
-  {
-    title: "Finance",
-    url: "finance",
-    icon: Banknote,
   },
 ];
 
