@@ -90,8 +90,8 @@ function FinanceActionButtons() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="expense">Expense</SelectItem>
-                  <SelectItem value="income">Income</SelectItem>
+                  <SelectItem value="Expense">Expense</SelectItem>
+                  <SelectItem value="Income">Income</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -113,7 +113,9 @@ function FinanceActionButtons() {
                 </SelectTrigger>
                 <SelectContent>
                   {categories[formValue.transactionType].map((category) => (
-                    <SelectItem value={category}>{category}</SelectItem>
+                    <SelectItem key={category} value={category}>
+                      {category}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
