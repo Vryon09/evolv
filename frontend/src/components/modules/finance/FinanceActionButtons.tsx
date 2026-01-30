@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { Expense, Income } from "@/constants/finance";
+import { useAddTransaction } from "@/services/apiTransactions";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -36,7 +37,16 @@ function FinanceActionButtons() {
   const [formValue, setFormValue] = useState<{
     transactionType: "Expense" | "Income";
     category: Expense | Income;
-  }>({ transactionType: "Expense", category: "Food" });
+    amount: number;
+    description: string;
+  }>({
+    transactionType: "Expense",
+    category: "Food",
+    amount: 0,
+    description: "",
+  });
+
+  const { mutate: handleAddTransaction } = useAddTransaction();
 
   useEffect(() => {
     if (formValue.transactionType === "Expense") {
@@ -51,6 +61,19 @@ function FinanceActionButtons() {
       });
     }
   }, [formValue.transactionType]);
+
+  function handleAdd() {
+    console.log(formValue);
+
+    handleAddTransaction({
+      transactionType: formValue.transactionType,
+      category: formValue.category,
+      amount: formValue.amount,
+      description: formValue.description,
+    });
+
+    setIsCreatingNew(false);
+  }
 
   return (
     <>
@@ -122,16 +145,31 @@ function FinanceActionButtons() {
             </div>
             <div className="flex flex-col gap-1">
               <label className="font-semibold">Amount($)</label>
-              <Input type="number" placeholder="0.00" />
+              <Input
+                type="number"
+                placeholder="0.00"
+                value={formValue.amount}
+                onChange={(e) =>
+                  setFormValue((prev) => {
+                    return { ...prev, amount: +e.target.value };
+                  })
+                }
+              />
             </div>
             <div className="flex flex-col gap-1">
               <label className="font-semibold">Description (Optional)</label>
               <Input
-                type="number"
+                type="text"
                 placeholder={`Add a note about this ${formValue.transactionType}`}
+                value={formValue.description}
+                onChange={(e) =>
+                  setFormValue((prev) => {
+                    return { ...prev, description: e.target.value };
+                  })
+                }
               />
             </div>
-            <Button className="flex cursor-pointer">
+            <Button className="flex cursor-pointer" onClick={handleAdd}>
               Add {`${formValue.transactionType}`}
             </Button>
           </div>

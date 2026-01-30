@@ -83,6 +83,12 @@ const userSchema = new Schema(
         ref: "Note",
       },
     ],
+    transactions: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Transaction",
+      },
+    ],
     contacts: [
       {
         type: Schema.Types.ObjectId,
@@ -95,7 +101,7 @@ const userSchema = new Schema(
       type: Date,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 userSchema.pre("save", async function (next) {

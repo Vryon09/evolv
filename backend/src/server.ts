@@ -8,6 +8,7 @@ import moodRoutes from "./routes/moodRoutes.ts";
 import tagRoutes from "./routes/tagRoutes.ts";
 import pomodoroRoutes from "./routes/pomodoroRoutes.ts";
 import journalRoutes from "./routes/journalRoutes.ts";
+import transactionRoutes from "./routes/transactionRoutes.ts";
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use("/api/moods", moodRoutes);
 app.use("/api/tags", tagRoutes);
 app.use("/api/pomodoro", pomodoroRoutes);
 app.use("/api/journals", journalRoutes);
+app.use("/api/transactions", transactionRoutes);
 
 connectDB();
 

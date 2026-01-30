@@ -1,5 +1,9 @@
 import mongoose, { Schema } from "mongoose";
 import type { InferSchemaType } from "mongoose";
+import {
+  EXPENSE_CATEGORIES,
+  INCOME_CATEGORIES,
+} from "../const/financeConstants.ts";
 
 const transactionSchema = new Schema(
   {
@@ -8,9 +12,14 @@ const transactionSchema = new Schema(
       ref: "User",
       required: true,
     },
-    type: {
+    transactionType: {
       type: String,
       enum: ["Expense", "Income"],
+      required: true,
+    },
+    category: {
+      type: String,
+      enum: [...EXPENSE_CATEGORIES, ...INCOME_CATEGORIES],
       required: true,
     },
     amount: {
@@ -25,7 +34,7 @@ const transactionSchema = new Schema(
       maxlength: 200,
       trim: true,
     },
-    tags: { type: String, default: [] },
+    tags: { type: [String], default: [] },
     isFavorite: {
       type: Boolean,
       default: false,

@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCurrentUser } from "@/services/apiAuth";
 import type { IPomodoroSettings } from "../modules/habit/PomodoroSettings";
+import { Loader } from "lucide-react";
 export interface IUser {
   _id: string;
   name: string;
@@ -45,7 +46,11 @@ function OSLayout() {
   }, [navigate]);
 
   if (isPending) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <Loader size={64} />
+      </div>
+    );
   }
 
   return (

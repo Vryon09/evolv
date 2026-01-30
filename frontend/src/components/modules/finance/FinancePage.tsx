@@ -1,4 +1,5 @@
 import FinanceActionButtons from "./FinanceActionButtons";
+import FinancialSummary from "./FinancialSummary";
 
 function FinancePage() {
   return (
@@ -7,6 +8,7 @@ function FinancePage() {
         <div className="flex justify-end">
           <FinanceActionButtons />
         </div>
+        <FinancialSummary />
       </div>
     </div>
   );
