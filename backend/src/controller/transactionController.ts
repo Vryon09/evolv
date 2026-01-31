@@ -94,3 +94,30 @@ export async function deleteTransaction(req: Request, res: Response) {
     res.status(500).json({ message: "Internal Server Error." });
   }
 }
+
+export async function updateTransaction(req: Request, res: Response) {
+  try {
+    const { id } = req.params;
+    const { transactionType, category, amount, description } = req.body;
+
+    if (!id) {
+      return res.status(201).json({ message: "No id found." });
+    }
+
+    const updatedTransactions = await Transaction.findByIdAndUpdate(
+      id,
+      {
+        transactionType,
+        category,
+        amount,
+        description,
+      },
+      { new: true },
+    );
+
+    res.status(200).json(updatedTransactions);
+  } catch (error) {
+    console.error("Error in updateTransaction Controller: " + error);
+    res.status(500).json({ message: "Internal Server Error." });
+  }
+}

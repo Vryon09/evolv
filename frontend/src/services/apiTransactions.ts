@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import type { Category } from "types/Transaction";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -70,6 +71,47 @@ export function useDeleteTransaction() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: handleDeleteTransaction,
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["transactions"] }),
+  });
+}
+
+async function handleUpdateTransaction({
+  _id,
+  transactionType,
+  category,
+  amount,
+  description,
+}: {
+  _id: string;
+  transactionType: "Expense" | "Income";
+  category: Category;
+  amount: number;
+  description: string;
+}) {
+  const token = localStorage.getItem("evolv_token");
+  try {
+    const updatedTransaction = {
+      transactionType,
+      category,
+      amount,
+      description,
+    };
+    await axios.patch(
+      `${API_BASE_URL}/api/transactions/${_id}`,
+      updatedTransaction,
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export function useUpdateTransaction() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: handleUpdateTransaction,
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["transactions"] }),
   });

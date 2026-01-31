@@ -14,29 +14,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Expense, Income } from "@/constants/finance";
+import { categories, type Expense, type Income } from "@/constants/finance";
 import { useAddTransaction } from "@/services/apiTransactions";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
-
-const categories = {
-  Expense: [
-    "Food",
-    "Transport",
-    "Bills",
-    "Personal",
-    "Leisure",
-    "Savings",
-    "Misc",
-  ],
-  Income: ["Primary", "Side", "Passive", "Other"],
-};
+import type { Category } from "types/Transaction";
 
 function FinanceActionButtons() {
   const [isCreatingNew, setIsCreatingNew] = useState<boolean>(false);
   const [formValue, setFormValue] = useState<{
     transactionType: "Expense" | "Income";
-    category: Expense | Income;
+    category: Category;
     amount: string;
     description: string;
   }>({
@@ -126,7 +114,7 @@ function FinanceActionButtons() {
                   setFormValue((prev) => {
                     return {
                       ...prev,
-                      category: value as Expense | Income,
+                      category: value as Category,
                     };
                   })
                 }
