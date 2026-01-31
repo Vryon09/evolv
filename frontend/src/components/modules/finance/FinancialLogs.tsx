@@ -1,7 +1,12 @@
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { handleGetTransactions } from "@/services/apiTransactions";
+import {
+  handleGetTransactions,
+  useDeleteTransaction,
+} from "@/services/apiTransactions";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
+import { Edit2, Trash } from "lucide-react";
 import type { ITransaction } from "types/Transaction";
 
 function FinancialLogs() {
@@ -10,10 +15,12 @@ function FinancialLogs() {
     queryKey: ["transactions"],
   });
 
+  const { mutate: handleDeleteTransaction } = useDeleteTransaction();
+
   return (
-    <div className="mt-4 divide-y rounded-2xl border-1 border-black">
+    <div className="mt-4 divide-y rounded-2xl border-1 border-neutral-300">
       {transactions.map((transaction) => (
-        <div className="flex items-center justify-between border-black p-2">
+        <div className="flex items-center justify-between border-neutral-300 p-2">
           <div className="flex flex-col gap-1">
             <div
               className={cn(
@@ -38,16 +45,36 @@ function FinancialLogs() {
               {dayjs(transaction.createdAt).format("MMM DD, YYYY")}
             </p>
           </div>
-          <p
-            className={cn(
-              transaction.transactionType === "Income"
-                ? "text-green-600"
-                : "text-red-600",
-            )}
-          >
-            {transaction.transactionType === "Income" ? "+" : "-"}$
-            {transaction.amount}
-          </p>
+
+          <div className="flex items-center gap-2">
+            <p
+              className={cn(
+                transaction.transactionType === "Income"
+                  ? "text-green-600"
+                  : "text-red-600",
+              )}
+            >
+              {transaction.transactionType === "Income" ? "+" : "-"}$
+              {transaction.amount}
+            </p>
+
+            <Button
+              variant="ghost"
+              size="icon-lg"
+              className="cursor-pointer rounded-full"
+            >
+              <Edit2 />
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="icon-lg"
+              className="cursor-pointer rounded-full"
+              onClick={() => handleDeleteTransaction(transaction._id)}
+            >
+              <Trash />
+            </Button>
+          </div>
           {/* {transaction.description !== "" && <p>{transaction.description}</p>} */}
         </div>
       ))}

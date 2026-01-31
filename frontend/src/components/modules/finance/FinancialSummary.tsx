@@ -38,7 +38,9 @@ function FinancialSummary() {
         <Card className="w-full p-4" key={summary.label}>
           <p className="font-semibold">{summary.label}</p>
           <p className="text-4xl font-bold">
-            ${isTransactionsLoading ? "Loading..." : summary.value}
+            {isTransactionsLoading
+              ? "Loading..."
+              : `${summary.value < 0 ? "-" : ""}$${Math.abs(summary.value)}`}
           </p>
         </Card>
       ))}

@@ -54,3 +54,23 @@ export function useAddTransaction() {
       queryClient.invalidateQueries({ queryKey: ["transactions"] }),
   });
 }
+
+async function handleDeleteTransaction(id: string) {
+  const token = localStorage.getItem("evolv_token");
+  try {
+    await axios.delete(`${API_BASE_URL}/api/transactions/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export function useDeleteTransaction() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: handleDeleteTransaction,
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["transactions"] }),
+  });
+}

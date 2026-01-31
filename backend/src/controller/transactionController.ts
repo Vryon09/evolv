@@ -61,3 +61,36 @@ export async function addTransaction(req: Request, res: Response) {
     res.status(500).json({ message: "Internal Server Error" });
   }
 }
+
+export async function deleteTransaction(req: Request, res: Response) {
+  try {
+    const { id } = req.params;
+
+    const authUser = (req as any).user;
+
+    if (!authUser) {
+      return res.status(201).json({ message: "Unauthorized." });
+    }
+
+    const user = await User.findById(authUser._id);
+
+    if (!user) {
+      return res.status(201).json({ message: "No user found." });
+    }
+
+    const deletedTransaction = await Transaction.findByIdAndDelete(id);
+
+    const updatedUserTransactions = authUser.transactions.filter(
+      (transaction: string) => transaction.toString() !== id,
+    );
+
+    user.transactions = updatedUserTransactions;
+
+    await user.save();
+
+    res.status(400).json(deletedTransaction);
+  } catch (error) {
+    console.error("Error in deleteTransaction Controller: " + error);
+    res.status(500).json({ message: "Internal Server Error." });
+  }
+}

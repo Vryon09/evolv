@@ -72,6 +72,16 @@ function Journals() {
           <p>{selectedJournal?.content}</p>
         </DialogContent>
       </Dialog>
+
+      {/* <Dialog open={true}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              Are you sure you want to delete this journal?
+            </DialogTitle>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog> */}
     </div>
   );
 }
