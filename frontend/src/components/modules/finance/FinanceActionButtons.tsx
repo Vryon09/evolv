@@ -37,12 +37,12 @@ function FinanceActionButtons() {
   const [formValue, setFormValue] = useState<{
     transactionType: "Expense" | "Income";
     category: Expense | Income;
-    amount: number;
+    amount: string;
     description: string;
   }>({
     transactionType: "Expense",
     category: "Food",
-    amount: 0,
+    amount: "",
     description: "",
   });
 
@@ -63,12 +63,12 @@ function FinanceActionButtons() {
   }, [formValue.transactionType]);
 
   function handleAdd() {
-    console.log(formValue);
+    if (isNaN(+formValue.amount)) return;
 
     handleAddTransaction({
       transactionType: formValue.transactionType,
       category: formValue.category,
-      amount: formValue.amount,
+      amount: +formValue.amount,
       description: formValue.description,
     });
 
@@ -146,12 +146,12 @@ function FinanceActionButtons() {
             <div className="flex flex-col gap-1">
               <label className="font-semibold">Amount($)</label>
               <Input
-                type="number"
+                type="text"
                 placeholder="0.00"
                 value={formValue.amount}
                 onChange={(e) =>
                   setFormValue((prev) => {
-                    return { ...prev, amount: +e.target.value };
+                    return { ...prev, amount: e.target.value };
                   })
                 }
               />
