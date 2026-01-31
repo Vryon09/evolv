@@ -29,7 +29,7 @@ const categories = {
     "Savings",
     "Misc",
   ],
-  Income: ["Salary", "Side", "Passive", "Other"],
+  Income: ["Primary", "Side", "Passive", "Other"],
 };
 
 function FinanceActionButtons() {

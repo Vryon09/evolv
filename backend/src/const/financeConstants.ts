@@ -11,7 +11,7 @@ export const EXPENSE_CATEGORIES = [
 ] as const;
 
 export const INCOME_CATEGORIES = [
-  "Salary",
+  "Primary",
   "Side",
   "Passive",
   "Other",

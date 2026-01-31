@@ -7,4 +7,4 @@ export type Expense =
   | "Savings"
   | "Misc";
 
-export type Income = "Salary" | "Side" | "Passive" | "Other";
+export type Income = "Primary" | "Side" | "Passive" | "Other";
