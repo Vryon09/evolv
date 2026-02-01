@@ -1,24 +1,25 @@
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+// import {
+//   Dialog,
+//   DialogContent,
+//   DialogDescription,
+//   DialogHeader,
+//   DialogTitle,
+// } from "@/components/ui/dialog";
+// import { Input } from "@/components/ui/input";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
 import { categories, type Expense, type Income } from "@/constants/finance";
 import { useAddTransaction } from "@/services/apiTransactions";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Category } from "types/Transaction";
+import FinancialDialog from "./FinancialDialog";
 
 function FinanceActionButtons() {
   const [isCreatingNew, setIsCreatingNew] = useState<boolean>(false);
@@ -77,92 +78,14 @@ function FinanceActionButtons() {
         </Button>
       </div>
 
-      <Dialog open={isCreatingNew} onOpenChange={setIsCreatingNew}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Add New Transaction</DialogTitle>
-            <DialogDescription>Add new transaction</DialogDescription>
-          </DialogHeader>
-          <div className="flex flex-col gap-2">
-            <div className="flex flex-col gap-1">
-              <label className="font-semibold">Type</label>
-              <Select
-                value={formValue.transactionType}
-                onValueChange={(value) =>
-                  setFormValue((prev) => {
-                    return {
-                      ...prev,
-                      transactionType: value as "Income" | "Expense",
-                    };
-                  })
-                }
-              >
-                <SelectTrigger id="frequency" className="cursor-pointer">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Expense">Expense</SelectItem>
-                  <SelectItem value="Income">Income</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex flex-col gap-1">
-              <label className="font-semibold">Category</label>
-              <Select
-                value={formValue.category}
-                onValueChange={(value) =>
-                  setFormValue((prev) => {
-                    return {
-                      ...prev,
-                      category: value as Category,
-                    };
-                  })
-                }
-              >
-                <SelectTrigger id="frequency" className="cursor-pointer">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories[formValue.transactionType].map((category) => (
-                    <SelectItem key={category} value={category}>
-                      {category}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex flex-col gap-1">
-              <label className="font-semibold">Amount($)</label>
-              <Input
-                type="text"
-                placeholder="0.00"
-                value={formValue.amount}
-                onChange={(e) =>
-                  setFormValue((prev) => {
-                    return { ...prev, amount: e.target.value };
-                  })
-                }
-              />
-            </div>
-            <div className="flex flex-col gap-1">
-              <label className="font-semibold">Description (Optional)</label>
-              <Input
-                type="text"
-                placeholder={`Add a note about this ${formValue.transactionType}`}
-                value={formValue.description}
-                onChange={(e) =>
-                  setFormValue((prev) => {
-                    return { ...prev, description: e.target.value };
-                  })
-                }
-              />
-            </div>
-            <Button className="flex cursor-pointer" onClick={handleAdd}>
-              Add {`${formValue.transactionType}`}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <FinancialDialog
+        open={isCreatingNew}
+        onOpenChange={() => setIsCreatingNew((prev) => !prev)}
+        formValue={formValue}
+        setFormValue={setFormValue}
+        handleSubmit={handleAdd}
+        action="Add"
+      />
     </>
   );
 }

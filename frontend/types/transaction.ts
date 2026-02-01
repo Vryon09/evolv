@@ -23,3 +23,10 @@ export interface ITransaction {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface IFinanceFormValue {
+  transactionType: "Expense" | "Income";
+  category: Category;
+  amount: string;
+  description: string;
+}
