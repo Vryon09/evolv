@@ -4,13 +4,22 @@ import type { Category } from "types/Transaction";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
-export async function handleGetTransactions() {
+export async function handleGetTransactions({
+  transactionType = "All",
+  category = "All",
+}: {
+  transactionType: "All" | "Income" | "Expense";
+  category: Category | "All";
+}) {
   const token = localStorage.getItem("evolv_token");
 
   try {
-    const res = await axios.get(`${API_BASE_URL}/api/transactions`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const res = await axios.get(
+      `${API_BASE_URL}/api/transactions?type=${transactionType}&category=${category}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
 
     return res.data ?? [];
   } catch (error) {

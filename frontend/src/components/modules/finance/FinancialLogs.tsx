@@ -10,8 +10,13 @@ import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { Edit2, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
-import type { IFinanceFormValue, ITransaction } from "types/Transaction";
+import type {
+  Category,
+  IFinanceFormValue,
+  ITransaction,
+} from "types/Transaction";
 import FinancialDialog from "./FinancialDialog";
+import FinancialLogsFilter from "./FinancialLogsFilter";
 
 function FinancialLogs() {
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -26,9 +31,21 @@ function FinancialLogs() {
     description: "",
   });
 
+  const [selectedType, setSelectedType] = useState<
+    "Income" | "Expense" | "All"
+  >("All");
+
+  const [selectedCategory, setSelectedCategory] = useState<Category | "All">(
+    "All",
+  );
+
   const { data: transactions = [] } = useQuery<ITransaction[]>({
-    queryFn: handleGetTransactions,
-    queryKey: ["transactions"],
+    queryFn: () =>
+      handleGetTransactions({
+        transactionType: selectedType,
+        category: selectedCategory,
+      }),
+    queryKey: ["transactions", selectedType, selectedCategory],
   });
 
   const { mutate: handleDeleteTransaction } = useDeleteTransaction();
@@ -91,7 +108,13 @@ function FinancialLogs() {
   }, [formValue.transactionType]);
 
   return (
-    <>
+    <div>
+      <FinancialLogsFilter
+        selectedType={selectedType}
+        setSelectedType={setSelectedType}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+      />
       <div className="mt-4 divide-y rounded-2xl border-1 border-neutral-300">
         {transactions.map((transaction) => (
           <div className="flex items-center justify-between border-neutral-300 p-2">
@@ -165,7 +188,7 @@ function FinancialLogs() {
         handleSubmit={handleEdit}
         action="Edit"
       />
-    </>
+    </div>
   );
 }
 

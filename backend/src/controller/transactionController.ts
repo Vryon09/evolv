@@ -3,6 +3,11 @@ import User from "../models/User.ts";
 import Transaction from "../models/Transaction.ts";
 import type { ITransaction } from "../models/Transaction.ts";
 
+interface TransactionFilter {
+  transactionType?: string;
+  category?: string;
+}
+
 export async function getTransactions(req: Request, res: Response) {
   try {
     const authUser = (req as any).user;
@@ -11,13 +16,28 @@ export async function getTransactions(req: Request, res: Response) {
       return res.status(401).json({ message: "Unauthorized." });
     }
 
+    const { type, category } = req.query as {
+      type?: string;
+      category?: string;
+    };
+
+    const filter: TransactionFilter = {};
+
+    if (type && type !== "All") {
+      filter.transactionType = type;
+    }
+
+    if (category && category !== "All") {
+      filter.category = category;
+    }
+
     const transactions = await User.findById(authUser._id)
       .populate<{
         transactions: ITransaction[];
       }>({
         path: "transactions",
         model: Transaction,
-        match: { isArchived: false },
+        match: { isArchived: false, ...filter },
       })
       .select("transactions");
 
