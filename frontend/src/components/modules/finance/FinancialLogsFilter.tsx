@@ -11,7 +11,7 @@ import {
   type Income,
 } from "@/constants/finance";
 import { Funnel, ListFilterPlus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Category } from "types/Transaction";
 
 const transactionTypes = ["All", "Expense", "Income"] as const;
@@ -30,6 +30,10 @@ function FinancialLogsFilter() {
       : selectedType === "Income"
         ? (allCategories.Income as Income[])
         : ([...allCategories.Expense, ...allCategories.Income] as Category[]);
+
+  useEffect(() => {
+    setSelectedCategory("All");
+  }, [selectedType]);
 
   return (
     <div className="flex justify-end">
