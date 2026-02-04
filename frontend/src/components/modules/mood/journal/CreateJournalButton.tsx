@@ -29,6 +29,8 @@ function CreateJournalButton() {
     });
 
     setJournalForm({ title: "", content: "" });
+
+    setIsCreating(false);
   }
 
   return (

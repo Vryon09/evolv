@@ -1,12 +1,4 @@
-import {
-  Banknote,
-  Brain,
-  Home,
-  LogOut,
-  Meh,
-  Network,
-  TreePalm,
-} from "lucide-react";
+import { Banknote, Home, LogOut, Meh, TreePalm } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -42,16 +34,6 @@ const items = [
     title: "Finance",
     url: "finance",
     icon: Banknote,
-  },
-  {
-    title: "Knowledge",
-    url: "knowledge",
-    icon: Brain,
-  },
-  {
-    title: "Opportunity",
-    url: "opportunity",
-    icon: Network,
   },
 ];
 

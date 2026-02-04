@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { handleGetJournals } from "@/services/apiJournals";
+import { handleGetJournals, useDeleteJournal } from "@/services/apiJournals";
 import { useQuery } from "@tanstack/react-query";
 import { MoveLeftIcon } from "lucide-react";
 import { useNavigate } from "react-router";
@@ -15,13 +15,17 @@ import {
 import { useState } from "react";
 import dayjs from "dayjs";
 import CreateJournalButton from "./CreateJournalButton";
-
+import DeleteDialog from "@/components/DeleteDialog";
 function Journals() {
   const [selectedJournal, setSelectedJournal] = useState<IJournal | null>(null);
+  const [journalDeleteDialog, setJournalDeleteDialog] =
+    useState<IJournal | null>(null);
   const { data: journals, isLoading } = useQuery<IJournal[]>({
     queryFn: handleGetJournals,
     queryKey: ["journals"],
   });
+
+  const { mutate: handleDeleteJournal } = useDeleteJournal();
 
   const navigate = useNavigate();
 
@@ -48,10 +52,12 @@ function Journals() {
               journal={journal}
               key={journal._id}
               setSelectedJournal={setSelectedJournal}
+              setJournalDeleteDialog={setJournalDeleteDialog}
             />
           ))}
         </div>
       </div>
+
       <Dialog
         open={selectedJournal !== null}
         onOpenChange={() => {
@@ -73,15 +79,24 @@ function Journals() {
         </DialogContent>
       </Dialog>
 
-      {/* <Dialog open={true}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>
-              Are you sure you want to delete this journal?
-            </DialogTitle>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog> */}
+      <DeleteDialog
+        open={journalDeleteDialog !== null}
+        onOpenChange={() => {
+          if (journalDeleteDialog !== null) {
+            setJournalDeleteDialog(null);
+          }
+        }}
+        handleDelete={() => {
+          if (journalDeleteDialog === null) return;
+
+          handleDeleteJournal({ id: journalDeleteDialog._id });
+
+          setJournalDeleteDialog(null);
+        }}
+      >
+        Are you sure you want to delete this journal
+        {journalDeleteDialog?.title ? `: "${journalDeleteDialog?.title}"` : ""}
+      </DeleteDialog>
     </div>
   );
 }

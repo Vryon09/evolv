@@ -4,7 +4,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useDeleteJournal } from "@/services/apiJournals";
 import dayjs from "dayjs";
 import { EllipsisVertical } from "lucide-react";
 import type { Dispatch, SetStateAction } from "react";
@@ -13,16 +12,12 @@ import type { IJournal } from "types/journal";
 function JournalCard({
   journal,
   setSelectedJournal,
+  setJournalDeleteDialog,
 }: {
   journal: IJournal;
   setSelectedJournal: Dispatch<SetStateAction<IJournal | null>>;
+  setJournalDeleteDialog: Dispatch<SetStateAction<IJournal | null>>;
 }) {
-  const { mutate: handleDeleteJournal } = useDeleteJournal();
-
-  function handleDelete() {
-    handleDeleteJournal({ id: journal._id });
-  }
-
   return (
     <div
       onClick={(e) => {
@@ -46,7 +41,7 @@ function JournalCard({
             <DropdownMenuItem
               onClick={(e) => {
                 e.stopPropagation();
-                handleDelete();
+                setJournalDeleteDialog(journal);
               }}
             >
               Delete

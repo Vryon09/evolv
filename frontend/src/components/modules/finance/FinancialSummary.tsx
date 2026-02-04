@@ -6,7 +6,8 @@ import type { ITransaction } from "types/Transaction";
 function FinancialSummary() {
   const { data: transactions = [], isLoading: isTransactionsLoading } =
     useQuery<ITransaction[]>({
-      queryFn: handleGetTransactions,
+      queryFn: () =>
+        handleGetTransactions({ transactionType: "All", category: "All" }),
       queryKey: ["transactions"],
     });
 
@@ -40,7 +41,7 @@ function FinancialSummary() {
           <p className="text-4xl font-bold">
             {isTransactionsLoading
               ? "Loading..."
-              : `${summary.value < 0 ? "-" : ""}$${Math.abs(summary.value)}`}
+              : `${summary.value < 0 ? "-" : ""}₱${Math.abs(summary.value)}`}
           </p>
         </Card>
       ))}

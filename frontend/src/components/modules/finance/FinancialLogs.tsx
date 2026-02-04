@@ -17,6 +17,7 @@ import type {
 } from "types/Transaction";
 import FinancialDialog from "./FinancialDialog";
 import FinancialLogsFilter from "./FinancialLogsFilter";
+import DeleteDialog from "@/components/DeleteDialog";
 
 function FinancialLogs() {
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -38,6 +39,9 @@ function FinancialLogs() {
   const [selectedCategory, setSelectedCategory] = useState<Category | "All">(
     "All",
   );
+
+  const [transactionDeleteDialog, setTransactionDeleteDialog] =
+    useState<ITransaction | null>(null);
 
   const { data: transactions = [] } = useQuery<ITransaction[]>({
     queryFn: () =>
@@ -108,14 +112,14 @@ function FinancialLogs() {
   }, [formValue.transactionType]);
 
   return (
-    <div>
+    <div className="mt-8 space-y-4">
       <FinancialLogsFilter
         selectedType={selectedType}
         setSelectedType={setSelectedType}
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
       />
-      <div className="mt-4 divide-y rounded-2xl border-1 border-neutral-300">
+      <div className="divide-y rounded-2xl border-1 border-neutral-300">
         {transactions.map((transaction) => (
           <div className="flex items-center justify-between border-neutral-300 p-2">
             <div className="flex flex-col gap-1">
@@ -151,7 +155,7 @@ function FinancialLogs() {
                     : "text-red-600",
                 )}
               >
-                {transaction.transactionType === "Income" ? "+" : "-"}$
+                {transaction.transactionType === "Income" ? "+" : "-"}₱
                 {transaction.amount}
               </p>
 
@@ -171,7 +175,9 @@ function FinancialLogs() {
                 variant="ghost"
                 size="icon-lg"
                 className="cursor-pointer rounded-full"
-                onClick={() => handleDeleteTransaction(transaction._id)}
+                onClick={() => {
+                  setTransactionDeleteDialog(transaction);
+                }}
               >
                 <Trash />
               </Button>
@@ -188,6 +194,23 @@ function FinancialLogs() {
         handleSubmit={handleEdit}
         action="Edit"
       />
+
+      <DeleteDialog
+        open={transactionDeleteDialog !== null}
+        onOpenChange={() => {
+          if (transactionDeleteDialog !== null) {
+            setTransactionDeleteDialog(null);
+          }
+        }}
+        handleDelete={() => {
+          if (transactionDeleteDialog === null) return;
+          handleDeleteTransaction(transactionDeleteDialog?._id);
+
+          setTransactionDeleteDialog(null);
+        }}
+      >
+        Are you sure you want to delete this transaction?
+      </DeleteDialog>
     </div>
   );
 }
