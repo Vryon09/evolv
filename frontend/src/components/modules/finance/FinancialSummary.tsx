@@ -41,7 +41,7 @@ function FinancialSummary() {
           <p className="text-4xl font-bold">
             {isTransactionsLoading
               ? "Loading..."
-              : `${summary.value < 0 ? "-" : ""}₱${Math.abs(summary.value)}`}
+              : `${summary.value < 0 ? "-" : ""}₱${new Intl.NumberFormat().format(Math.abs(summary.value))}`}
           </p>
         </Card>
       ))}
