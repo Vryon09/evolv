@@ -1,60 +1,107 @@
-import {
-  ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
-  ChartTooltip,
-  ChartTooltipContent,
-  type ChartConfig,
-} from "@/components/ui/chart";
 import { handleGetTransactions } from "@/services/apiTransactions";
 import { useQuery } from "@tanstack/react-query";
-import { Bar, BarChart, CartesianGrid } from "recharts";
 import type { ITransaction } from "types/Transaction";
+import IncomeExpenseBarChart from "./charts/IncomeExpenseBarChart";
+import type { ChartConfig } from "@/components/ui/chart";
+import CategoryPieChart from "./charts/CategoryPieChart";
+import { categories } from "@/constants/finance";
 
-const chartConfig = {
-  income: {
-    label: "Income",
-    color: "#2563eb",
+const expenseChartConfig = {
+  Food: {
+    label: "Food",
+    color: "#22c55e", // green
   },
-  expense: {
-    label: "Expense",
-    color: "#60a5fa",
+  Transport: {
+    label: "Transport",
+    color: "#3b82f6", // blue
+  },
+  Bills: {
+    label: "Bills",
+    color: "#ef4444", // red
+  },
+  Personal: {
+    label: "Personal",
+    color: "#a855f7", // purple
+  },
+  Leisure: {
+    label: "Leisure",
+    color: "#f59e0b", // amber
+  },
+  Savings: {
+    label: "Savings",
+    color: "#14b8a6", // teal
+  },
+  Misc: {
+    label: "Misc",
+    color: "#6b7280", // gray
+  },
+} satisfies ChartConfig;
+
+const incomeChartConfig = {
+  Primary: {
+    label: "Primary",
+    color: "#16a34a", // dark green
+  },
+  Side: {
+    label: "Side",
+    color: "#0ea5e9", // sky blue
+  },
+  Passive: {
+    label: "Passive",
+    color: "#8b5cf6", // violet
+  },
+  Other: {
+    label: "Other",
+    color: "#64748b", // slate
   },
 } satisfies ChartConfig;
 
 function FinanceChart() {
-  const { data: transactions = [], isLoading: isTransactionsLoading } =
-    useQuery<ITransaction[]>({
-      queryFn: () =>
-        handleGetTransactions({ transactionType: "All", category: "All" }),
-      queryKey: ["transactions"],
-    });
+  const { data: transactions = [] } = useQuery<ITransaction[]>({
+    queryFn: () =>
+      handleGetTransactions({ transactionType: "All", category: "All" }),
+    queryKey: ["transactions"],
+  });
 
-  const chartData = transactions.reduce(
-    (acc, curr) => {
+  const { incomes, expenses } = transactions.reduce(
+    (
+      acc: {
+        incomes: ITransaction[];
+        expenses: ITransaction[];
+      },
+      curr,
+    ) => {
       if (curr.transactionType === "Expense") {
-        acc.expense += curr.amount;
+        acc.expenses.push(curr);
       }
-
       if (curr.transactionType === "Income") {
-        acc.income += curr.amount;
+        acc.incomes.push(curr);
       }
 
       return acc;
     },
-
-    { income: 0, expense: 0 },
+    {
+      incomes: [],
+      expenses: [],
+    },
   );
 
   return (
-    <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
-      <BarChart accessibilityLayer data={[chartData]}>
-        <ChartTooltip content={<ChartTooltipContent />} />
-        <ChartLegend content={<ChartLegendContent />} />
-        <Bar dataKey="income" fill="var(--color-income)" radius={4} />
-        <Bar dataKey="expense" fill="var(--color-expense)" radius={4} />
-      </BarChart>
-    </ChartContainer>
+    <div>
+      <IncomeExpenseBarChart transactions={transactions} />
+      <div className="flex flex-col">
+        <CategoryPieChart
+          chartConfig={expenseChartConfig}
+          transactions={expenses}
+          categories={categories.Expense}
+        />
+        <CategoryPieChart
+          chartConfig={incomeChartConfig}
+          transactions={incomes}
+          categories={categories.Income}
+        />
+      </div>
+    </div>
   );
 }
 

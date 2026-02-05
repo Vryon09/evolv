@@ -29,8 +29,6 @@ function FinancialLogsFilter({
   selectedCategory,
   setSelectedCategory,
 }: IFinancialLogsFilter) {
-  console.log(setSelectedCategory);
-
   const categories =
     selectedType === "Expense"
       ? (allCategories.Expense as Expense[])

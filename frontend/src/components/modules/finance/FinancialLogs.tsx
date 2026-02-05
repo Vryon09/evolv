@@ -121,7 +121,10 @@ function FinancialLogs() {
       />
       <div className="divide-y rounded-2xl border-1 border-neutral-300">
         {transactions.map((transaction) => (
-          <div className="flex items-center justify-between border-neutral-300 p-2">
+          <div
+            className="flex items-center justify-between border-neutral-300 p-2"
+            key={transaction._id}
+          >
             <div className="flex flex-col gap-1">
               <div
                 className={cn(
