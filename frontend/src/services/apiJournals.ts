@@ -1,15 +1,9 @@
+import api from "@/lib/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-
-const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 export async function handleGetJournals() {
-  const token = localStorage.getItem("evolv_token");
-
   try {
-    const res = await axios.get(`${API_BASE_URL}/api/journals`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const res = await api.get("/api/journals");
 
     return res.data || [];
   } catch (error) {
@@ -24,13 +18,10 @@ async function handleAddJournal({
   title: string;
   content: string;
 }) {
-  const token = localStorage.getItem("evolv_token");
-
   try {
     const newJournal = { title, content };
-    const res = await axios.post(`${API_BASE_URL}/api/journals`, newJournal, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+
+    const res = await api.post("/api/journals", newJournal);
 
     console.log(res.data);
   } catch (error) {
@@ -51,11 +42,7 @@ export function useAddJournal() {
 
 async function handleDeleteJournal({ id }: { id: string }) {
   try {
-    const token = localStorage.getItem("evolv_token");
-
-    await axios.delete(`${API_BASE_URL}/api/journals/${id}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    await api.delete(`/api/journals/${id}`);
   } catch (error) {
     console.error(error);
   }

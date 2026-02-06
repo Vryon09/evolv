@@ -1,17 +1,9 @@
+import api from "@/lib/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-
-const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 export async function handleGetHabits(sortBy: string) {
-  const token = localStorage.getItem("evolv_token");
-
   try {
-    const res = await axios.get(`${API_BASE_URL}/api/habits?sortBy=${sortBy}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const res = await api.get(`/api/habits?sortBy=${sortBy}`);
 
     return res.data || [];
   } catch (error) {
@@ -30,15 +22,11 @@ async function handleAddHabit({
   frequency: "daily" | "weekly" | "monthly";
   tags?: string[];
 }) {
-  const token = localStorage.getItem("evolv_token");
-
   try {
     const newHabit = { title, description, frequency, tags };
-    const res = await axios.post(`${API_BASE_URL}/api/habits`, newHabit, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+
+    const res = await api.post(`/api/habits`, newHabit);
+
     console.log(res.data);
   } catch (error) {
     console.log(error);
@@ -68,24 +56,16 @@ async function handleUpdateHabit({
   tags?: string[];
   isArchived?: boolean;
 }) {
-  const token = localStorage.getItem("evolv_token");
-
   try {
-    await axios.patch(
-      `${API_BASE_URL}/api/habits/${_id}`,
-      {
-        title,
-        description,
-        frequency,
-        tags,
-        isArchived,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
+    const updatedHabit = {
+      title,
+      description,
+      frequency,
+      tags,
+      isArchived,
+    };
+
+    await api.patch(`/api/habits/${_id}`, updatedHabit);
   } catch (error) {
     console.log(error);
   }
@@ -101,14 +81,8 @@ export function useUpdateHabit() {
 }
 
 async function handleDeleteHabit({ _id }: { _id: string }) {
-  const token = localStorage.getItem("evolv_token");
-
   try {
-    await axios.delete(`${API_BASE_URL}/api/habits/${_id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    await api.delete(`/api/habits/${_id}`);
   } catch (error) {
     console.log(error);
   }
@@ -124,18 +98,8 @@ export function useDeleteHabit() {
 }
 
 async function handleCompleteHabit({ _id }: { _id: string }) {
-  const token = localStorage.getItem("evolv_token");
-
   try {
-    await axios.patch(
-      `${API_BASE_URL}/api/habits/${_id}/complete`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
+    await api.patch(`/api/habits/${_id}/complete`, {});
   } catch (error) {
     console.log(error);
   }

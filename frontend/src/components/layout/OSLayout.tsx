@@ -28,13 +28,11 @@ export interface IUser {
 }
 
 function OSLayout() {
-  const token = localStorage.getItem("evolv_token");
-
   const { data: user, isPending } = useQuery<IUser>({
     queryKey: ["currentUser"],
-    queryFn: () => fetchCurrentUser(token!),
-    enabled: !!token,
-    retry: 1,
+    queryFn: fetchCurrentUser,
+    // enabled: !!token,
+    // retry: 1,
   });
 
   const navigate = useNavigate();

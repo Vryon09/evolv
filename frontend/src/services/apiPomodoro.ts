@@ -1,8 +1,6 @@
 import type { IPomodoroSettings } from "@/components/modules/habit/PomodoroSettings";
+import api from "@/lib/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-
-const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 async function handleUpdatePomodoroSettings({
   pomodoro,
@@ -12,25 +10,17 @@ async function handleUpdatePomodoroSettings({
   autoBreak,
   longBreakInterval,
 }: IPomodoroSettings) {
-  const token = localStorage.getItem("evolv_token");
-
   try {
-    await axios.patch(
-      `${API_BASE_URL}/api/pomodoro/`,
-      {
-        pomodoro,
-        short,
-        long,
-        autoPomodoro,
-        autoBreak,
-        longBreakInterval,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
+    const updatedSettings = {
+      pomodoro,
+      short,
+      long,
+      autoPomodoro,
+      autoBreak,
+      longBreakInterval,
+    };
+
+    await api.patch(`/api/pomodoro`, updatedSettings);
   } catch (error) {
     console.log(error);
   }

@@ -1,8 +1,6 @@
+import api from "@/lib/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import type { Category } from "types/Transaction";
-
-const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 export async function handleGetTransactions({
   transactionType = "All",
@@ -11,14 +9,9 @@ export async function handleGetTransactions({
   transactionType: "All" | "Income" | "Expense";
   category: Category | "All";
 }) {
-  const token = localStorage.getItem("evolv_token");
-
   try {
-    const res = await axios.get(
-      `${API_BASE_URL}/api/transactions?type=${transactionType}&category=${category}`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      },
+    const res = await api.get(
+      `/api/transactions?type=${transactionType}&category=${category}`,
     );
 
     return res.data ?? [];
@@ -38,16 +31,10 @@ async function handleAddTransaction({
   amount: number;
   description: string;
 }) {
-  const token = localStorage.getItem("evolv_token");
-
   try {
     const newTransaction = { transactionType, category, amount, description };
 
-    const res = await axios.post(
-      `${API_BASE_URL}/api/transactions`,
-      newTransaction,
-      { headers: { Authorization: `Bearer ${token}` } },
-    );
+    const res = await api.post(`/api/transactions`, newTransaction);
 
     console.log(res.data);
   } catch (error) {
@@ -66,11 +53,8 @@ export function useAddTransaction() {
 }
 
 async function handleDeleteTransaction(id: string) {
-  const token = localStorage.getItem("evolv_token");
   try {
-    await axios.delete(`${API_BASE_URL}/api/transactions/${id}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    await api.delete(`/api/transactions/${id}`);
   } catch (error) {
     console.error(error);
   }
@@ -98,7 +82,6 @@ async function handleUpdateTransaction({
   amount: number;
   description: string;
 }) {
-  const token = localStorage.getItem("evolv_token");
   try {
     const updatedTransaction = {
       transactionType,
@@ -106,11 +89,8 @@ async function handleUpdateTransaction({
       amount,
       description,
     };
-    await axios.patch(
-      `${API_BASE_URL}/api/transactions/${_id}`,
-      updatedTransaction,
-      { headers: { Authorization: `Bearer ${token}` } },
-    );
+
+    await api.patch(`/api/transactions/${_id}`, updatedTransaction);
   } catch (error) {
     console.error(error);
   }

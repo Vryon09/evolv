@@ -1,7 +1,5 @@
+import api from "@/lib/api";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
-
-const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 interface IUser {
   name: string;
@@ -12,7 +10,9 @@ interface IUser {
 async function handleAddUser({ name, email, password }: IUser) {
   try {
     const newUser = { name, email, password };
-    const res = await axios.post(`${API_BASE_URL}/api/auth`, newUser);
+
+    const res = await api.post(`/api/auth`, newUser);
+
     console.log(res.data);
   } catch (error) {
     console.log(error);
@@ -28,7 +28,8 @@ export function useAddUser() {
 async function handleLoginUser({ email, password }: Omit<IUser, "name">) {
   try {
     const user = { email, password };
-    const res = await axios.post(`${API_BASE_URL}/api/auth/login`, user);
+
+    const res = await api.post(`/api/auth/login`, user);
     return res.data || {};
   } catch (error) {
     console.log(error);
@@ -41,13 +42,9 @@ export function useLoginUser() {
   });
 }
 
-export async function fetchCurrentUser(token: string) {
+export async function fetchCurrentUser() {
   try {
-    const res = await axios.get(`${API_BASE_URL}/api/auth/me`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const res = await api.get(`/api/auth/me`);
     return res.data || {};
   } catch (error) {
     console.log(error);

@@ -1,17 +1,9 @@
+import api from "@/lib/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-
-const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 export async function getTags() {
-  const token = localStorage.getItem("evolv_token");
-
   try {
-    const res = await axios.get(`${API_BASE_URL}/api/tags`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const res = await api.get(`/api/tags`);
 
     return res.data ?? [];
   } catch (error) {
@@ -20,18 +12,9 @@ export async function getTags() {
 }
 
 async function handleAddTag({ tag }: { tag: string }) {
-  const token = localStorage.getItem("evolv_token");
-
   try {
-    const res = await axios.post(
-      `${API_BASE_URL}/api/tags/`,
-      { tag },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
+    const res = await api.post(`/api/tags/`, { tag });
+
     console.log(res.data);
   } catch (error) {
     console.log(error);
