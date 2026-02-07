@@ -13,6 +13,7 @@ import {
 import { Link, useLocation, useNavigate } from "react-router";
 import { usePomodoroTimer } from "@/contexts/usePomodoroTimer";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/contexts/useAuth";
 
 const items = [
   {
@@ -41,10 +42,10 @@ function AppSidebar({ username }: { username: string }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { timerState } = usePomodoroTimer();
+  const { logout } = useAuth();
 
   function handleLogout() {
-    localStorage.removeItem("evolv_token");
-    localStorage.removeItem("evolv_user");
+    logout();
     navigate("/login");
   }
 

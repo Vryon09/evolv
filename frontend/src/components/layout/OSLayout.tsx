@@ -31,8 +31,6 @@ function OSLayout() {
   const { data: user, isPending } = useQuery<IUser>({
     queryKey: ["currentUser"],
     queryFn: fetchCurrentUser,
-    // enabled: !!token,
-    // retry: 1,
   });
 
   const navigate = useNavigate();
