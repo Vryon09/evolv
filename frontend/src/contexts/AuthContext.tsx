@@ -1,7 +1,17 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import api from "@/lib/api";
 import { getToken, setToken } from "@/lib/token";
+import { useNavigate } from "react-router";
+import { jwtDecode } from "jwt-decode";
 
+type JwtPayload = { exp?: number };
 type IUser = { _id?: string; name?: string; email?: string } | null;
 
 interface IAuthContext {
@@ -17,8 +27,40 @@ const AuthContext = createContext<IAuthContext | undefined>(undefined);
 function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<IUser>(null);
   const [loading, setLoading] = useState(true);
+  const logoutTimer = useRef<number | null>(null);
+  const navigate = useNavigate();
 
-  async function refreshUser() {
+  const clearLogoutTimer = () => {
+    if (logoutTimer.current) {
+      window.clearTimeout(logoutTimer.current);
+      logoutTimer.current = null;
+    }
+  };
+
+  const scheduleLogout = useCallback(
+    (expSec?: number) => {
+      clearLogoutTimer();
+      if (!expSec) return;
+
+      const ms = expSec * 1000 - Date.now();
+
+      if (ms <= 0) {
+        // already expired
+        setToken(null);
+        setUser(null);
+        return;
+      }
+
+      logoutTimer.current = window.setTimeout(() => {
+        setToken(null);
+        setUser(null);
+        navigate("/login");
+      }, ms);
+    },
+    [navigate],
+  );
+
+  const refreshUser = useCallback(async () => {
     const token = getToken();
     if (!token) {
       setUser(null);
@@ -26,6 +68,17 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
     try {
+      // decode locally to schedule logout immediately for UX
+      try {
+        const payload = jwtDecode<JwtPayload>(token);
+        if (payload?.exp && typeof payload.exp === "number") {
+          // schedule auto logout when token expires
+          scheduleLogout(payload.exp);
+        }
+      } catch {
+        // ignore decode errors
+      }
+
       // call your endpoint to fetch current user; adjust path/name as needed
       const { data } = await api.get("/api/auth/me"); // implement endpoint on backend to return current user
       setUser(data);
@@ -36,35 +89,67 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }
+  }, [scheduleLogout]);
 
   useEffect(() => {
     void refreshUser();
-  }, []);
 
-  function login(token: string, userObj?: IUser) {
-    setToken(token);
-    if (userObj) {
-      setUser(userObj);
+    const onLogout = () => {
+      clearLogoutTimer();
+      setUser(null);
       setLoading(false);
-    } else {
-      // if backend returns only token, fetch user
-      void refreshUser();
-    }
-  }
+      navigate("/login");
+    };
 
-  function logout() {
+    window.addEventListener("evolv:logout", onLogout);
+
+    return () => {
+      window.removeEventListener("evolv:logout", onLogout);
+      clearLogoutTimer();
+    };
+  }, [refreshUser, navigate]);
+
+  const login = useCallback(
+    (token: string, userObj?: IUser) => {
+      setToken(token);
+
+      if (userObj) {
+        setUser(userObj);
+        setLoading(false);
+      } else {
+        // fetch authoritative user
+        void refreshUser();
+      }
+
+      // schedule logout using token exp (if present)
+      try {
+        const payload = jwtDecode<JwtPayload>(token);
+        if (payload?.exp && typeof payload.exp === "number")
+          scheduleLogout(payload.exp);
+      } catch {
+        // ignore
+      }
+    },
+    [refreshUser, scheduleLogout],
+  );
+
+  const logout = useCallback(() => {
     setToken(null);
     setUser(null);
-  }
+    clearLogoutTimer();
+    navigate("/login");
+  }, [navigate]);
 
-  const value: IAuthContext = {
-    user,
-    loading,
-    login,
-    logout,
-    refreshUser,
-  };
+  const value = useMemo(
+    () => ({
+      user,
+      loading,
+      login,
+      logout,
+      refreshUser,
+    }),
+    [user, loading, login, logout, refreshUser],
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

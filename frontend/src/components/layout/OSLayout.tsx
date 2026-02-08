@@ -1,7 +1,6 @@
-import { Outlet, useNavigate } from "react-router";
+import { Outlet } from "react-router";
 import { SidebarProvider } from "../ui/sidebar";
 import AppSidebar from "../AppSidebar";
-import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCurrentUser } from "@/services/apiAuth";
 import type { IPomodoroSettings } from "../modules/habit/PomodoroSettings";
@@ -32,14 +31,6 @@ function OSLayout() {
     queryKey: ["currentUser"],
     queryFn: fetchCurrentUser,
   });
-
-  const navigate = useNavigate();
-  useEffect(() => {
-    const token = localStorage.getItem("evolv_token");
-    if (!token) {
-      navigate("/");
-    }
-  }, [navigate]);
 
   if (isPending) {
     return (

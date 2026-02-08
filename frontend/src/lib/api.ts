@@ -25,6 +25,8 @@ api.interceptors.response.use(
     const status = error?.response?.status;
     if (status === 401) {
       setToken(null);
+
+      window.dispatchEvent(new Event("evolv:logout"));
     }
 
     return Promise.reject(error);
