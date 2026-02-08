@@ -21,7 +21,6 @@ const habitSchema = new Schema(
     frequency: {
       type: String,
       enum: ["daily", "weekly", "monthly"],
-      default: "daily",
     },
     streak: {
       type: Number,
