@@ -1,10 +1,9 @@
 import { Outlet } from "react-router";
 import { SidebarProvider } from "../ui/sidebar";
 import AppSidebar from "../AppSidebar";
-import { useQuery } from "@tanstack/react-query";
-import { fetchCurrentUser } from "@/services/apiAuth";
 import type { IPomodoroSettings } from "../modules/habit/PomodoroSettings";
 import { Loader } from "lucide-react";
+import { useAuth } from "@/contexts/useAuth";
 export interface IUser {
   _id: string;
   name: string;
@@ -27,12 +26,9 @@ export interface IUser {
 }
 
 function OSLayout() {
-  const { data: user, isPending } = useQuery<IUser>({
-    queryKey: ["currentUser"],
-    queryFn: fetchCurrentUser,
-  });
+  const { user, loading } = useAuth();
 
-  if (isPending) {
+  if (loading) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <Loader size={64} />

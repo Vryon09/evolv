@@ -2,8 +2,6 @@ import mongoose, { Schema } from "mongoose";
 import type { InferSchemaType } from "mongoose";
 import bcrypt from "bcrypt";
 
-//do something about the frontend module, start with habit
-
 const userSchema = new Schema(
   {
     name: {

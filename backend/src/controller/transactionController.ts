@@ -89,13 +89,13 @@ export async function deleteTransaction(req: Request, res: Response) {
     const authUser = (req as any).user;
 
     if (!authUser) {
-      return res.status(201).json({ message: "Unauthorized." });
+      return res.status(401).json({ message: "Unauthorized." });
     }
 
     const user = await User.findById(authUser._id);
 
     if (!user) {
-      return res.status(201).json({ message: "No user found." });
+      return res.status(401).json({ message: "No user found." });
     }
 
     const deletedTransaction = await Transaction.findByIdAndDelete(id);
@@ -108,7 +108,7 @@ export async function deleteTransaction(req: Request, res: Response) {
 
     await user.save();
 
-    res.status(400).json(deletedTransaction);
+    res.status(200).json(deletedTransaction);
   } catch (error) {
     console.error("Error in deleteTransaction Controller: " + error);
     res.status(500).json({ message: "Internal Server Error." });
