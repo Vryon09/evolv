@@ -61,8 +61,9 @@ export async function getHabits(req: Request, res: Response) {
 
 export async function addHabit(req: Request, res: Response): Promise<void> {
   try {
-    const { title, description, frequency, tags } = req.body;
     const authUser = (req as any).user;
+
+    const { title, description, frequency, tags } = req.body;
 
     const newHabit = new Habit({
       user: authUser._id,

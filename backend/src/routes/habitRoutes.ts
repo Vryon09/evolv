@@ -7,14 +7,19 @@ import {
   updateHabit,
 } from "../controller/habitsController.ts";
 import { protect } from "../middleware/authMiddleware.ts";
+import { validateSchema } from "../middleware/validateSchema.ts";
+import {
+  createHabitSchema,
+  updateHabitSchema,
+} from "../schemas/habitSchema.ts";
 
 const router = express.Router();
 
 router.get("/", protect, getHabits);
 
-router.post("/", protect, addHabit);
+router.post("/", protect, validateSchema(createHabitSchema), addHabit);
 
-router.patch("/:id", protect, updateHabit);
+router.patch("/:id", protect, validateSchema(updateHabitSchema), updateHabit);
 
 router.delete("/:id", protect, deleteHabit);
 
