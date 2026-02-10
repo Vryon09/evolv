@@ -6,12 +6,27 @@ import {
   getTransactions,
   updateTransaction,
 } from "../controller/transactionController.ts";
+import { validateSchema } from "../middleware/validateSchema.ts";
+import {
+  createTransactionSchema,
+  updateTransactionSchema,
+} from "../schemas/transactionSchema.ts";
 
 const router = Router();
 
 router.get("/", protect, getTransactions);
-router.post("/", protect, addTransaction);
+router.post(
+  "/",
+  protect,
+  validateSchema(createTransactionSchema),
+  addTransaction,
+);
 router.delete("/:id", protect, deleteTransaction);
-router.patch("/:id", protect, updateTransaction);
+router.patch(
+  "/:id",
+  protect,
+  validateSchema(updateTransactionSchema),
+  updateTransaction,
+);
 
 export default router;
