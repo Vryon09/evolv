@@ -6,12 +6,14 @@ import {
   fetchCurrentUser,
 } from "../controller/authController.ts";
 import { protect } from "../middleware/authMiddleware.ts";
+import { validateSchema } from "../middleware/validateSchema.ts";
+import { loginSchema, signupSchema } from "../schemas/authSchema.ts";
 
 const router = express.Router();
 
-router.post("/", addUser);
+router.post("/", validateSchema(signupSchema), addUser);
 
-router.post("/login", loginUser);
+router.post("/login", validateSchema(loginSchema), loginUser);
 
 router.get("/me", protect, fetchCurrentUser);
 
