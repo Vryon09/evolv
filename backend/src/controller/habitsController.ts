@@ -197,7 +197,7 @@ export async function completeHabit(req: Request, res: Response) {
       ) {
         habit.bestStreakAchievedAt = recalcBestStreakDate({
           dates: updatedCompletedDates,
-          frequency: habit.frequency,
+          frequency: habit.frequency as "daily" | "weekly" | "monthly",
         });
 
         habit.bestStreak--;
