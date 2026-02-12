@@ -34,27 +34,11 @@ export async function getHabits(req: UserRequest, res: Response) {
   }
 }
 
-export async function addHabit(req: Request, res: Response): Promise<void> {
+export async function addHabit(req: UserRequest, res: Response): Promise<void> {
   try {
-    const authUser = (req as any).user;
+    const habit = habitService.addHabit(req.user._id.toString(), req.body);
 
-    const { title, description, frequency, tags } = req.body;
-
-    const newHabit = new Habit({
-      user: authUser._id,
-      title,
-      description,
-      frequency,
-      tags,
-    });
-
-    const savedHabit = await newHabit.save();
-
-    await User.findByIdAndUpdate(authUser._id, {
-      $push: { habits: savedHabit._id },
-    });
-
-    res.status(201).json(savedHabit);
+    res.status(201).json(habit);
   } catch (error) {
     console.error("Error in addHabit controller.", error);
     res.status(500).json({ message: "Internal Server Error!" });

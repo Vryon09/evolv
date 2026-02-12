@@ -1,6 +1,7 @@
 import type { IHabit } from "../models/Habit.ts";
 import Habit from "../models/Habit.ts";
 import User from "../models/User.ts";
+import type { CreateHabitInput } from "../schemas/habitSchema.ts";
 
 export class HabitService {
   private getSortOptions(sortBy?: string) {
@@ -39,6 +40,25 @@ export class HabitService {
       }
 
       return userWithHabits.habits;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async addHabit(userId: string, data: CreateHabitInput) {
+    try {
+      const newHabit = new Habit({
+        user: userId,
+        ...data,
+      });
+
+      const savedHabit = await newHabit.save();
+
+      await User.findByIdAndUpdate(userId, {
+        $push: { habits: savedHabit._id },
+      });
+
+      return savedHabit;
     } catch (error) {
       throw error;
     }
