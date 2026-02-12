@@ -1,12 +1,13 @@
 import type { Request, Response } from "express";
 import Habit from "../models/Habit.ts";
-import type { IHabit } from "../models/Habit.ts";
 import User from "../models/User.ts";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
 import isoWeek from "dayjs/plugin/isoWeek.js";
 import timezone from "dayjs/plugin/timezone.js";
 import { recalcBestStreakDate } from "../helper/RecalcBestStreakDate.ts";
+import { habitService } from "../services/HabitService.ts";
+import type { UserRequest } from "../types/express.ts";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -17,42 +18,16 @@ interface sortTypes {
   streak?: number;
 }
 
-export async function getHabits(req: Request, res: Response) {
+export async function getHabits(req: UserRequest, res: Response) {
   try {
-    const authUser = (req as any).user;
-    const { sortBy } = req.query;
-    const sortType: sortTypes = {};
+    const { sortBy } = req.query as { sortBy?: string };
 
-    if (!authUser) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
+    const habits = await habitService.getHabits(
+      req.user._id.toString(),
+      sortBy,
+    );
 
-    switch (sortBy) {
-      case "recent":
-        sortType.createdAt = -1;
-        break;
-      case "streak":
-        sortType.streak = -1;
-        break;
-      default:
-        sortType.createdAt = 1;
-        break;
-    }
-
-    const userWithHabits = await User.findById(authUser._id)
-      .populate<{ habits: IHabit[] }>({
-        path: "habits",
-        model: Habit,
-        match: { isArchived: false },
-        options: { sort: sortType },
-      })
-      .select("habits");
-
-    if (!userWithHabits) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    res.status(200).json(userWithHabits.habits);
+    res.status(200).json(habits);
   } catch (error) {
     console.error("Error in getHabits controller.", error);
     res.status(500).json({ message: "Internal Server Error!" });

@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import type { InferSchemaType } from "mongoose";
+import type { InferSchemaType, ObjectId } from "mongoose";
 import bcrypt from "bcrypt";
 
 const userSchema = new Schema(
@@ -114,7 +114,7 @@ userSchema.methods.comparePassword = async function (enteredPassword: string) {
   return bcrypt.compare(enteredPassword, this.password);
 };
 
-export type IUser = InferSchemaType<typeof userSchema> & {
+export type IUser = InferSchemaType<typeof userSchema> & { _id: ObjectId } & {
   comparePassword: (enteredPassword: string) => Promise<boolean>;
 };
 
