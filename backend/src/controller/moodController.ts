@@ -1,99 +1,35 @@
 import type { Request, Response } from "express";
-import Mood from "../models/Mood.ts";
-import type { IMood } from "../models/Mood.ts";
-import User from "../models/User.ts";
-import type { IUser } from "../models/User.ts";
-export async function getMood(req: Request, res: Response) {
+import { handleError } from "../helper/HandleError.ts";
+import { moodService } from "../services/MoodService.ts";
+import type { UserRequest } from "../types/express.ts";
+
+export async function getMood(req: UserRequest, res: Response) {
   try {
-    const authUser = (req as any).user;
+    const moods = await moodService.getMood(req.user._id);
 
-    if (!authUser) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    const userWithMoods = await User.findById(authUser._id)
-      .populate<{ moods: IMood[] }>({
-        path: "moods",
-        model: Mood,
-        match: { isArchived: false },
-      })
-      .select("moods");
-
-    if (!userWithMoods) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    res.status(200).json(userWithMoods.moods);
+    res.status(200).json(moods);
   } catch (error) {
-    console.error("Error in getMood controller.", error);
-    res.status(500).json({ message: "Internal Server Error!" });
+    handleError(error, res);
   }
 }
 
-export async function addMood(req: Request, res: Response) {
+export async function addMood(req: UserRequest, res: Response) {
   try {
-    const {
-      mood,
-      sleep,
-      stressLevel,
-      physicalActivity,
-      habits,
-      habitsMoodImpact,
-    } = req.body;
-    const authUser = (req as any).user;
-
-    const newMood = new Mood({
-      user: authUser._id,
-      mood,
-      sleep,
-      stressLevel,
-      physicalActivity,
-      habits,
-      habitsMoodImpact,
-    });
-
-    const savedMood = await newMood.save();
-
-    await User.findByIdAndUpdate(authUser._id, {
-      $push: { moods: savedMood._id },
-    });
+    const savedMood = moodService.addMood(req.user._id, req.body);
 
     res.status(201).json(savedMood);
   } catch (error) {
-    console.error("Error in addMood controller.", error);
-    res.status(500).json({ message: "Internal Server Error!" });
+    handleError(error, res);
   }
 }
 
 //finish this
-export async function deleteMood(req: Request, res: Response) {
+export async function deleteMood(req: UserRequest, res: Response) {
   try {
-    const { id } = req.params;
-    const deletedMood = await Mood.findByIdAndDelete(id);
-
-    const authUser = (req as any).user;
-
-    if (!authUser) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    const user = await User.findById(authUser._id);
-
-    if (!user) {
-      return res.status(401).json({ message: "No user found." });
-    }
-
-    const updatedUserMoods = authUser.moods.filter(
-      (mood: string) => mood.toString() !== id,
-    );
-
-    user.moods = updatedUserMoods;
-
-    await user.save();
+    const deletedMood = moodService.deleteMood(req.user, req.params.id);
 
     res.status(200).json(deletedMood);
   } catch (error) {
-    console.error("Error in addMood controller.", error);
-    res.status(500).json({ message: "Internal Server Error!" });
+    handleError(error, res);
   }
 }
