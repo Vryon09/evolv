@@ -6,6 +6,8 @@ import type {
   UpdateHabitInput,
 } from "../schemas/habitSchema.ts";
 import type { IUser } from "../models/User.ts";
+import dayjs from "dayjs";
+import { recalcBestStreakDate } from "../helper/RecalcBestStreakDate.ts";
 
 export class HabitService {
   private getSortOptions(sortBy?: string) {
@@ -100,6 +102,97 @@ export class HabitService {
     habitUser.habits = updatedUserHabit;
 
     await habitUser.save();
+  }
+
+  async completeHabit(habitId: string) {
+    const habit = await Habit.findById(habitId);
+
+    if (!habit) {
+      throw new Error("Habit not found");
+    }
+
+    const sortedDates = [...habit.completedDates].sort(
+      (a, b) => new Date(a).getTime() - new Date(b).getTime(),
+    );
+
+    const isDuplicate = habit.completedDates.some((date) =>
+      habit.frequency === "daily"
+        ? dayjs(date).isSame(dayjs(), "day")
+        : habit.frequency === "weekly"
+          ? dayjs(date).isSame(dayjs(), "isoWeek")
+          : dayjs(date).isSame(dayjs(), "month"),
+    );
+
+    const timeUnit =
+      habit.frequency === "daily"
+        ? "day"
+        : habit.frequency === "weekly"
+          ? "week"
+          : "month";
+
+    const frequencyUnit =
+      habit.frequency === "daily"
+        ? "day"
+        : habit.frequency === "weekly"
+          ? "isoWeek"
+          : "month";
+
+    //If there is duplicate || already completed || unmark
+    if (isDuplicate) {
+      const updatedCompletedDates = sortedDates.filter(
+        (date) => !dayjs(date).isSame(dayjs(), frequencyUnit),
+      );
+
+      habit.completedDates = updatedCompletedDates;
+
+      if (
+        habit.streak === habit.bestStreak &&
+        habit.completedDates.length > 0 &&
+        dayjs(habit.bestStreakAchievedAt).isSame(dayjs(), frequencyUnit)
+      ) {
+        habit.bestStreakAchievedAt = recalcBestStreakDate({
+          dates: updatedCompletedDates,
+          frequency: habit.frequency as "daily" | "weekly" | "monthly",
+        });
+
+        habit.bestStreak--;
+      }
+
+      habit.streak--;
+
+      if (habit.completedDates.length === 0) {
+        habit.bestStreakAchievedAt = null;
+      }
+
+      const savedHabit = await habit.save();
+      return savedHabit;
+    }
+
+    //If not duplicate || not completed || mark
+    if (habit.completedDates.length === 0) {
+      habit.streak++;
+    }
+
+    if (
+      dayjs(sortedDates[habit.completedDates.length - 1])
+        .add(1, timeUnit)
+        .isSame(dayjs(), frequencyUnit)
+    ) {
+      habit.streak++;
+    } else {
+      habit.streak = 1;
+    }
+
+    habit.completedDates.push(dayjs().toDate());
+
+    if (habit.bestStreak < habit.streak) {
+      habit.bestStreak = habit.streak;
+      habit.bestStreakAchievedAt = new Date();
+    }
+
+    const savedHabit = await habit.save();
+
+    return savedHabit;
   }
 }
 
