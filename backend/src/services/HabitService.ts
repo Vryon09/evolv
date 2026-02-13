@@ -5,6 +5,7 @@ import type {
   CreateHabitInput,
   UpdateHabitInput,
 } from "../schemas/habitSchema.ts";
+import type { IUser } from "../models/User.ts";
 
 export class HabitService {
   private getSortOptions(sortBy?: string) {
@@ -73,10 +74,32 @@ export class HabitService {
         new: true,
       });
 
+      if (!updatedHabit) {
+        throw new Error("Habit not found");
+      }
+
       return updatedHabit;
     } catch (error) {
       throw error;
     }
+  }
+
+  async deleteHabit(habitId: string, authUser: IUser) {
+    const deletedHabit = await Habit.findByIdAndDelete(habitId);
+
+    const updatedUserHabit = authUser.habits.filter(
+      (habit) => habit.toString() !== habitId,
+    );
+
+    const habitUser = await User.findById(authUser._id);
+
+    if (!habitUser) {
+      throw new Error("Habit not found");
+    }
+
+    habitUser.habits = updatedUserHabit;
+
+    await habitUser.save();
   }
 }
 
