@@ -5,9 +5,9 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
 import isoWeek from "dayjs/plugin/isoWeek.js";
 import timezone from "dayjs/plugin/timezone.js";
-import { recalcBestStreakDate } from "../helper/RecalcBestStreakDate.ts";
 import { habitService } from "../services/HabitService.ts";
 import type { UserRequest } from "../types/express.ts";
+import { handleError } from "../helper/HandleError.ts";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -29,8 +29,7 @@ export async function getHabits(req: UserRequest, res: Response) {
 
     res.status(200).json(habits);
   } catch (error) {
-    console.error("Error in getHabits controller.", error);
-    res.status(500).json({ message: "Internal Server Error!" });
+    handleError(error, res);
   }
 }
 
@@ -40,8 +39,7 @@ export async function addHabit(req: UserRequest, res: Response): Promise<void> {
 
     res.status(201).json(habit);
   } catch (error) {
-    console.error("Error in addHabit controller.", error);
-    res.status(500).json({ message: "Internal Server Error!" });
+    handleError(error, res);
   }
 }
 
@@ -66,8 +64,7 @@ export async function deleteHabit(req: UserRequest, res: Response) {
 
     res.status(200).json(deletedHabit);
   } catch (error) {
-    console.log("Error in deleteHabit controller", error);
-    res.status(500).json({ message: "Internal Server Error!" });
+    handleError(error, res);
   }
 }
 
@@ -79,7 +76,6 @@ export async function completeHabit(req: Request, res: Response) {
 
     res.status(200).json(savedHabit);
   } catch (error) {
-    console.log("Error in completeHabit controller", error);
-    res.status(500).json({ message: "Internal Server Error!" });
+    handleError(error, res);
   }
 }
