@@ -48,20 +48,8 @@ export async function addHabit(req: UserRequest, res: Response): Promise<void> {
 export async function updateHabit(req: Request, res: Response) {
   try {
     const { id } = req.params;
-    const updatedData = req.body;
 
-    if (!id) {
-      res.status(401).json({ message: "No id passed" });
-    }
-
-    const updatedHabit = await Habit.findByIdAndUpdate(id, updatedData, {
-      new: true,
-    });
-
-    if (!updatedHabit) {
-      res.status(404).json({ message: "Habit not found" });
-      return;
-    }
+    const updatedHabit = habitService.updateHabit(id, req.body);
 
     res.status(200).json(updatedHabit);
   } catch (error) {
@@ -69,6 +57,31 @@ export async function updateHabit(req: Request, res: Response) {
     res.status(500).json({ message: "Internal Server Error!" });
   }
 }
+
+// export async function updateHabit(req: Request, res: Response) {
+//   try {
+//     const { id } = req.params;
+//     const updatedData = req.body;
+
+//     if (!id) {
+//       res.status(401).json({ message: "No id passed" });
+//     }
+
+//     const updatedHabit = await Habit.findByIdAndUpdate(id, updatedData, {
+//       new: true,
+//     });
+
+//     if (!updatedHabit) {
+//       res.status(404).json({ message: "Habit not found" });
+//       return;
+//     }
+
+//     res.status(200).json(updatedHabit);
+//   } catch (error) {
+//     console.error("Error in updateHabit controller.", error);
+//     res.status(500).json({ message: "Internal Server Error!" });
+//   }
+// }
 
 export async function deleteHabit(req: Request, res: Response) {
   try {
