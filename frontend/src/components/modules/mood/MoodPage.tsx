@@ -13,12 +13,17 @@ import PerHabitImpactForm from "./PerHabitImpactForm";
 import isCompletedToday from "@/helper/isCompletedToday";
 import type { IMood } from "types/mood";
 import dayjs from "dayjs";
+import type { PaginatedResponse } from "types/pagination";
 
 function MoodPage() {
-  const { data: habits = [], isPending: isHabitsLoading } = useQuery<IHabit[]>({
+  const { data: habitsData, isPending: isHabitsLoading } = useQuery<
+    PaginatedResponse<IHabit>
+  >({
     queryFn: () => handleGetHabits("default"),
     queryKey: ["habits", "default"],
   });
+
+  const habits = habitsData?.data ?? [];
 
   const { data: moods = [] } = useQuery<IMood[]>({
     queryFn: handleGetMoods,

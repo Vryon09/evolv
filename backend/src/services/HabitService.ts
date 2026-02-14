@@ -8,10 +8,11 @@ import type {
 import type { IUser } from "../models/User.ts";
 import dayjs from "dayjs";
 import { recalcBestStreakDate } from "../helper/RecalcBestStreakDate.ts";
+import { calculateSkip } from "../types/pagination.ts";
 
 export class HabitService {
   private getSortOptions(sortBy?: string) {
-    const sortType: Record<string, number> = {};
+    const sortType: Record<string, 1 | -1> = {};
 
     switch (sortBy) {
       case "recent":
@@ -28,24 +29,35 @@ export class HabitService {
     return sortType;
   }
 
-  async getHabits(userId: string, sortBy?: string) {
+  async getHabits(
+    userId: string,
+    sortBy: string = "",
+    page: number = 1,
+    limit: number = 3,
+  ) {
     try {
       const sortType = this.getSortOptions(sortBy);
+      const skip = calculateSkip(page, limit);
 
-      const userWithHabits = await User.findById(userId)
-        .populate<{ habits: IHabit[] }>({
-          path: "habits",
-          model: Habit,
-          match: { isArchived: false },
-          options: { sort: sortType },
-        })
-        .select("habits");
+      const totalHabits = await Habit.countDocuments({
+        user: userId,
+        isArchived: false,
+      });
 
-      if (!userWithHabits) {
-        throw new Error("User not found");
-      }
+      const habits = await Habit.find({ user: userId, isArchived: false })
+        .sort(sortType)
+        .skip(skip)
+        .limit(limit);
 
-      return userWithHabits.habits;
+      return {
+        habits,
+        pagination: {
+          page,
+          limit,
+          total: totalHabits,
+          pages: Math.ceil(totalHabits / limit),
+        },
+      };
     } catch (error) {
       throw error;
     }

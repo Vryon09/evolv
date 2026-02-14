@@ -6,12 +6,18 @@ import { useQuery } from "@tanstack/react-query";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router";
 import type { IHabit } from "types/habit";
+import type { PaginatedResponse } from "types/pagination";
 
 function HabitOverview() {
-  const { data: habits = [], isPending: isHabitsLoading } = useQuery<IHabit[]>({
+  const { data: habitsData, isPending: isHabitsLoading } = useQuery<
+    PaginatedResponse<IHabit>
+  >({
     queryFn: () => handleGetHabits("default"),
     queryKey: ["habits", "default"],
   });
+
+  const habits = habitsData?.data ?? [];
+
   const navigate = useNavigate();
 
   return (

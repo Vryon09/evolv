@@ -8,26 +8,40 @@ import timezone from "dayjs/plugin/timezone.js";
 import { habitService } from "../services/HabitService.ts";
 import type { UserRequest } from "../types/express.ts";
 import { handleError } from "../helper/HandleError.ts";
+import { parsePaginationParams } from "../types/pagination.ts";
+import type { PaginatedResponse } from "../types/pagination.ts";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(isoWeek);
 
-interface sortTypes {
-  createdAt?: number;
-  streak?: number;
-}
-
 export async function getHabits(req: UserRequest, res: Response) {
   try {
-    const { sortBy } = req.query as { sortBy?: string };
+    const { sortBy, page, limit } = req.query as {
+      sortBy?: string;
+      page?: string;
+      limit?: string;
+    };
 
-    const habits = await habitService.getHabits(
+    const { page: parsedPage, limit: parsedLimit } = parsePaginationParams({
+      page,
+      limit,
+    });
+
+    const { habits, pagination } = await habitService.getHabits(
       req.user._id.toString(),
       sortBy,
+      parsedPage,
+      parsedLimit,
     );
 
-    res.status(200).json(habits);
+    const response: PaginatedResponse<any> = {
+      success: true,
+      data: habits,
+      pagination,
+    };
+
+    res.status(200).json(response);
   } catch (error) {
     handleError(error, res);
   }

@@ -15,6 +15,7 @@ import PomodoroTimer from "./PomodoroTimer";
 import { Card } from "@/components/ui/card";
 import dayjs from "dayjs";
 import isoWeek from "dayjs/plugin/isoWeek";
+import type { PaginatedResponse } from "types/pagination";
 // import type { IMood } from "types/mood";
 // import { handleGetMoods } from "@/services/apiMoods";
 // import { MOODS, type MoodKey } from "@/constants/moods";
@@ -28,10 +29,14 @@ export default function HabitsPage() {
     "default",
   );
 
-  const { data: habits = [], isPending: isHabitsLoading } = useQuery<IHabit[]>({
+  const { data: habitsData, isPending: isHabitsLoading } = useQuery<
+    PaginatedResponse<IHabit>
+  >({
     queryFn: () => handleGetHabits(sortBy),
     queryKey: ["habits", sortBy],
   });
+
+  const habits = habitsData?.data ?? [];
 
   // const { data: moods = [] } = useQuery<IMood[]>({
   //   queryFn: handleGetMoods,

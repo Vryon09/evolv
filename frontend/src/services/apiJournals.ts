@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export async function handleGetJournals() {
   try {
-    const res = await api.get("/api/journals");
+    const res = await api.get("/api/journals?page=1&limit=5");
 
     return res.data || [];
   } catch (error) {

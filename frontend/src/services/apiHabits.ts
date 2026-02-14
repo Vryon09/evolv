@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export async function handleGetHabits(sortBy: string) {
   try {
-    const res = await api.get(`/api/habits?sortBy=${sortBy}`);
+    const res = await api.get(`/api/habits?sortBy=${sortBy}&page=1&limit=3`);
 
     return res.data || [];
   } catch (error) {

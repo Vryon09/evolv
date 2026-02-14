@@ -5,12 +5,31 @@ import Journal from "../models/Journal.ts";
 import { journalService } from "../services/JournalService.ts";
 import type { UserRequest } from "../types/express.ts";
 import { handleError } from "../helper/HandleError.ts";
+import { parsePaginationParams } from "../types/pagination.ts";
+import type { PaginatedResponse } from "../types/pagination.ts";
 
 export async function getJournals(req: UserRequest, res: Response) {
   try {
-    const journals = await journalService.getJournal(req.user._id);
+    const { page, limit } = req.query as { page?: string; limit?: string };
 
-    res.status(200).json(journals);
+    const { page: parsedPage, limit: parsedLimit } = parsePaginationParams({
+      page,
+      limit,
+    });
+
+    const { journals, pagination } = await journalService.getJournal(
+      req.user._id,
+      parsedPage,
+      parsedLimit,
+    );
+
+    const response: PaginatedResponse<any> = {
+      success: true,
+      data: journals,
+      pagination,
+    };
+
+    res.status(200).json(response);
   } catch (error) {
     handleError(error, res);
   }

@@ -16,14 +16,19 @@ import { useState } from "react";
 import dayjs from "dayjs";
 import CreateJournalButton from "./CreateJournalButton";
 import DeleteDialog from "@/components/DeleteDialog";
+import type { PaginatedResponse } from "types/pagination";
 function Journals() {
   const [selectedJournal, setSelectedJournal] = useState<IJournal | null>(null);
   const [journalDeleteDialog, setJournalDeleteDialog] =
     useState<IJournal | null>(null);
-  const { data: journals, isLoading } = useQuery<IJournal[]>({
+  const { data: journalsData, isLoading } = useQuery<
+    PaginatedResponse<IJournal>
+  >({
     queryFn: handleGetJournals,
     queryKey: ["journals"],
   });
+
+  const journals = journalsData?.data ?? [];
 
   const { mutate: handleDeleteJournal } = useDeleteJournal();
 

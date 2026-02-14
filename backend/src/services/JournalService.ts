@@ -5,23 +5,32 @@ import User from "../models/User.ts";
 import type { IUser } from "../models/User.ts";
 import type { CreateJournalInput } from "../schemas/journalSchema.ts";
 import { deleteJournal } from "../controller/journalController.ts";
+import { calculateSkip } from "../types/pagination.ts";
 
 export class JournalService {
-  async getJournal(userId: ObjectId) {
+  async getJournal(userId: ObjectId, page: number = 1, limit: number = 20) {
     try {
-      const journals = await User.findById(userId)
-        .populate<{ journals: IJournal[] }>({
-          path: "journals",
-          model: Journal,
-          match: { isArchived: false },
-        })
-        .select("journals");
+      const skip = calculateSkip(page, limit);
 
-      if (!journals) {
-        throw new Error("User not found");
-      }
+      const totalJournals = await Journal.countDocuments({
+        user: userId,
+        isArchived: false,
+      });
 
-      return journals.journals;
+      const journals = await Journal.find({ user: userId, isArchived: false })
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit);
+
+      return {
+        journals,
+        pagination: {
+          page,
+          limit,
+          total: totalJournals,
+          pages: Math.ceil(totalJournals / limit),
+        },
+      };
     } catch (error) {
       throw error;
     }
