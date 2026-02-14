@@ -1,22 +1,32 @@
 import { Flame, Calendar, Check } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import type { IHabit } from "types/habit";
+import { useQuery } from "@tanstack/react-query";
+import { handleGetAllHabits } from "@/services/apiHabits";
+import isCompletedToday from "@/helper/isCompletedToday";
 
-interface HabitStatsProps {
-  todaysCompletion: number;
-  longestStreak: IHabit;
-  totalHabits: number;
-}
+export function HabitStats() {
+  const { data: habits = [] } = useQuery<IHabit[]>({
+    queryFn: () => handleGetAllHabits("default"),
+    queryKey: ["habits"],
+  });
 
-export function HabitStats({
-  todaysCompletion,
-  longestStreak,
-  totalHabits,
-}: HabitStatsProps) {
+  const todaysCompletion = habits.reduce((acc, habit) => {
+    if (habit.completedDates.length === 0) return acc;
+
+    if (isCompletedToday(habit)) acc++;
+
+    return acc;
+  }, 0);
+
+  const longestStreak = [...habits].sort(
+    (a, b) => b.bestStreak - a.bestStreak,
+  )[0];
+
   const stats = [
     {
       label: "Today's Completion",
-      value: `${!todaysCompletion ? "0%" : `${((todaysCompletion / totalHabits) * 100).toFixed(0)}%`}`,
+      value: `${!todaysCompletion ? "0%" : `${((todaysCompletion / habits.length) * 100).toFixed(0)}%`}`,
       icon: Check,
       color: "text-green-500",
       bgColor: "bg-green-500/20",
@@ -30,7 +40,7 @@ export function HabitStats({
     },
     {
       label: "Active Habits",
-      value: totalHabits,
+      value: habits.length,
       icon: Calendar,
       color: "text-chart-4",
       bgColor: "bg-chart-4/20",

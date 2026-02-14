@@ -58,6 +58,17 @@ export async function getHabits(req: UserRequest, res: Response) {
   }
 }
 
+// export async function getHabitsSummary(req: UserRequest, res: Response){
+// try {
+//   const habitsSummary = await habitService.getHabitsSummary()
+
+//   res.status(200).json(habitsSummary)
+// } catch (error) {
+//     handleError(error, res);
+
+// }
+// }
+
 export async function addHabit(req: UserRequest, res: Response): Promise<void> {
   try {
     const habit = habitService.addHabit(req.user._id.toString(), req.body);

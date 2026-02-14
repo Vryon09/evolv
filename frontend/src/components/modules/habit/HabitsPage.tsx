@@ -7,7 +7,7 @@ import { HabitDialog } from "@/components/habit-dialog";
 import { useQuery } from "@tanstack/react-query";
 import { handleGetHabits } from "@/services/apiHabits";
 import type { IHabit } from "types/habit";
-import { HabitStats } from "@/components/habit-stats";
+import { HabitStats } from "@/components/modules/habit/HabitStats";
 import HabitsSort from "./HabitsSort";
 import Habits from "./Habits";
 import NoHabits from "./NoHabits";
@@ -43,37 +43,6 @@ export default function HabitsPage() {
 
   if (isHabitsLoading) return <p>Loading...</p>;
 
-  const todaysCompletion = habits.reduce((acc, habit) => {
-    if (habit.completedDates.length === 0) return acc;
-
-    const last = dayjs(
-      Math.max(...habit.completedDates.map((date) => new Date(date).getTime())),
-    );
-    const isCompletedToday = last.isSame(dayjs(), "day");
-    const isCompletedThisWeek = last.isSame(dayjs(), "isoWeek");
-    const isCompletedThisMonth = last.isSame(dayjs(), "month");
-
-    switch (habit.frequency) {
-      case "daily":
-        if (isCompletedToday) acc++;
-        break;
-      case "weekly":
-        if (isCompletedThisWeek) acc++;
-        break;
-      case "monthly":
-        if (isCompletedThisMonth) acc++;
-        break;
-      default:
-        break;
-    }
-
-    return acc;
-  }, 0);
-
-  const longestStreak = [...habits].sort(
-    (a, b) => b.bestStreak - a.bestStreak,
-  )[0];
-
   return (
     <div className="bg-background overflow-scroll overflow-x-hidden">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -87,11 +56,7 @@ export default function HabitsPage() {
           </p>
         )} */}
         {/* Stats Overview */}
-        <HabitStats
-          todaysCompletion={todaysCompletion}
-          longestStreak={longestStreak}
-          totalHabits={habits.length}
-        />
+        <HabitStats />
         {/* Controls */}
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <HabitsSort
