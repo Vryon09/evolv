@@ -11,7 +11,6 @@ function JournalButtons() {
     queryKey: ["journals"],
   });
 
-  const journals = journalsData?.data ?? [];
   const pagination = journalsData?.pagination;
 
   const navigate = useNavigate();
