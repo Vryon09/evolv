@@ -1,9 +1,15 @@
 import api from "@/lib/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export async function handleGetJournals() {
+export async function handleGetJournals({
+  page,
+  limit,
+}: {
+  page: number;
+  limit: number;
+}) {
   try {
-    const res = await api.get("/api/journals?page=1&limit=5");
+    const res = await api.get(`/api/journals?page=${page}&limit=${limit}`);
 
     return res.data || [];
   } catch (error) {
