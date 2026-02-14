@@ -15,6 +15,17 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(isoWeek);
 
+export async function getAllHabits(req: UserRequest, res: Response) {
+  try {
+    const { sortBy } = req.query as { sortBy?: string };
+    const allHabits = await habitService.getAllHabits(req.user._id, sortBy);
+
+    res.status(200).json(allHabits);
+  } catch (error) {
+    handleError(error, res);
+  }
+}
+
 export async function getHabits(req: UserRequest, res: Response) {
   try {
     const { sortBy, page, limit } = req.query as {

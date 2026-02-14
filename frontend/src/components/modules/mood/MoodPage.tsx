@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import MoodForm from "./MoodForm";
 import SleepForm from "./SleepForm";
 import StressForm from "./StressForm";
-import { handleGetHabits } from "@/services/apiHabits";
+import { handleGetAllHabits } from "@/services/apiHabits";
 import type { IHabit } from "types/habit";
 import JournalButtons from "./MoodButtons";
 import { Button } from "@/components/ui/button";
@@ -13,17 +13,12 @@ import PerHabitImpactForm from "./PerHabitImpactForm";
 import isCompletedToday from "@/helper/isCompletedToday";
 import type { IMood } from "types/mood";
 import dayjs from "dayjs";
-import type { PaginatedResponse } from "types/pagination";
 
 function MoodPage() {
-  const { data: habitsData, isPending: isHabitsLoading } = useQuery<
-    PaginatedResponse<IHabit>
-  >({
-    queryFn: () => handleGetHabits("default"),
+  const { data: habits = [], isPending: isHabitsLoading } = useQuery<IHabit[]>({
+    queryFn: () => handleGetAllHabits("default"),
     queryKey: ["habits", "default"],
   });
-
-  const habits = habitsData?.data ?? [];
 
   const { data: moods = [] } = useQuery<IMood[]>({
     queryFn: handleGetMoods,

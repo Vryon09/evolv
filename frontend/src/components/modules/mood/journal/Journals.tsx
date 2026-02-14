@@ -17,13 +17,7 @@ import dayjs from "dayjs";
 import CreateJournalButton from "./CreateJournalButton";
 import DeleteDialog from "@/components/DeleteDialog";
 import type { PaginatedResponse } from "types/pagination";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+import PaginationComponent from "@/components/PaginationComponent";
 function Journals() {
   const [selectedJournal, setSelectedJournal] = useState<IJournal | null>(null);
   const [page, setPage] = useState<number>(1);
@@ -71,31 +65,12 @@ function Journals() {
           ))}
         </div>
 
-        <Pagination>
-          <PaginationContent className="mt-4 flex w-full items-center justify-between">
-            <PaginationItem>
-              <Button
-                variant="ghost"
-                disabled={pagination?.page === 1}
-                className="cursor-pointer"
-                onClick={() => setPage((page) => page - 1)}
-              >
-                <PaginationPrevious />
-              </Button>
-            </PaginationItem>
-            <p className="text-xs font-semibold">Page {pagination?.page}</p>
-            <PaginationItem>
-              <Button
-                variant="ghost"
-                disabled={pagination?.page === pagination?.pages}
-                className="cursor-pointer"
-                onClick={() => setPage((page) => page + 1)}
-              >
-                <PaginationNext />
-              </Button>
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+        <PaginationComponent
+          page={pagination?.page}
+          pages={pagination?.pages}
+          toPrev={() => setPage((page) => page - 1)}
+          toNext={() => setPage((page) => page + 1)}
+        />
       </div>
 
       <Dialog

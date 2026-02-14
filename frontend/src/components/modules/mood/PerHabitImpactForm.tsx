@@ -28,7 +28,6 @@ function PerHabitImpactForm({
   isHabitsLoading: boolean;
 }) {
   const [isSelectingHabits, setIsSelectingHabits] = useState<boolean>(false);
-  // const [selectedHabits, setSelectedHabits] = useState<IHabit[]>([]);
   const { dispatch, selectedHabits } = useMood();
 
   if (isHabitsLoading) return <p>Loading...</p>;

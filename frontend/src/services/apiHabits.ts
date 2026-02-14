@@ -1,9 +1,27 @@
 import api from "@/lib/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export async function handleGetHabits(sortBy: string) {
+interface IGetHabits {
+  sortBy: string;
+  page: number;
+  limit: number;
+}
+
+export async function handleGetAllHabits(sortBy: string) {
   try {
-    const res = await api.get(`/api/habits?sortBy=${sortBy}&page=1&limit=3`);
+    const res = await api.get(`/api/habits/all?sortBy=${sortBy}`);
+
+    return res.data || [];
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function handleGetHabits({ sortBy, page, limit }: IGetHabits) {
+  try {
+    const res = await api.get(
+      `/api/habits?sortBy=${sortBy}&page=${page}&limit=${limit}`,
+    );
 
     return res.data || [];
   } catch (error) {

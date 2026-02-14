@@ -3,6 +3,7 @@ import {
   addHabit,
   completeHabit,
   deleteHabit,
+  getAllHabits,
   getHabits,
   updateHabit,
 } from "../controller/habitsController.ts";
@@ -16,6 +17,8 @@ import {
 const router = express.Router();
 
 router.get("/", protect, getHabits);
+
+router.get("/all", protect, getAllHabits);
 
 router.post("/", protect, validateSchema(createHabitSchema), addHabit);
 

@@ -9,6 +9,7 @@ import type { IUser } from "../models/User.ts";
 import dayjs from "dayjs";
 import { recalcBestStreakDate } from "../helper/RecalcBestStreakDate.ts";
 import { calculateSkip } from "../types/pagination.ts";
+import type { ObjectId } from "mongoose";
 
 export class HabitService {
   private getSortOptions(sortBy?: string) {
@@ -27,6 +28,20 @@ export class HabitService {
     }
 
     return sortType;
+  }
+
+  async getAllHabits(userId: ObjectId, sortBy?: string) {
+    try {
+      const sortType = this.getSortOptions(sortBy);
+      const allHabits = await Habit.find({
+        user: userId,
+        isArchived: false,
+      }).sort(sortType);
+
+      return allHabits;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async getHabits(

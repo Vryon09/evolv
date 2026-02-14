@@ -16,6 +16,7 @@ import { Card } from "@/components/ui/card";
 import dayjs from "dayjs";
 import isoWeek from "dayjs/plugin/isoWeek";
 import type { PaginatedResponse } from "types/pagination";
+import PaginationComponent from "@/components/PaginationComponent";
 // import type { IMood } from "types/mood";
 // import { handleGetMoods } from "@/services/apiMoods";
 // import { MOODS, type MoodKey } from "@/constants/moods";
@@ -28,24 +29,17 @@ export default function HabitsPage() {
   const [sortBy, setSortBy] = useState<"streak" | "recent" | "default">(
     "default",
   );
+  const [page, setPage] = useState<number>(1);
 
   const { data: habitsData, isPending: isHabitsLoading } = useQuery<
     PaginatedResponse<IHabit>
   >({
-    queryFn: () => handleGetHabits(sortBy),
-    queryKey: ["habits", sortBy],
+    queryFn: () => handleGetHabits({ sortBy, page, limit: 3 }),
+    queryKey: ["habits", sortBy, page],
   });
 
   const habits = habitsData?.data ?? [];
-
-  // const { data: moods = [] } = useQuery<IMood[]>({
-  //   queryFn: handleGetMoods,
-  //   queryKey: ["moods"],
-  // });
-
-  // const moodToday = moods.find((mood) =>
-  //   dayjs(mood.createdAt).isSame(dayjs(), "day"),
-  // );
+  const pagination = habitsData?.pagination;
 
   if (isHabitsLoading) return <p>Loading...</p>;
 
@@ -126,6 +120,12 @@ export default function HabitsPage() {
             setIsDialogOpen={setIsDialogOpen}
           />
         )}
+        <PaginationComponent
+          page={pagination?.page}
+          pages={pagination?.pages}
+          toPrev={() => setPage((page) => page - 1)}
+          toNext={() => setPage((page) => page + 1)}
+        />
         <div className="mt-8 flex flex-col gap-4 lg:flex-row">
           <PomodoroTimer />
           <Card className="px-4 py-2 md:w-full">
