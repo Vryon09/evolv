@@ -1,47 +1,38 @@
-import type { Request, Response } from "express";
-import User from "../models/User.ts";
+import type { Response } from "express";
+import type { UserRequest } from "../types/express.ts";
+import { tagService } from "../services/TagService.ts";
+import { handleError } from "../helper/HandleError.ts";
 
-export async function getTags(req: Request, res: Response) {
+export async function getTags(req: UserRequest, res: Response) {
   try {
-    const authUser = (req as any).user;
+    const tags = await tagService.getTags(req.user._id);
 
-    const user = await User.findById(authUser._id).select("tags");
-
-    if (!user) {
-      res.status(404).json({ message: "User not found." });
-      return;
-    }
-
-    return res.status(200).json(user.tags);
+    return res.status(200).json(tags);
   } catch (error) {
-    console.error("Error in getTags controller.", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    handleError(error, res);
   }
 }
 
-export async function addTag(req: Request, res: Response) {
+export async function addTag(req: UserRequest, res: Response) {
   try {
     const { tag } = req.body;
-    const authUser = (req as any).user;
 
-    const user = await User.findById(authUser._id);
+    const tags = await tagService.addTag(req.user._id, tag);
 
-    if (!user) {
-      res.status(404).json({ message: "User not found." });
-      return;
-    }
-
-    if (user.tags.includes(tag.toLowerCase().trim())) {
-      res.status(400).json({ message: "Tag already exists." });
-      return;
-    }
-
-    user.tags.push(tag);
-    await user.save();
-
-    res.status(201).json(user.tags);
+    return res.status(201).json(tags);
   } catch (error) {
-    console.error("Error in addHabit controller.", error);
-    res.status(500).json({ message: "Internam Server Error" });
+    handleError(error, res);
+  }
+}
+
+export async function removeTag(req: UserRequest, res: Response) {
+  try {
+    const { tag } = req.body;
+
+    const tags = await tagService.removeTag(req.user._id, tag);
+
+    return res.status(200).json(tags);
+  } catch (error) {
+    handleError(error, res);
   }
 }
