@@ -78,17 +78,17 @@ export class HabitService {
     }
   }
 
-  async getHabitsSummary(userId: ObjectId) {
-    try {
-      const allHabits = await Habit.find({
-        user: userId,
-        isArchived: false,
-        frequency: "daily",
-      });
-    } catch (error) {
-      throw error;
-    }
-  }
+  // async getHabitsSummary(userId: ObjectId) {
+  //   try {
+  //     const allHabits = await Habit.find({
+  //       user: userId,
+  //       isArchived: false,
+  //       frequency: "daily",
+  //     });
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
 
   async addHabit(userId: string, data: CreateHabitInput) {
     try {

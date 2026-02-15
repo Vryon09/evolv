@@ -48,7 +48,7 @@ export function SignupForm({
           localStorage.removeItem("evolv_token");
         }
       } catch (error) {
-        console.log(error);
+        throw error;
         localStorage.removeItem("evolv_token");
       }
     }

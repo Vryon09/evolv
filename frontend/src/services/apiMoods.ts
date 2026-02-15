@@ -3,13 +3,9 @@ import api from "@/lib/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export async function handleGetMoods() {
-  try {
-    const res = await api.get(`/api/moods`);
+  const res = await api.get(`/api/moods`);
 
-    return res.data || [];
-  } catch (error) {
-    console.log(error);
-  }
+  return res.data || [];
 }
 
 async function handleAddMood({
@@ -27,23 +23,18 @@ async function handleAddMood({
   habits: { habitId: string; isCompleted: boolean }[];
   habitsMoodImpact: { habitId: string; moodImpact: number; title: string }[];
 }) {
-  try {
-    const newMood = {
-      mood,
-      sleep,
-      stressLevel,
-      physicalActivity,
-      habits,
-      habitsMoodImpact,
-    };
+  const newMood = {
+    mood,
+    sleep,
+    stressLevel,
+    physicalActivity,
+    habits,
+    habitsMoodImpact,
+  };
 
-    const res = await api.post(`/api/moods`, newMood);
+  const res = await api.post(`/api/moods`, newMood);
 
-    console.log(res.data);
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
+  console.log(res.data);
 }
 
 export function useAddMood() {
@@ -60,13 +51,9 @@ export function useAddMood() {
 }
 
 async function handleDeleteMood({ id }: { id: string }) {
-  try {
-    const res = await api.delete(`/api/moods/${id}`);
+  const res = await api.delete(`/api/moods/${id}`);
 
-    return res.data || [];
-  } catch (error) {
-    console.error(error);
-  }
+  return res.data || [];
 }
 
 export function useDeleteMood() {

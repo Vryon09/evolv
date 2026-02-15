@@ -23,7 +23,6 @@ export async function addMood(req: UserRequest, res: Response) {
   }
 }
 
-//finish this
 export async function deleteMood(req: UserRequest, res: Response) {
   try {
     const deletedMood = moodService.deleteMood(req.user, req.params.id);

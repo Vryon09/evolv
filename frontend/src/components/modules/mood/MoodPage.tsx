@@ -17,7 +17,7 @@ import dayjs from "dayjs";
 function MoodPage() {
   const { data: habits = [], isPending: isHabitsLoading } = useQuery<IHabit[]>({
     queryFn: () => handleGetAllHabits("default"),
-    queryKey: ["habits", "default"],
+    queryKey: ["allHabits"],
   });
 
   const { data: moods = [] } = useQuery<IMood[]>({
@@ -29,7 +29,10 @@ function MoodPage() {
     useMood();
   const { mutate: handleAddMood } = useAddMood();
   const { mutate: handleDeleteMood } = useDeleteMood();
-  const dailyHabits = habits.reduce(
+
+  console.log(habits);
+
+  const dailyHabits = habits?.reduce(
     (acc: { habitId: string; isCompleted: boolean }[], curr) => {
       if (curr.frequency !== "daily") return acc;
 

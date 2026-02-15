@@ -40,7 +40,7 @@ export async function addJournal(req: UserRequest, res: Response) {
   try {
     const savedJournal = journalService.addJournal(req.user._id, req.body);
 
-    res.status(200).json(savedJournal);
+    res.status(201).json(savedJournal);
   } catch (error) {
     handleError(error, res);
   }

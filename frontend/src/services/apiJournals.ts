@@ -8,13 +8,9 @@ export async function handleGetJournals({
   page: number;
   limit: number;
 }) {
-  try {
-    const res = await api.get(`/api/journals?page=${page}&limit=${limit}`);
+  const res = await api.get(`/api/journals?page=${page}&limit=${limit}`);
 
-    return res.data || [];
-  } catch (error) {
-    console.error(error);
-  }
+  return res.data || [];
 }
 
 async function handleAddJournal({
@@ -24,15 +20,11 @@ async function handleAddJournal({
   title: string;
   content: string;
 }) {
-  try {
-    const newJournal = { title, content };
+  const newJournal = { title, content };
 
-    const res = await api.post("/api/journals", newJournal);
+  const res = await api.post("/api/journals", newJournal);
 
-    console.log(res.data);
-  } catch (error) {
-    console.error(error);
-  }
+  console.log(res.data);
 }
 
 export function useAddJournal() {
@@ -47,11 +39,7 @@ export function useAddJournal() {
 }
 
 async function handleDeleteJournal({ id }: { id: string }) {
-  try {
-    await api.delete(`/api/journals/${id}`);
-  } catch (error) {
-    console.error(error);
-  }
+  await api.delete(`/api/journals/${id}`);
 }
 
 export function useDeleteJournal() {

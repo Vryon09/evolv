@@ -9,15 +9,11 @@ export async function handleGetTransactions({
   transactionType: "All" | "Income" | "Expense";
   category: Category | "All";
 }) {
-  try {
-    const res = await api.get(
-      `/api/transactions?type=${transactionType}&category=${category}`,
-    );
+  const res = await api.get(
+    `/api/transactions?type=${transactionType}&category=${category}`,
+  );
 
-    return res.data ?? [];
-  } catch (error) {
-    console.error(error);
-  }
+  return res.data ?? [];
 }
 
 async function handleAddTransaction({
@@ -31,15 +27,11 @@ async function handleAddTransaction({
   amount: number;
   description: string;
 }) {
-  try {
-    const newTransaction = { transactionType, category, amount, description };
+  const newTransaction = { transactionType, category, amount, description };
 
-    const res = await api.post(`/api/transactions`, newTransaction);
+  const res = await api.post(`/api/transactions`, newTransaction);
 
-    console.log(res.data);
-  } catch (error) {
-    console.error(error);
-  }
+  console.log(res.data);
 }
 
 export function useAddTransaction() {
@@ -53,11 +45,7 @@ export function useAddTransaction() {
 }
 
 async function handleDeleteTransaction(id: string) {
-  try {
-    await api.delete(`/api/transactions/${id}`);
-  } catch (error) {
-    console.error(error);
-  }
+  await api.delete(`/api/transactions/${id}`);
 }
 
 export function useDeleteTransaction() {
@@ -82,18 +70,14 @@ async function handleUpdateTransaction({
   amount: number;
   description: string;
 }) {
-  try {
-    const updatedTransaction = {
-      transactionType,
-      category,
-      amount,
-      description,
-    };
+  const updatedTransaction = {
+    transactionType,
+    category,
+    amount,
+    description,
+  };
 
-    await api.patch(`/api/transactions/${_id}`, updatedTransaction);
-  } catch (error) {
-    console.error(error);
-  }
+  await api.patch(`/api/transactions/${_id}`, updatedTransaction);
 }
 
 export function useUpdateTransaction() {

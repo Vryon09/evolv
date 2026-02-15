@@ -8,15 +8,11 @@ interface IUser {
 }
 
 async function handleAddUser({ name, email, password }: IUser) {
-  try {
-    const newUser = { name, email, password };
+  const newUser = { name, email, password };
 
-    const res = await api.post(`/api/auth`, newUser);
+  const res = await api.post(`/api/auth`, newUser);
 
-    console.log(res.data);
-  } catch (error) {
-    console.log(error);
-  }
+  console.log(res.data);
 }
 
 export function useAddUser() {
@@ -26,14 +22,10 @@ export function useAddUser() {
 }
 
 async function handleLoginUser({ email, password }: Omit<IUser, "name">) {
-  try {
-    const user = { email, password };
+  const user = { email, password };
 
-    const res = await api.post(`/api/auth/login`, user);
-    return res.data || {};
-  } catch (error) {
-    console.log(error);
-  }
+  const res = await api.post(`/api/auth/login`, user);
+  return res.data || {};
 }
 
 export function useLoginUser() {
@@ -43,10 +35,6 @@ export function useLoginUser() {
 }
 
 export async function fetchCurrentUser() {
-  try {
-    const res = await api.get(`/api/auth/me`);
-    return res.data || {};
-  } catch (error) {
-    console.log(error);
-  }
+  const res = await api.get(`/api/auth/me`);
+  return res.data || {};
 }

@@ -10,20 +10,16 @@ async function handleUpdatePomodoroSettings({
   autoBreak,
   longBreakInterval,
 }: IPomodoroSettings) {
-  try {
-    const updatedSettings = {
-      pomodoro,
-      short,
-      long,
-      autoPomodoro,
-      autoBreak,
-      longBreakInterval,
-    };
+  const updatedSettings = {
+    pomodoro,
+    short,
+    long,
+    autoPomodoro,
+    autoBreak,
+    longBreakInterval,
+  };
 
-    await api.patch(`/api/pomodoro`, updatedSettings);
-  } catch (error) {
-    console.log(error);
-  }
+  await api.patch(`/api/pomodoro`, updatedSettings);
 }
 
 export function useUpdatePomodoroSettings() {

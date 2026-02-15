@@ -83,7 +83,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
       const { data } = await api.get("/api/auth/me"); // implement endpoint on backend to return current user
       setUser(data);
     } catch (error) {
-      console.log(error);
+      throw error;
       setUser(null);
       setToken(null);
     } finally {

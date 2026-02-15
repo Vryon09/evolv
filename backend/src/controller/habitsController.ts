@@ -87,8 +87,7 @@ export async function updateHabit(req: Request, res: Response) {
 
     res.status(200).json(updatedHabit);
   } catch (error) {
-    console.error("Error in updateHabit controller.", error);
-    res.status(500).json({ message: "Internal Server Error!" });
+    handleError(error, res);
   }
 }
 

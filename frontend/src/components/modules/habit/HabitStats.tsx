@@ -8,7 +8,7 @@ import isCompletedToday from "@/helper/isCompletedToday";
 export function HabitStats() {
   const { data: habits = [] } = useQuery<IHabit[]>({
     queryFn: () => handleGetAllHabits("default"),
-    queryKey: ["habits"],
+    queryKey: ["allHabits"],
   });
 
   const todaysCompletion = habits.reduce((acc, habit) => {

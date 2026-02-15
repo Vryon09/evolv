@@ -1,11 +1,13 @@
-import type { Request, Response } from "express";
+import type { Response } from "express";
 import User from "../models/User.ts";
+import type { UserRequest } from "../types/express.ts";
+import { handleError } from "../helper/HandleError.ts";
 
-export async function updatePomodoroSettings(req: Request, res: Response) {
+export async function updatePomodoroSettings(req: UserRequest, res: Response) {
   try {
     const updatedSettings = req.body;
 
-    const authUser = (req as any).user;
+    const authUser = req.user;
 
     if (!authUser) {
       res.status(401).json({ message: "Unauthorized" });
@@ -17,7 +19,7 @@ export async function updatePomodoroSettings(req: Request, res: Response) {
       { pomodoroSettings: updatedSettings },
       {
         new: true,
-      }
+      },
     );
 
     if (!user) {
@@ -25,11 +27,8 @@ export async function updatePomodoroSettings(req: Request, res: Response) {
       return;
     }
 
-    console.log(user.toObject());
-
     res.status(200).json(user.toObject());
   } catch (error) {
-    console.error("Error in updatePomodoroSettings controller.", error);
-    res.status(500).json({ message: "Internal Server Error!" });
+    handleError(error, res);
   }
 }

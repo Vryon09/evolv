@@ -3,6 +3,7 @@ import User from "../models/User.ts";
 import type { IUser } from "../models/User.ts";
 import { generateToken } from "../utils/generateToken.ts";
 import { ObjectId } from "mongodb";
+import { handleError } from "../helper/HandleError.ts";
 
 interface UserRequest extends Request {
   user?: IUser;
@@ -14,8 +15,7 @@ export async function getAllUsers(req: Request, res: Response) {
 
     res.status(200).json(users);
   } catch (error) {
-    console.error("Error in getAllUsers controller.", error);
-    res.status(500).json({ message: "Internal Server Error!" });
+    handleError(error, res);
   }
 }
 
@@ -52,8 +52,7 @@ export async function addUser(req: Request, res: Response): Promise<void> {
       user: { _id: userData._id, name: userData.name, email: userData.email },
     });
   } catch (error) {
-    console.error("Error in addUser controller.", error);
-    res.status(500).json({ message: "Internal Server Error!" });
+    handleError(error, res);
   }
 }
 
@@ -85,7 +84,6 @@ export async function loginUser(req: Request, res: Response): Promise<void> {
       user: { _id: user._id, name: user.name, email: user.email },
     });
   } catch (error) {
-    console.error("Error in loginUser controller.", error);
-    res.status(500).json({ message: "Internal Server Error!" });
+    handleError(error, res);
   }
 }

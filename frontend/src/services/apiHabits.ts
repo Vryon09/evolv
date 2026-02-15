@@ -8,25 +8,17 @@ interface IGetHabits {
 }
 
 export async function handleGetAllHabits(sortBy: string) {
-  try {
-    const res = await api.get(`/api/habits/all?sortBy=${sortBy}`);
+  const res = await api.get(`/api/habits/all?sortBy=${sortBy}`);
 
-    return res.data || [];
-  } catch (error) {
-    console.log(error);
-  }
+  return res.data || [];
 }
 
 export async function handleGetHabits({ sortBy, page, limit }: IGetHabits) {
-  try {
-    const res = await api.get(
-      `/api/habits?sortBy=${sortBy}&page=${page}&limit=${limit}`,
-    );
+  const res = await api.get(
+    `/api/habits?sortBy=${sortBy}&page=${page}&limit=${limit}`,
+  );
 
-    return res.data || [];
-  } catch (error) {
-    console.log(error);
-  }
+  return res.data || [];
 }
 
 async function handleAddHabit({
@@ -40,15 +32,11 @@ async function handleAddHabit({
   frequency: "daily" | "weekly" | "monthly";
   tags?: string[];
 }) {
-  try {
-    const newHabit = { title, description, frequency, tags };
+  const newHabit = { title, description, frequency, tags };
 
-    const res = await api.post(`/api/habits`, newHabit);
+  const res = await api.post(`/api/habits`, newHabit);
 
-    console.log(res.data);
-  } catch (error) {
-    console.log(error);
-  }
+  console.log(res.data);
 }
 
 export function useAddHabit() {
@@ -74,19 +62,15 @@ async function handleUpdateHabit({
   tags?: string[];
   isArchived?: boolean;
 }) {
-  try {
-    const updatedHabit = {
-      title,
-      description,
-      frequency,
-      tags,
-      isArchived,
-    };
+  const updatedHabit = {
+    title,
+    description,
+    frequency,
+    tags,
+    isArchived,
+  };
 
-    await api.patch(`/api/habits/${_id}`, updatedHabit);
-  } catch (error) {
-    console.log(error);
-  }
+  await api.patch(`/api/habits/${_id}`, updatedHabit);
 }
 
 export function useUpdateHabit() {
@@ -99,11 +83,7 @@ export function useUpdateHabit() {
 }
 
 async function handleDeleteHabit({ _id }: { _id: string }) {
-  try {
-    await api.delete(`/api/habits/${_id}`);
-  } catch (error) {
-    console.log(error);
-  }
+  await api.delete(`/api/habits/${_id}`);
 }
 
 export function useDeleteHabit() {
@@ -116,11 +96,7 @@ export function useDeleteHabit() {
 }
 
 async function handleCompleteHabit({ _id }: { _id: string }) {
-  try {
-    await api.patch(`/api/habits/${_id}/complete`, {});
-  } catch (error) {
-    console.log(error);
-  }
+  await api.patch(`/api/habits/${_id}/complete`, {});
 }
 
 export function useCompleteHabit() {
