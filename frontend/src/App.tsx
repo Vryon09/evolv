@@ -15,6 +15,7 @@ import Journals from "./components/modules/mood/journal/Journals";
 import MoodPage from "./components/modules/mood/MoodPage";
 import MoodCalendar from "./components/modules/mood/MoodCalendar";
 import { AuthProvider } from "./contexts/AuthContext";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,31 +27,36 @@ const queryClient = new QueryClient({
 
 function App() {
   return (
-    <AuthProvider>
-      <MoodProvider>
-        <PomodoroTimerProvider>
-          <QueryClientProvider client={queryClient}>
-            <Routes>
-              <Route element={<AppLayout />}>
-                <Route index element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<SignUp />} />
-              </Route>
-              <Route path="/app" element={<OSLayout />}>
-                <Route path="/app/dashboard" element={<Dashboard />} />
-                <Route path="/app/habit" element={<Habit />} />
-                <Route path="/app/mood" element={<Mood />}>
-                  <Route path="/app/mood/" element={<MoodPage />} />
-                  <Route path="/app/mood/journals" element={<Journals />} />
-                  <Route path="/app/mood/calendar" element={<MoodCalendar />} />
+    <ErrorBoundary>
+      <AuthProvider>
+        <MoodProvider>
+          <PomodoroTimerProvider>
+            <QueryClientProvider client={queryClient}>
+              <Routes>
+                <Route element={<AppLayout />}>
+                  <Route index element={<Home />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<SignUp />} />
                 </Route>
-                <Route path="/app/finance" element={<Finance />} />
-              </Route>
-            </Routes>
-          </QueryClientProvider>
-        </PomodoroTimerProvider>
-      </MoodProvider>
-    </AuthProvider>
+                <Route path="/app" element={<OSLayout />}>
+                  <Route path="/app/dashboard" element={<Dashboard />} />
+                  <Route path="/app/habit" element={<Habit />} />
+                  <Route path="/app/mood" element={<Mood />}>
+                    <Route path="/app/mood/" element={<MoodPage />} />
+                    <Route path="/app/mood/journals" element={<Journals />} />
+                    <Route
+                      path="/app/mood/calendar"
+                      element={<MoodCalendar />}
+                    />
+                  </Route>
+                  <Route path="/app/finance" element={<Finance />} />
+                </Route>
+              </Routes>
+            </QueryClientProvider>
+          </PomodoroTimerProvider>
+        </MoodProvider>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 
