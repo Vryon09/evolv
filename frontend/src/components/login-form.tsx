@@ -41,28 +41,6 @@ export function LoginForm({
     setForm(initialState);
   }
 
-  // useEffect(() => {
-  //   const token = getToken();
-  //   if (token) {
-  //     try {
-  //       const user = jwtDecode(token);
-
-  //       if (
-  //         user &&
-  //         typeof user.exp === "number" &&
-  //         user.exp * 1000 > Date.now()
-  //       ) {
-  //         navigate("/app/dashboard");
-  //       } else {
-  //         localStorage.removeItem("evolv_token");
-  //       }
-  //     } catch (error) {
-  //       throw error;
-  //       localStorage.removeItem("evolv_token");
-  //     }
-  //   }
-  // }, [navigate]);
-
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="py-4">

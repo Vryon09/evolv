@@ -1,6 +1,3 @@
-import api from "@/lib/api";
-import { getToken, setToken } from "@/lib/token";
-import { jwtDecode } from "jwt-decode";
 import React, {
   createContext,
   useCallback,
@@ -9,7 +6,10 @@ import React, {
   useRef,
   useState,
 } from "react";
+import api from "@/lib/api";
+import { getToken, setToken } from "@/lib/token";
 import { useNavigate } from "react-router";
+import { jwtDecode } from "jwt-decode";
 
 type JwtPayload = { exp?: number };
 type IUser = { _id?: string; name?: string; email?: string } | null;
@@ -26,36 +26,35 @@ const AuthContext = createContext<IAuthContext | undefined>(undefined);
 
 function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<IUser>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const logoutTimer = useRef<number>(null);
-
+  const [loading, setLoading] = useState(true);
+  const logoutTimer = useRef<number | null>(null);
   const navigate = useNavigate();
 
-  function clearLogoutTimer() {
+  const clearLogoutTimer = () => {
     if (logoutTimer.current) {
       window.clearTimeout(logoutTimer.current);
       logoutTimer.current = null;
     }
-  }
+  };
 
   const scheduleLogout = useCallback(
-    (expSec: number) => {
+    (expSec?: number) => {
       clearLogoutTimer();
       if (!expSec) return;
 
-      const expMs = expSec * 1000 - Date.now();
+      const ms = expSec * 1000 - Date.now();
 
-      if (expMs <= 0) {
-        setUser(null);
+      if (ms <= 0) {
         setToken(null);
+        setUser(null);
         return;
       }
 
-      logoutTimer.current = setTimeout(() => {
-        setUser(null);
+      logoutTimer.current = window.setTimeout(() => {
         setToken(null);
+        setUser(null);
         navigate("/login");
-      }, expMs);
+      }, ms);
     },
     [navigate],
   );
@@ -67,19 +66,19 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false);
       return;
     }
-
     try {
       try {
         const payload = jwtDecode<JwtPayload>(token);
-        if (payload.exp && typeof payload.exp === "number") {
+
+        if (payload?.exp && typeof payload.exp === "number") {
           scheduleLogout(payload.exp);
         }
       } catch (error) {
         console.warn(error);
       }
 
-      const { data: userObj } = await api.get("/api/auth/me");
-      setUser(userObj);
+      const { data } = await api.get("/api/auth/me");
+      setUser(data);
     } catch (error) {
       console.log(error);
       setUser(null);
@@ -92,12 +91,12 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     void refreshUser();
 
-    function onLogout() {
+    const onLogout = () => {
+      clearLogoutTimer();
       setUser(null);
-      setToken(null);
       setLoading(false);
       navigate("/login");
-    }
+    };
 
     window.addEventListener("evolv:logout", onLogout);
 

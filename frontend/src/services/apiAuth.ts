@@ -12,7 +12,7 @@ async function handleAddUser({ name, email, password }: IUser) {
 
   const res = await api.post(`/api/auth`, newUser);
 
-  console.log(res.data);
+  return res.data;
 }
 
 export function useAddUser() {
