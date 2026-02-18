@@ -1,12 +1,8 @@
 import z from "zod";
 
 const sleepSchema = z.object({
-  bedTime: z.coerce
-    .date()
-    .refine((date) => !isNaN(date.getTime()), "Invalid bed time"),
-  wakeTime: z.coerce
-    .date()
-    .refine((date) => !isNaN(date.getTime()), "Invalid wake time"),
+  bedTime: z.coerce.date(),
+  wakeTime: z.coerce.date(),
   quality: z.number().min(1).max(4),
 });
 

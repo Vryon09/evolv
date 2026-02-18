@@ -14,7 +14,7 @@ interface UserRequest extends Request {
 export async function protect(
   req: UserRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   let token;
 
@@ -30,7 +30,7 @@ export async function protect(
       // console.log(decoded);
 
       req.user = (await User.findById(decoded.id).select(
-        "-password"
+        "-password",
       )) as UserRequest["user"];
 
       return next();

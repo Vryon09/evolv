@@ -9,6 +9,7 @@ import tagRoutes from "./routes/tagRoutes.ts";
 import pomodoroRoutes from "./routes/pomodoroRoutes.ts";
 import journalRoutes from "./routes/journalRoutes.ts";
 import transactionRoutes from "./routes/transactionRoutes.ts";
+import { errorHandler } from "./middleware/errorHandler.ts";
 
 const app = express();
 
@@ -28,6 +29,8 @@ app.use("/api/tags", tagRoutes);
 app.use("/api/pomodoro", pomodoroRoutes);
 app.use("/api/journals", journalRoutes);
 app.use("/api/transactions", transactionRoutes);
+
+app.use(errorHandler);
 
 connectDB();
 

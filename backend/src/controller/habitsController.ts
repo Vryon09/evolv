@@ -18,6 +18,7 @@ dayjs.extend(isoWeek);
 export async function getAllHabits(req: UserRequest, res: Response) {
   try {
     const { sortBy } = req.query as { sortBy?: string };
+
     const allHabits = await habitService.getAllHabits(req.user._id, sortBy);
 
     res.status(200).json(allHabits);
@@ -26,7 +27,7 @@ export async function getAllHabits(req: UserRequest, res: Response) {
   }
 }
 
-export async function getHabits(req: UserRequest, res: Response) {
+export async function getHabits(req: Request, res: Response) {
   try {
     const { sortBy, page, limit } = req.query as {
       sortBy?: string;
@@ -69,7 +70,7 @@ export async function getHabits(req: UserRequest, res: Response) {
 // }
 // }
 
-export async function addHabit(req: UserRequest, res: Response): Promise<void> {
+export async function addHabit(req: Request, res: Response): Promise<void> {
   try {
     const habit = habitService.addHabit(req.user._id.toString(), req.body);
 
@@ -91,7 +92,7 @@ export async function updateHabit(req: Request, res: Response) {
   }
 }
 
-export async function deleteHabit(req: UserRequest, res: Response) {
+export async function deleteHabit(req: Request, res: Response) {
   try {
     const { id } = req.params;
 
