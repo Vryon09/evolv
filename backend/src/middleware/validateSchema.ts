@@ -18,10 +18,7 @@ export function validateSchema(schema: ZodType<any>) {
         });
       }
 
-      return res.status(400).json({
-        success: false,
-        error: "Validation failed",
-      });
+      next(error);
     }
   };
 }
