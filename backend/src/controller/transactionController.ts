@@ -14,7 +14,7 @@ export async function getTransactions(req: UserRequest, res: Response) {
     };
 
     const transactions = await transactionService.getTransactions(
-      req.user._id,
+      req.user!._id,
       type,
       category,
     );
@@ -28,7 +28,7 @@ export async function getTransactions(req: UserRequest, res: Response) {
 export async function addTransaction(req: UserRequest, res: Response) {
   try {
     const savedTransaction = await transactionService.addTransaction(
-      req.user._id,
+      req.user!._id,
       req.body,
     );
 
@@ -41,7 +41,7 @@ export async function addTransaction(req: UserRequest, res: Response) {
 export async function deleteTransaction(req: UserRequest, res: Response) {
   try {
     const deletedTransaction = await transactionService.deleteTransaction(
-      req.user,
+      req.user!,
       req.params.id,
     );
 

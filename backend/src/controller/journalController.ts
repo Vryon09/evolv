@@ -18,7 +18,7 @@ export async function getJournals(req: UserRequest, res: Response) {
     });
 
     const { journals, pagination } = await journalService.getJournal(
-      req.user._id,
+      req.user!._id,
       parsedPage,
       parsedLimit,
     );
@@ -38,7 +38,7 @@ export async function getJournals(req: UserRequest, res: Response) {
 //create addJournal controller
 export async function addJournal(req: UserRequest, res: Response) {
   try {
-    const savedJournal = journalService.addJournal(req.user._id, req.body);
+    const savedJournal = journalService.addJournal(req.user!._id, req.body);
 
     res.status(201).json(savedJournal);
   } catch (error) {
@@ -49,7 +49,7 @@ export async function addJournal(req: UserRequest, res: Response) {
 export async function deleteJournal(req: UserRequest, res: Response) {
   try {
     const deletedJournal = journalService.deleteJournal(
-      req.user,
+      req.user!,
       req.params.id,
     );
 

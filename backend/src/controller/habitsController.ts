@@ -1,6 +1,4 @@
 import type { Request, Response } from "express";
-import Habit from "../models/Habit.ts";
-import User from "../models/User.ts";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
 import isoWeek from "dayjs/plugin/isoWeek.js";
@@ -19,7 +17,7 @@ export async function getAllHabits(req: UserRequest, res: Response) {
   try {
     const { sortBy } = req.query as { sortBy?: string };
 
-    const allHabits = await habitService.getAllHabits(req.user._id, sortBy);
+    const allHabits = await habitService.getAllHabits(req.user!._id, sortBy);
 
     res.status(200).json(allHabits);
   } catch (error) {
@@ -27,7 +25,7 @@ export async function getAllHabits(req: UserRequest, res: Response) {
   }
 }
 
-export async function getHabits(req: Request, res: Response) {
+export async function getHabits(req: UserRequest, res: Response) {
   try {
     const { sortBy, page, limit } = req.query as {
       sortBy?: string;
@@ -41,7 +39,7 @@ export async function getHabits(req: Request, res: Response) {
     });
 
     const { habits, pagination } = await habitService.getHabits(
-      req.user._id.toString(),
+      req.user!._id.toString(),
       sortBy,
       parsedPage,
       parsedLimit,
@@ -70,9 +68,9 @@ export async function getHabits(req: Request, res: Response) {
 // }
 // }
 
-export async function addHabit(req: Request, res: Response): Promise<void> {
+export async function addHabit(req: UserRequest, res: Response): Promise<void> {
   try {
-    const habit = habitService.addHabit(req.user._id.toString(), req.body);
+    const habit = habitService.addHabit(req.user!._id.toString(), req.body);
 
     res.status(201).json(habit);
   } catch (error) {
@@ -92,11 +90,11 @@ export async function updateHabit(req: Request, res: Response) {
   }
 }
 
-export async function deleteHabit(req: Request, res: Response) {
+export async function deleteHabit(req: UserRequest, res: Response) {
   try {
     const { id } = req.params;
 
-    const deletedHabit = await habitService.deleteHabit(id, req.user);
+    const deletedHabit = await habitService.deleteHabit(id, req.user!);
 
     res.status(200).json(deletedHabit);
   } catch (error) {

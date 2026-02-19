@@ -7,7 +7,7 @@ export async function updatePomodoroSettings(req: UserRequest, res: Response) {
   try {
     const updatedSettings = req.body;
 
-    const authUser = req.user;
+    const authUser = req.user!;
 
     if (!authUser) {
       res.status(401).json({ message: "Unauthorized" });

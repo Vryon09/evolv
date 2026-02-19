@@ -20,7 +20,7 @@ export async function getAllUsers(req: Request, res: Response) {
 }
 
 export async function fetchCurrentUser(req: UserRequest, res: Response) {
-  res.status(200).json(req.user);
+  res.status(200).json(req.user!);
 }
 
 export async function addUser(req: Request, res: Response): Promise<void> {

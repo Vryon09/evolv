@@ -1,14 +1,10 @@
 import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import User from "../models/User.ts";
-import type { IUser } from "../models/User.ts";
+import type { UserRequest } from "../types/express.ts";
 
 interface JwtPayload {
   id: string;
-}
-
-interface UserRequest extends Request {
-  user?: IUser;
 }
 
 export async function protect(
@@ -27,11 +23,15 @@ export async function protect(
       const secret = process.env.JWT_SECRET as string;
       const decoded = jwt.verify(token, secret) as JwtPayload;
 
-      // console.log(decoded);
-
-      req.user = (await User.findById(decoded.id).select(
+      const user = (await User.findById(decoded.id).select(
         "-password",
       )) as UserRequest["user"];
+
+      if (!user) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      req.user = user;
 
       return next();
     } catch (error) {

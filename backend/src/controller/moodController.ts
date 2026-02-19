@@ -5,7 +5,7 @@ import type { UserRequest } from "../types/express.ts";
 
 export async function getMood(req: UserRequest, res: Response) {
   try {
-    const moods = await moodService.getMood(req.user._id);
+    const moods = await moodService.getMood(req.user!._id);
 
     res.status(200).json(moods);
   } catch (error) {
@@ -15,7 +15,7 @@ export async function getMood(req: UserRequest, res: Response) {
 
 export async function addMood(req: UserRequest, res: Response) {
   try {
-    const savedMood = moodService.addMood(req.user._id, req.body);
+    const savedMood = moodService.addMood(req.user!._id, req.body);
 
     res.status(201).json(savedMood);
   } catch (error) {
@@ -25,7 +25,7 @@ export async function addMood(req: UserRequest, res: Response) {
 
 export async function deleteMood(req: UserRequest, res: Response) {
   try {
-    const deletedMood = moodService.deleteMood(req.user, req.params.id);
+    const deletedMood = moodService.deleteMood(req.user!, req.params.id);
 
     res.status(200).json(deletedMood);
   } catch (error) {
