@@ -12,7 +12,9 @@ export function HabitStats() {
   });
 
   const todaysCompletion = habits.reduce((acc, habit) => {
-    if (habit.completedDates.length === 0) return acc;
+    if (habit.completedDates.length === 0) {
+      return acc;
+    }
 
     if (isCompletedToday(habit)) acc++;
 

@@ -43,7 +43,10 @@ export function useAddHabit() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: handleAddHabit,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["habits"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["habits"] });
+      queryClient.invalidateQueries({ queryKey: ["allHabits"] });
+    },
   });
 }
 
@@ -78,7 +81,10 @@ export function useUpdateHabit() {
 
   return useMutation({
     mutationFn: handleUpdateHabit,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["habits"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["habits"] });
+      queryClient.invalidateQueries({ queryKey: ["allHabits"] });
+    },
   });
 }
 
@@ -91,7 +97,10 @@ export function useDeleteHabit() {
 
   return useMutation({
     mutationFn: handleDeleteHabit,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["habits"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["habits"] });
+      queryClient.invalidateQueries({ queryKey: ["allHabits"] });
+    },
   });
 }
 
@@ -104,6 +113,9 @@ export function useCompleteHabit() {
 
   return useMutation({
     mutationFn: handleCompleteHabit,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["habits"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["habits"] });
+      queryClient.invalidateQueries({ queryKey: ["allHabits"] });
+    },
   });
 }
