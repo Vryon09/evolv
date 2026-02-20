@@ -35,7 +35,7 @@ export default function HabitsPage() {
     PaginatedResponse<IHabit>
   >({
     queryFn: () => handleGetHabits({ sortBy, page, limit: 3 }),
-    queryKey: ["habits", sortBy, page],
+    queryKey: ["habits", "paginated", sortBy, page],
   });
 
   const habits = habitsData?.data ?? [];

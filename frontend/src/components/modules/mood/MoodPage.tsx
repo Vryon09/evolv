@@ -17,7 +17,7 @@ import dayjs from "dayjs";
 function MoodPage() {
   const { data: habits = [], isPending: isHabitsLoading } = useQuery<IHabit[]>({
     queryFn: () => handleGetAllHabits("default"),
-    queryKey: ["allHabits"],
+    queryKey: ["habits", "all"],
   });
 
   const { data: moods = [] } = useQuery<IMood[]>({
