@@ -234,7 +234,7 @@ export class HabitService {
 
     const stats = await Habit.aggregate([
       {
-        $match: { user: userId, isArchived: false }, // only active habits
+        $match: { user: userId, isArchived: false },
       },
       {
         $addFields: {

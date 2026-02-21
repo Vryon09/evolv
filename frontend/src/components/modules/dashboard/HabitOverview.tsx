@@ -1,18 +1,8 @@
 import { Button } from "@/components/ui/button";
-import isCompletedToday from "@/helper/isCompletedToday";
-import { cn } from "@/lib/utils";
-import { handleGetAllHabits } from "@/services/apiHabits";
-import { useQuery } from "@tanstack/react-query";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router";
-import type { IHabit } from "types/habit";
 
 function HabitOverview() {
-  const { data: habits = [], isPending: isHabitsLoading } = useQuery<IHabit[]>({
-    queryFn: () => handleGetAllHabits("default"),
-    queryKey: ["habits", "default"],
-  });
-
   const navigate = useNavigate();
 
   return (
@@ -25,26 +15,6 @@ function HabitOverview() {
           <span>Go to Habit</span>
           <ArrowRight />
         </Button>
-      </div>
-
-      <div className="flex justify-between">
-        {isHabitsLoading ? (
-          <div>Loading...</div>
-        ) : (
-          habits.map((habit) => {
-            return (
-              <div
-                key={habit._id}
-                className={cn(
-                  "w-full border",
-                  isCompletedToday(habit) ? "bg-green-500" : "bg-neutral-600",
-                )}
-              >
-                <p>{habit.title}</p>
-              </div>
-            );
-          })
-        )}
       </div>
     </div>
   );

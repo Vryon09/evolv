@@ -30,8 +30,6 @@ function MoodPage() {
   const { mutate: handleAddMood } = useAddMood();
   const { mutate: handleDeleteMood } = useDeleteMood();
 
-  console.log(habits);
-
   const dailyHabits = habits?.reduce(
     (acc: { habitId: string; isCompleted: boolean }[], curr) => {
       if (curr.frequency !== "daily") return acc;
