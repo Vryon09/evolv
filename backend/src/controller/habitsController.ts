@@ -113,3 +113,12 @@ export async function completeHabit(req: Request, res: Response) {
     handleError(error, res);
   }
 }
+
+export async function getHabitsStats(req: UserRequest, res: Response) {
+  try {
+    const stats = await habitService.getHabitsStats(req.user!._id);
+    res.status(200).json(stats);
+  } catch (error) {
+    handleError(error, res);
+  }
+}

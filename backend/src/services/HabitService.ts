@@ -221,6 +221,96 @@ export class HabitService {
 
     return savedHabit;
   }
+
+  async getHabitsStats(userId: ObjectId) {
+    const startOfDay = dayjs().startOf("day").toDate();
+    const endOfDay = dayjs().endOf("day").toDate();
+
+    const startOfWeek = dayjs().startOf("isoWeek").toDate();
+    const endOfWeek = dayjs().endOf("isoWeek").toDate();
+
+    const startOfMonth = dayjs().startOf("month").toDate();
+    const endOfMonth = dayjs().endOf("month").toDate();
+
+    const stats = await Habit.aggregate([
+      {
+        $match: { user: userId, isArchived: false }, // only active habits
+      },
+      {
+        $addFields: {
+          isCompletedToday: {
+            $gt: [
+              {
+                $size: {
+                  $filter: {
+                    input: "$completedDates",
+                    as: "date",
+                    cond: {
+                      $or: [
+                        {
+                          $and: [
+                            { $eq: ["$frequency", "daily"] },
+                            { $gte: ["$$date", startOfDay] },
+                            { $lte: ["$$date", endOfDay] },
+                          ],
+                        },
+                        {
+                          $and: [
+                            { $eq: ["$frequency", "weekly"] },
+                            { $gte: ["$$date", startOfWeek] },
+                            { $lte: ["$$date", endOfWeek] },
+                          ],
+                        },
+                        {
+                          $and: [
+                            { $eq: ["$frequency", "monthly"] },
+                            { $gte: ["$$date", startOfMonth] },
+                            { $lte: ["$$date", endOfMonth] },
+                          ],
+                        },
+                      ],
+                    },
+                  },
+                },
+              },
+              0,
+            ],
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalHabits: { $sum: 1 },
+          completedToday: { $sum: { $cond: ["$isCompletedToday", 1, 0] } },
+          longestStreak: { $max: "$bestStreak" },
+        },
+      },
+      {
+        $addFields: {
+          completionPercentage: {
+            $cond: [
+              { $eq: ["$totalHabits", 0] },
+              0,
+              {
+                $multiply: [
+                  { $divide: ["$completedToday", "$totalHabits"] },
+                  100,
+                ],
+              },
+            ],
+          },
+        },
+      },
+      {
+        $project: {
+          completedToday: 0,
+        },
+      },
+    ]);
+
+    return stats;
+  }
 }
 
 export const habitService = new HabitService();

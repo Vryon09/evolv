@@ -1,48 +1,34 @@
 import { Flame, Calendar, Check } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import type { IHabit } from "types/habit";
 import { useQuery } from "@tanstack/react-query";
-import { handleGetAllHabits } from "@/services/apiHabits";
-import isCompletedToday from "@/helper/isCompletedToday";
+import { handleGetHabitsStats } from "@/services/apiHabits";
 
 export function HabitStats() {
-  const { data: habits = [] } = useQuery<IHabit[]>({
-    queryFn: () => handleGetAllHabits("default"),
-    queryKey: ["habits", "all"],
+  const { data: rawStats, isPending } = useQuery({
+    queryFn: handleGetHabitsStats,
+    queryKey: ["habits", "stats"],
   });
 
-  const todaysCompletion = habits.reduce((acc, habit) => {
-    if (habit.completedDates.length === 0) {
-      return acc;
-    }
-
-    if (isCompletedToday(habit)) acc++;
-
-    return acc;
-  }, 0);
-
-  const longestStreak = [...habits].sort(
-    (a, b) => b.bestStreak - a.bestStreak,
-  )[0];
+  if (isPending) return <p>Loading...</p>;
 
   const stats = [
     {
       label: "Today's Completion",
-      value: `${!todaysCompletion ? "0%" : `${((todaysCompletion / habits.length) * 100).toFixed(0)}%`}`,
+      value: `${rawStats[0].completionPercentage}%`,
       icon: Check,
       color: "text-green-500",
       bgColor: "bg-green-500/20",
     },
     {
       label: "Longest Streak",
-      value: `${!longestStreak ? "0" : `${longestStreak.bestStreak} ${longestStreak.frequency === "daily" ? "day" : longestStreak.frequency === "weekly" ? "week" : "month"}${longestStreak.bestStreak > 1 ? "s" : ""}`}`,
+      value: rawStats[0].longestStreak,
       icon: Flame,
       color: "text-flame",
       bgColor: "bg-flame/20",
     },
     {
       label: "Active Habits",
-      value: habits.length,
+      value: rawStats[0].totalHabits,
       icon: Calendar,
       color: "text-chart-4",
       bgColor: "bg-chart-4/20",

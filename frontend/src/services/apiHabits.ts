@@ -21,6 +21,12 @@ export async function handleGetHabits({ sortBy, page, limit }: IGetHabits) {
   return res.data || [];
 }
 
+export async function handleGetHabitsStats() {
+  const res = await api.get(`/api/habits/stats`);
+
+  return res.data;
+}
+
 async function handleAddHabit({
   title,
   description = "",
