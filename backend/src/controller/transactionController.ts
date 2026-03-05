@@ -63,3 +63,15 @@ export async function updateTransaction(req: Request, res: Response) {
     handleError(error, res);
   }
 }
+
+export async function resetTransactions(req: UserRequest, res: Response) {
+  try {
+    await transactionService.resetTransactions(req.user!._id);
+
+    res
+      .status(200)
+      .json({ success: true, message: "All transaction has been deleted." });
+  } catch (error) {
+    handleError(error, res);
+  }
+}

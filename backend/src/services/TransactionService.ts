@@ -88,6 +88,24 @@ class TransactionService {
     }
   }
 
+  async resetTransactions(userId: ObjectId) {
+    try {
+      const user = await User.findById(userId);
+
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      await Transaction.deleteMany({ user: user._id });
+
+      user.transactions = [];
+
+      await user.save();
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async updateTransaction(transactionId: string, data: UpdateTransactionInput) {
     try {
       if (!transactionId) {

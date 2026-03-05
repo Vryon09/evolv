@@ -89,3 +89,19 @@ export function useUpdateTransaction() {
       queryClient.invalidateQueries({ queryKey: ["transactions"] }),
   });
 }
+
+async function handleResetTransactions() {
+  const res = await api.delete("/api/transactions/reset");
+
+  console.log(res.data);
+}
+
+export function useResetTransactions() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: handleResetTransactions,
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["transactions"] }),
+  });
+}

@@ -4,6 +4,7 @@ import {
   addTransaction,
   deleteTransaction,
   getTransactions,
+  resetTransactions,
   updateTransaction,
 } from "../controller/transactionController.ts";
 import { validateSchema } from "../middleware/validateSchema.ts";
@@ -15,18 +16,21 @@ import {
 const router = Router();
 
 router.get("/", protect, getTransactions);
+
 router.post(
   "/",
   protect,
   validateSchema(createTransactionSchema),
   addTransaction,
 );
+
+router.delete("/reset", protect, resetTransactions);
 router.delete("/:id", protect, deleteTransaction);
+
 router.patch(
   "/:id",
   protect,
   validateSchema(updateTransactionSchema),
   updateTransaction,
 );
-
 export default router;

@@ -1,7 +1,6 @@
 import express from "express";
 import {
   addUser,
-  // getAllUsers,
   loginUser,
   fetchCurrentUser,
 } from "../controller/authController.ts";

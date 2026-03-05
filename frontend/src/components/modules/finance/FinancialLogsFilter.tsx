@@ -10,6 +10,7 @@ import {
   type Expense,
   type Income,
 } from "@/constants/finance";
+import { useResetTransactions } from "@/services/apiTransactions";
 import { Funnel, ListFilterPlus } from "lucide-react";
 import { useEffect, type Dispatch, type SetStateAction } from "react";
 import type { Category } from "types/Transaction";
@@ -41,9 +42,12 @@ function FinancialLogsFilter({
     setSelectedCategory("All");
   }, [selectedType, setSelectedCategory]);
 
+  const { mutate: handleResetTransactions } = useResetTransactions();
+
   return (
     <div className="flex justify-end">
       <div className="flex gap-2">
+        <Button onClick={() => handleResetTransactions()}>Reset</Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
