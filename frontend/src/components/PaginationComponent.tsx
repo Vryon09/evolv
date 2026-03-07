@@ -1,4 +1,6 @@
+import type { Dispatch, SetStateAction } from "react";
 import { Button } from "./ui/button";
+import { Field, FieldLabel } from "./ui/field";
 import {
   Pagination,
   PaginationContent,
@@ -6,10 +8,21 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "./ui/pagination";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 interface IPaginationComponent {
-  page?: number;
-  pages?: number;
+  page: number;
+  pages: number;
+  numPerPage: number;
+  setNumPerPage: Dispatch<SetStateAction<number>>;
+  numPageOptions: number[];
   toPrev: () => void;
   toNext: () => void;
 }
@@ -17,6 +30,9 @@ interface IPaginationComponent {
 function PaginationComponent({
   page,
   pages,
+  numPerPage,
+  setNumPerPage,
+  numPageOptions,
   toPrev,
   toNext,
 }: IPaginationComponent) {
@@ -33,7 +49,29 @@ function PaginationComponent({
             <PaginationPrevious />
           </Button>
         </PaginationItem>
-        <p className="text-xs font-semibold">Page {page}</p>
+        <div className="flex items-center">
+          <Field className="flex-row">
+            <FieldLabel>Cards per page</FieldLabel>
+            <Select
+              value={`${numPerPage}`}
+              onValueChange={(value) => setNumPerPage(+value)}
+            >
+              <SelectTrigger className="w-20">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent align="start">
+                <SelectGroup>
+                  {numPageOptions.map((num, i) => (
+                    <SelectItem key={i} value={`${num}`}>
+                      {num}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </Field>
+          <p className="text-xs font-semibold">Page {page}</p>
+        </div>
         <PaginationItem>
           <Button
             variant="ghost"

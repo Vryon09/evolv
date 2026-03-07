@@ -21,6 +21,7 @@ import PaginationComponent from "@/components/PaginationComponent";
 function Journals() {
   const [selectedJournal, setSelectedJournal] = useState<IJournal | null>(null);
   const [page, setPage] = useState<number>(1);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [journalDeleteDialog, setJournalDeleteDialog] =
     useState<IJournal | null>(null);
   const { data: journalsData, isLoading } = useQuery<
@@ -39,7 +40,13 @@ function Journals() {
 
   if (isLoading) return <p>Is loading...</p>;
 
-  if (journals?.length === 0) return <p>No journal</p>;
+  if (journals?.length === 0)
+    return (
+      <div>
+        <p>No journal</p>
+        <CreateJournalButton />
+      </div>
+    );
 
   return (
     <div className="bg-background overflow-scroll overflow-x-hidden">
@@ -66,10 +73,13 @@ function Journals() {
         </div>
 
         <PaginationComponent
-          page={pagination?.page}
-          pages={pagination?.pages}
+          page={pagination!.page}
+          pages={pagination!.pages}
           toPrev={() => setPage((page) => page - 1)}
           toNext={() => setPage((page) => page + 1)}
+          numPageOptions={[10, 15, 20]}
+          numPerPage={rowsPerPage}
+          setNumPerPage={setRowsPerPage}
         />
       </div>
 

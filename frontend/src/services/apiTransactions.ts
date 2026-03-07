@@ -5,12 +5,16 @@ import type { Category } from "types/Transaction";
 export async function handleGetTransactions({
   transactionType = "All",
   category = "All",
+  limit = 10,
+  page = 1,
 }: {
   transactionType: "All" | "Income" | "Expense";
   category: Category | "All";
+  limit: number;
+  page: number;
 }) {
   const res = await api.get(
-    `/api/transactions?type=${transactionType}&category=${category}`,
+    `/api/transactions?type=${transactionType}&category=${category}&limit=${limit}&page=${page}`,
   );
 
   return res.data ?? [];
@@ -101,6 +105,22 @@ export function useResetTransactions() {
 
   return useMutation({
     mutationFn: handleResetTransactions,
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["transactions"] }),
+  });
+}
+
+async function handleSeedTransaction() {
+  const res = await api.post(`/api/transactions/seed`);
+
+  console.log(res.data);
+}
+
+export function useSeedTransaction() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: handleSeedTransaction,
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["transactions"] }),
   });

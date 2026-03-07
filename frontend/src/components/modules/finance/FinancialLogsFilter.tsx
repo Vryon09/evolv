@@ -10,7 +10,10 @@ import {
   type Expense,
   type Income,
 } from "@/constants/finance";
-import { useResetTransactions } from "@/services/apiTransactions";
+import {
+  useResetTransactions,
+  useSeedTransaction,
+} from "@/services/apiTransactions";
 import { Funnel, ListFilterPlus } from "lucide-react";
 import { useEffect, type Dispatch, type SetStateAction } from "react";
 import type { Category } from "types/Transaction";
@@ -43,11 +46,27 @@ function FinancialLogsFilter({
   }, [selectedType, setSelectedCategory]);
 
   const { mutate: handleResetTransactions } = useResetTransactions();
+  const { mutate: handleSeedTransaction } = useSeedTransaction();
 
   return (
     <div className="flex justify-end">
       <div className="flex gap-2">
-        <Button onClick={() => handleResetTransactions()}>Reset</Button>
+        <Button
+          variant="outline"
+          size="sm"
+          className="cursor-pointer"
+          onClick={() => handleResetTransactions()}
+        >
+          Reset
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          className="cursor-pointer"
+          onClick={() => handleSeedTransaction()}
+        >
+          Seed
+        </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button

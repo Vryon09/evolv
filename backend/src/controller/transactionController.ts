@@ -5,21 +5,33 @@ import type { ITransaction } from "../models/Transaction.ts";
 import { handleError } from "../helper/HandleError.ts";
 import type { UserRequest } from "../types/express.ts";
 import { transactionService } from "../services/TransactionService.ts";
+import type { PaginatedResponse } from "../types/pagination.ts";
 
 export async function getTransactions(req: UserRequest, res: Response) {
   try {
-    const { type, category } = req.query as {
+    const { type, category, limit, page } = req.query as {
       type?: string;
       category?: string;
+      limit?: number;
+      page?: number;
     };
 
-    const transactions = await transactionService.getTransactions(
-      req.user!._id,
-      type,
-      category,
-    );
+    const { transactions, pagination } =
+      await transactionService.getTransactions({
+        userId: req.user!._id,
+        type,
+        category,
+        limit: limit!,
+        page: page!,
+      });
 
-    res.status(200).json(transactions);
+    const response: PaginatedResponse<any> = {
+      success: true,
+      data: transactions,
+      pagination,
+    };
+
+    res.status(200).json(response);
   } catch (error) {
     handleError(error, res);
   }
@@ -71,6 +83,14 @@ export async function resetTransactions(req: UserRequest, res: Response) {
     res
       .status(200)
       .json({ success: true, message: "All transaction has been deleted." });
+  } catch (error) {
+    handleError(error, res);
+  }
+}
+
+export async function seedMockTransactions(req: UserRequest, res: Response) {
+  try {
+    await transactionService.seedMockTransactions(req.user!._id, 20);
   } catch (error) {
     handleError(error, res);
   }

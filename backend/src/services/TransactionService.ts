@@ -7,15 +7,33 @@ import type {
   UpdateTransactionInput,
 } from "../schemas/transactionSchema.ts";
 import type { IUser } from "../models/User.ts";
+import { generateMockTransaction } from "../helper/MockTransactions.ts";
+import { calculateSkip } from "../types/pagination.ts";
 
 interface TransactionFilter {
   transactionType?: string;
   category?: string;
 }
 
+interface IGetTransactions {
+  userId: ObjectId;
+  type?: string;
+  category?: string;
+  limit: number;
+  page: number;
+}
+
 class TransactionService {
-  async getTransactions(userId: ObjectId, type?: string, category?: string) {
+  async getTransactions({
+    userId,
+    type,
+    category,
+    limit = 10,
+    page,
+  }: IGetTransactions) {
     try {
+      const skip = calculateSkip(page, limit);
+
       const filter: TransactionFilter = {};
 
       if (type && type !== "All") {
@@ -26,21 +44,32 @@ class TransactionService {
         filter.category = category;
       }
 
-      const transactions = await User.findById(userId)
-        .populate<{
-          transactions: ITransaction[];
-        }>({
-          path: "transactions",
-          model: Transaction,
-          match: { isArchived: false, ...filter },
-        })
-        .select("transactions");
+      const transactions = await Transaction.find({
+        user: userId,
+        isArchived: false,
+        ...filter,
+      })
+        .skip(skip)
+        .limit(limit);
+
+      const transactionsLength = await Transaction.countDocuments({
+        user: userId,
+        isArchived: false,
+      });
 
       if (!transactions) {
         throw new Error("User not found");
       }
 
-      return transactions.transactions;
+      return {
+        transactions,
+        pagination: {
+          limit,
+          total: transactionsLength,
+          page: page,
+          pages: Math.ceil(transactionsLength / limit),
+        },
+      };
     } catch (error) {
       throw error;
     }
@@ -124,6 +153,23 @@ class TransactionService {
     } catch (error) {
       throw error;
     }
+  }
+
+  async seedMockTransactions(
+    userId: ObjectId,
+    count: number = 20,
+  ): Promise<void> {
+    const results = await Promise.allSettled(
+      Array.from({ length: count }, () => {
+        const data = generateMockTransaction();
+        return this.addTransaction(userId, data);
+      }),
+    );
+
+    const succeeded = results.filter((r) => r.status === "fulfilled").length;
+    const failed = results.filter((r) => r.status === "rejected").length;
+
+    console.log(`Seeded ${succeeded}/${count} transactions. Failed: ${failed}`);
   }
 }
 

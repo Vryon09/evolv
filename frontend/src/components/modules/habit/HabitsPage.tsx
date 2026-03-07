@@ -30,12 +30,13 @@ export default function HabitsPage() {
     "default",
   );
   const [page, setPage] = useState<number>(1);
+  const [cardsPerPage, setCardsPerPage] = useState<number>(6);
 
   const { data: habitsData, isPending: isHabitsLoading } = useQuery<
     PaginatedResponse<IHabit>
   >({
-    queryFn: () => handleGetHabits({ sortBy, page, limit: 3 }),
-    queryKey: ["habits", "paginated", sortBy, page],
+    queryFn: () => handleGetHabits({ sortBy, page, limit: cardsPerPage }),
+    queryKey: ["habits", "paginated", sortBy, page, cardsPerPage],
   });
 
   const habits = habitsData?.data ?? [];
@@ -86,8 +87,11 @@ export default function HabitsPage() {
           />
         )}
         <PaginationComponent
-          page={pagination?.page}
-          pages={pagination?.pages}
+          page={pagination!.page}
+          pages={pagination!.pages}
+          numPerPage={cardsPerPage}
+          setNumPerPage={setCardsPerPage}
+          numPageOptions={[3, 6, 9, 12]}
           toPrev={() => setPage((page) => page - 1)}
           toNext={() => setPage((page) => page + 1)}
         />

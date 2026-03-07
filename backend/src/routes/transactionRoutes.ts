@@ -5,6 +5,7 @@ import {
   deleteTransaction,
   getTransactions,
   resetTransactions,
+  seedMockTransactions,
   updateTransaction,
 } from "../controller/transactionController.ts";
 import { validateSchema } from "../middleware/validateSchema.ts";
@@ -23,6 +24,8 @@ router.post(
   validateSchema(createTransactionSchema),
   addTransaction,
 );
+
+router.post("/seed", protect, seedMockTransactions);
 
 router.delete("/reset", protect, resetTransactions);
 router.delete("/:id", protect, deleteTransaction);

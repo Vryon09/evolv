@@ -18,6 +18,8 @@ import type {
 import FinancialDialog from "./FinancialDialog";
 import FinancialLogsFilter from "./FinancialLogsFilter";
 import DeleteDialog from "@/components/DeleteDialog";
+import PaginationComponent from "@/components/PaginationComponent";
+import type { PaginatedResponse } from "types/pagination";
 
 function FinancialLogs() {
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -40,17 +42,35 @@ function FinancialLogs() {
     "All",
   );
 
+  const [page, setPage] = useState<number>(1);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+
   const [transactionDeleteDialog, setTransactionDeleteDialog] =
     useState<ITransaction | null>(null);
 
-  const { data: transactions = [] } = useQuery<ITransaction[]>({
+  const { data: transactionsData, isPending: isTransactionsPending } = useQuery<
+    PaginatedResponse<ITransaction>
+  >({
     queryFn: () =>
       handleGetTransactions({
         transactionType: selectedType,
         category: selectedCategory,
+        limit: rowsPerPage,
+        page,
       }),
-    queryKey: ["transactions", selectedType, selectedCategory],
+    queryKey: [
+      "transactions",
+      selectedType,
+      selectedCategory,
+      page,
+      rowsPerPage,
+    ],
   });
+
+  const transactions = transactionsData?.data || [];
+  const pagination = transactionsData?.pagination;
+
+  console.log(transactionsData);
 
   const { mutate: handleDeleteTransaction } = useDeleteTransaction();
   const { mutate: handleUpdateTransaction } = useUpdateTransaction();
@@ -110,6 +130,8 @@ function FinancialLogs() {
       });
     }
   }, [formValue.transactionType]);
+
+  if (isTransactionsPending) return <p>Loading...</p>;
 
   return (
     <div className="mt-8 space-y-4">
@@ -187,6 +209,16 @@ function FinancialLogs() {
             </div>
           </div>
         ))}
+
+        <PaginationComponent
+          page={+pagination!.page}
+          pages={pagination!.pages}
+          numPerPage={rowsPerPage}
+          numPageOptions={[5, 10, 15, 20]}
+          setNumPerPage={setRowsPerPage}
+          toNext={() => setPage((page) => page + 1)}
+          toPrev={() => setPage((page) => page - 1)}
+        />
       </div>
 
       <FinancialDialog
