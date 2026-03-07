@@ -171,6 +171,33 @@ class TransactionService {
 
     console.log(`Seeded ${succeeded}/${count} transactions. Failed: ${failed}`);
   }
+
+  async getTransactionsStats(userId: ObjectId) {
+    try {
+      const stats = await Transaction.aggregate([
+        { $match: { user: userId, isArchived: false } },
+        {
+          $group: {
+            _id: null,
+            totalIncome: {
+              $sum: {
+                $cond: [{ $eq: ["$transactionType", "Income"] }, "$amount", 0],
+              },
+            },
+            totalExpense: {
+              $sum: {
+                $cond: [{ $eq: ["$transactionType", "Expense"] }, "$amount", 0],
+              },
+            },
+          },
+        },
+      ]);
+
+      return stats[0];
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export const transactionService = new TransactionService();

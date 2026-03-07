@@ -1,37 +1,20 @@
 import { Card } from "@/components/ui/card";
-import { handleGetTransactions } from "@/services/apiTransactions";
+import { handleGetTransactionsStats } from "@/services/apiTransactions";
 import { useQuery } from "@tanstack/react-query";
-import type { ITransaction } from "types/Transaction";
 
 function FinancialSummary() {
-  const { data: transactions = [], isLoading: isTransactionsLoading } =
-    useQuery<ITransaction[]>({
-      queryFn: () =>
-        handleGetTransactions({ transactionType: "All", category: "All" }),
-      queryKey: ["transactions"],
-    });
-
-  const { incomeTotal, expenseTotal } = transactions.reduce(
-    (acc, curr) => {
-      if (curr.transactionType === "Expense") {
-        acc.expenseTotal += curr.amount;
-      }
-
-      if (curr.transactionType === "Income") {
-        acc.incomeTotal += curr.amount;
-      }
-
-      return acc;
-    },
-
-    { incomeTotal: 0, expenseTotal: 0 },
-  );
+  const { data: stats, isPending: isStatsLoading } = useQuery({
+    queryFn: handleGetTransactionsStats,
+    queryKey: ["transactionsStats"],
+  });
 
   const summaries = [
-    { label: "Income", value: incomeTotal },
-    { label: "Expense", value: expenseTotal },
-    { label: "Balance", value: incomeTotal - expenseTotal },
+    { label: "Income", value: stats?.totalIncome },
+    { label: "Expense", value: stats?.totalExpense },
+    { label: "Balance", value: stats?.balance },
   ];
+
+  if (isStatsLoading) return <p>Loading...</p>;
 
   return (
     <div className="mt-4 flex justify-between gap-2">
@@ -39,9 +22,8 @@ function FinancialSummary() {
         <Card className="w-full p-4" key={summary.label}>
           <p className="font-semibold">{summary.label}</p>
           <p className="text-4xl font-bold">
-            {isTransactionsLoading
-              ? "Loading..."
-              : `${summary.value < 0 ? "-" : ""}₱${new Intl.NumberFormat().format(Math.abs(summary.value))}`}
+            {summary.value < 0 ? "-" : ""}₱
+            {new Intl.NumberFormat().format(Math.abs(summary.value))}
           </p>
         </Card>
       ))}

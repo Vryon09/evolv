@@ -20,6 +20,12 @@ export async function handleGetTransactions({
   return res.data ?? [];
 }
 
+export async function handleGetTransactionsStats() {
+  const res = await api.get(`/api/transactions/stats`);
+
+  return res.data || {};
+}
+
 async function handleAddTransaction({
   transactionType,
   category,
@@ -43,8 +49,10 @@ export function useAddTransaction() {
 
   return useMutation({
     mutationFn: handleAddTransaction,
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["transactions"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["transactionsStats"] });
+    },
   });
 }
 
@@ -56,8 +64,10 @@ export function useDeleteTransaction() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: handleDeleteTransaction,
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["transactions"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["transactionsStats"] });
+    },
   });
 }
 
@@ -89,8 +99,10 @@ export function useUpdateTransaction() {
 
   return useMutation({
     mutationFn: handleUpdateTransaction,
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["transactions"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["transactionsStats"] });
+    },
   });
 }
 
@@ -105,8 +117,10 @@ export function useResetTransactions() {
 
   return useMutation({
     mutationFn: handleResetTransactions,
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["transactions"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["transactionsStats"] });
+    },
   });
 }
 
@@ -121,7 +135,9 @@ export function useSeedTransaction() {
 
   return useMutation({
     mutationFn: handleSeedTransaction,
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["transactions"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["transactionsStats"] });
+    },
   });
 }

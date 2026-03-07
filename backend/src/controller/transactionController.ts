@@ -95,3 +95,16 @@ export async function seedMockTransactions(req: UserRequest, res: Response) {
     handleError(error, res);
   }
 }
+
+export async function getTransactionsStats(req: UserRequest, res: Response) {
+  try {
+    const { totalIncome, totalExpense } =
+      await transactionService.getTransactionsStats(req.user!._id);
+
+    res
+      .status(200)
+      .json({ totalIncome, totalExpense, balance: totalIncome - totalExpense });
+  } catch (error) {
+    handleError(error, res);
+  }
+}
