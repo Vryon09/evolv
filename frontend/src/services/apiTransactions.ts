@@ -23,7 +23,7 @@ export async function handleGetTransactions({
 export async function handleGetTransactionsStats() {
   const res = await api.get(`/api/transactions/stats`);
 
-  return res.data || {};
+  return res.data;
 }
 
 async function handleAddTransaction({

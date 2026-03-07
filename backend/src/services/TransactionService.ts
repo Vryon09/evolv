@@ -174,6 +174,15 @@ class TransactionService {
 
   async getTransactionsStats(userId: ObjectId) {
     try {
+      const totalTransactions = await Transaction.countDocuments({
+        user: userId,
+        isArchived: false,
+      });
+
+      if (!totalTransactions) {
+        return { _id: null, totalIncome: 0, totalExpense: 0 };
+      }
+
       const stats = await Transaction.aggregate([
         { $match: { user: userId, isArchived: false } },
         {
