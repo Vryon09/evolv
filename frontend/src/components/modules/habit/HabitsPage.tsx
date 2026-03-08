@@ -44,6 +44,8 @@ export default function HabitsPage() {
 
   if (isHabitsLoading) return <p>Loading...</p>;
 
+  console.log(typeof pagination?.page);
+
   return (
     <div className="bg-background overflow-scroll overflow-x-hidden">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">

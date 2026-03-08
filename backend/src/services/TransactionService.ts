@@ -49,6 +49,7 @@ class TransactionService {
         isArchived: false,
         ...filter,
       })
+        .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit);
 
@@ -66,7 +67,7 @@ class TransactionService {
         pagination: {
           limit,
           total: transactionsLength,
-          page: page,
+          page: +page,
           pages: Math.ceil(transactionsLength / limit),
         },
       };
