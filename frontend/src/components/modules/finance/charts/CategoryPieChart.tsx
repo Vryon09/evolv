@@ -12,7 +12,7 @@ import type { ITransaction } from "types/Transaction";
 interface IChartData {
   category: string;
   amount: number;
-  fill: string;
+  // fill: string;
 }
 
 function CategoryPieChart({
@@ -42,6 +42,7 @@ function CategoryPieChart({
     },
     initialChartData,
   );
+  console.log(chartData);
 
   return (
     <ChartContainer config={chartConfig} className="w-full">

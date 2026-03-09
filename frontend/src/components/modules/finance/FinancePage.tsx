@@ -1,4 +1,5 @@
 import FinanceActionButtons from "./FinanceActionButtons";
+import FinanceChart from "./FinanceChart";
 import FinancialLogs from "./FinancialLogs";
 import FinancialSummary from "./FinancialSummary";
 
@@ -11,7 +12,7 @@ function FinancePage() {
         </div>
         <FinancialSummary />
         <FinancialLogs />
-        {/* <FinanceChart /> */}
+        <FinanceChart />
       </div>
     </div>
   );

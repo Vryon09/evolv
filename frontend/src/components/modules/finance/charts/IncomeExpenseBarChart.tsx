@@ -6,8 +6,9 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
+import { handleGetTransactionsStats } from "@/services/apiTransactions";
+import { useQuery } from "@tanstack/react-query";
 import { Bar, BarChart } from "recharts";
-import type { ITransaction } from "types/Transaction";
 
 const chartConfig = {
   income: {
@@ -20,26 +21,18 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-function IncomeExpenseBarChart({
-  transactions,
-}: {
-  transactions: ITransaction[];
-}) {
-  const chartData = transactions.reduce(
-    (acc, curr) => {
-      if (curr.transactionType === "Expense") {
-        acc.expense += curr.amount;
-      }
+function IncomeExpenseBarChart() {
+  const { data: stats, isPending } = useQuery({
+    queryFn: handleGetTransactionsStats,
+    queryKey: ["transactionsStats"],
+  });
 
-      if (curr.transactionType === "Income") {
-        acc.income += curr.amount;
-      }
+  const chartData = {
+    income: stats?.totalIncome,
+    expense: stats?.totalExpense,
+  };
 
-      return acc;
-    },
-
-    { income: 0, expense: 0 },
-  );
+  if (isPending) return <p>loading...</p>;
 
   return (
     <ChartContainer config={chartConfig} className="min-h-[200px] w-full">

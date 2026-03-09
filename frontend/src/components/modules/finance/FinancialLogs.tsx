@@ -17,6 +17,9 @@ import { useTransactionEditing } from "@/hooks/transaction/useTransactionEditing
 import { useTransactionDelete } from "@/hooks/transaction/useTransactionDelete";
 
 function FinancialLogs() {
+  const { mutate: handleUpdateTransaction } = useUpdateTransaction();
+  const { mutate: handleDeleteTransaction } = useDeleteTransaction();
+
   const {
     selectedType,
     setSelectedType,
@@ -26,8 +29,6 @@ function FinancialLogs() {
 
   const { page, rowsPerPage, setRowsPerPage, toNext, toPrev } =
     useTransactionPagination();
-
-  const { mutate: handleUpdateTransaction } = useUpdateTransaction();
 
   const {
     isEditing,
@@ -39,8 +40,6 @@ function FinancialLogs() {
     handleEdit,
   } = useTransactionEditing(handleUpdateTransaction);
 
-  const { mutate: handleDeleteTransaction } = useDeleteTransaction();
-
   const {
     transactionDeleteDialog,
     setTransactionDeleteDialog,
@@ -48,9 +47,10 @@ function FinancialLogs() {
     handleDeleteOpenChange,
   } = useTransactionDelete(handleDeleteTransaction);
 
-  const { data: transactionsData, isPending: isTransactionsPending } = useQuery<
-    PaginatedResponse<ITransaction>
-  >({
+  const {
+    data: { data: transactions, pagination },
+    isPending: isTransactionsPending,
+  } = useQuery<PaginatedResponse<ITransaction>>({
     queryFn: () =>
       handleGetTransactions({
         transactionType: selectedType,
@@ -65,10 +65,12 @@ function FinancialLogs() {
       page,
       rowsPerPage,
     ],
+    initialData: {
+      success: true,
+      data: [],
+      pagination: { limit: 0, page: 1, pages: 0, total: 0 },
+    },
   });
-
-  const transactions = transactionsData?.data || [];
-  const pagination = transactionsData?.pagination;
 
   return (
     <div className="mt-8 space-y-4">

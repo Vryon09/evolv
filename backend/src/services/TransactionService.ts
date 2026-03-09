@@ -208,6 +208,22 @@ class TransactionService {
       throw error;
     }
   }
+
+  // async getTransactionChartStats(userId: ObjectId) {
+  //   try {
+  //     const chartStats = await Transaction.aggregate([
+  //       { $match: { user: userId } },
+  //       {$group: {
+  //         _id: null,
+  //         incomes: {
+  //           $cond: [{$eq: ["$transactionType", "Income"], }]
+  //         }
+  //       }}
+  //     ]);
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
 }
 
 export const transactionService = new TransactionService();
