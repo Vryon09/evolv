@@ -209,21 +209,88 @@ class TransactionService {
     }
   }
 
-  // async getTransactionChartStats(userId: ObjectId) {
-  //   try {
-  //     const chartStats = await Transaction.aggregate([
-  //       { $match: { user: userId } },
-  //       {$group: {
-  //         _id: null,
-  //         incomes: {
-  //           $cond: [{$eq: ["$transactionType", "Income"], }]
-  //         }
-  //       }}
-  //     ]);
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // }
+  async getTransactionsChartStats(userId: ObjectId) {
+    try {
+      const chartStats = await Transaction.aggregate([
+        { $match: { user: userId, isArchived: false } },
+        {
+          $group: {
+            _id: { transactionType: "$transactionType", category: "$category" },
+            amount: { $sum: "$amount" },
+          },
+        },
+        {
+          $group: {
+            _id: "$_id.transactionType",
+            categories: {
+              $push: { category: "$_id.category", amount: "$amount" },
+            },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            transactionType: "$_id",
+            categories: 1,
+          },
+        },
+      ]);
+
+      return chartStats;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export const transactionService = new TransactionService();
+
+// [
+//   {
+//     category: "Food",
+//     amount: 733.84,
+//   },
+//   {
+//     category: "Transport",
+//     amount: 1292.52,
+//   },
+//   {
+//     category: "Bills",
+//     amount: 1872.8100000000002,
+//   },
+//   {
+//     category: "Personal",
+//     amount: 2289.5099999999998,
+//   },
+//   {
+//     category: "Leisure",
+//     amount: 436.52,
+//   },
+//   {
+//     category: "Savings",
+//     amount: 941.1800000000001,
+//   },
+//   {
+//     category: "Misc",
+//     amount: 2705.5099999999998,
+//   },
+// ];
+
+// [
+//   {
+//     category: "Primary",
+//     amount: 43311.85,
+//   },
+//   {
+//     category: "Side",
+//     amount: 40129.75,
+//   },
+//   {
+//     category: "Passive",
+//     amount: 55955.82,
+//   },
+//   {
+//     category: "Other",
+//     amount: 30523.339999999997,
+//   },
+// ];

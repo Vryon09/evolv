@@ -4,6 +4,7 @@ import {
   addTransaction,
   deleteTransaction,
   getTransactions,
+  getTransactionsChartStats,
   getTransactionsStats,
   resetTransactions,
   seedMockTransactions,
@@ -19,6 +20,7 @@ const router = Router();
 
 router.get("/", protect, getTransactions);
 router.get("/stats", protect, getTransactionsStats);
+router.get("/stats/chart", protect, getTransactionsChartStats);
 
 router.post(
   "/",

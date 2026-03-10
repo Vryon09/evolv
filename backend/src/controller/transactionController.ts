@@ -108,3 +108,18 @@ export async function getTransactionsStats(req: UserRequest, res: Response) {
     handleError(error, res);
   }
 }
+
+export async function getTransactionsChartStats(
+  req: UserRequest,
+  res: Response,
+) {
+  try {
+    const chartStats = await transactionService.getTransactionsChartStats(
+      req.user!._id,
+    );
+
+    res.status(200).json(chartStats);
+  } catch (error) {
+    handleError(error, res);
+  }
+}
