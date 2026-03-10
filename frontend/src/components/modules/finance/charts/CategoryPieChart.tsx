@@ -42,7 +42,6 @@ function CategoryPieChart({
     },
     initialChartData,
   );
-  console.log(chartData);
 
   return (
     <ChartContainer config={chartConfig} className="w-full">

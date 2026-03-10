@@ -1,11 +1,9 @@
-import { handleGetTransactions } from "@/services/apiTransactions";
+import { handleGetTransactionsChartStats } from "@/services/apiTransactions";
 import { useQuery } from "@tanstack/react-query";
-import type { ITransaction } from "types/Transaction";
 import IncomeExpenseBarChart from "./charts/IncomeExpenseBarChart";
 import type { ChartConfig } from "@/components/ui/chart";
 import CategoryPieChart from "./charts/CategoryPieChart";
 import { categories } from "@/constants/finance";
-import type { PaginatedResponse } from "types/pagination";
 
 const expenseChartConfig = {
   Food: {
@@ -58,46 +56,12 @@ const incomeChartConfig = {
 } satisfies ChartConfig;
 
 function FinanceChart() {
-  const {
-    data: { data: transactions },
-  } = useQuery<PaginatedResponse<ITransaction>>({
-    queryFn: () =>
-      handleGetTransactions({
-        transactionType: "All",
-        category: "All",
-        limit: 0,
-        page: 0,
-      }),
-    queryKey: ["transactions"],
-    initialData: {
-      success: true,
-      data: [],
-      pagination: { limit: 0, page: 1, pages: 0, total: 0 },
-    },
+  const { data: chartStats, isPending: isChartStatsPending } = useQuery({
+    queryFn: handleGetTransactionsChartStats,
+    queryKey: ["chartStats"],
   });
 
-  const { incomes, expenses } = transactions.reduce(
-    (
-      acc: {
-        incomes: ITransaction[];
-        expenses: ITransaction[];
-      },
-      curr,
-    ) => {
-      if (curr.transactionType === "Expense") {
-        acc.expenses.push(curr);
-      }
-      if (curr.transactionType === "Income") {
-        acc.incomes.push(curr);
-      }
-
-      return acc;
-    },
-    {
-      incomes: [],
-      expenses: [],
-    },
-  );
+  if (isChartStatsPending) return <p>loading...</p>;
 
   return (
     <div>
@@ -105,12 +69,12 @@ function FinanceChart() {
       <div className="flex flex-col">
         <CategoryPieChart
           chartConfig={expenseChartConfig}
-          transactions={expenses}
+          transactions={chartStats[0].categories}
           categories={categories.Expense}
         />
         <CategoryPieChart
           chartConfig={incomeChartConfig}
-          transactions={incomes}
+          transactions={chartStats[1].categories}
           categories={categories.Income}
         />
       </div>

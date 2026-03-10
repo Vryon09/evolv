@@ -141,3 +141,9 @@ export function useSeedTransaction() {
     },
   });
 }
+
+export async function handleGetTransactionsChartStats() {
+  const res = await api.get("/api/transactions/stats/chart");
+
+  return res.data || [];
+}
