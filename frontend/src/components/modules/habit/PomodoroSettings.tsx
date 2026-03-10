@@ -63,9 +63,6 @@ function PomodoroSettings({
                     type: "setPomodoroSettings",
                     payload: { ...pomodoroSet, pomodoro: +e.target.value },
                   });
-                  // setPomodoroSettings((prev: IPomodoroSettings) => {
-                  //   return { ...prev, pomodoro: +e.target.value };
-                  // });
                 }}
               />
             </div>

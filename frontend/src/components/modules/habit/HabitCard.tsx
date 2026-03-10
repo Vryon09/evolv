@@ -46,7 +46,6 @@ export function HabitCard({
 
   const isComplete = isCompletedToday(habit);
 
-  //create a daily, weekly, monthly conditions in this controller
   const calendarDatesHighlight = habit.completedDates.map(
     (date) => new Date(date),
   );

@@ -10,7 +10,7 @@ type PomodoroTimerState = {
   pomodoroCount: number;
 };
 
-type PomodoroTimerAction =
+export type PomodoroTimerAction =
   | {
       type: "setPomodoroSettings";
       payload: IPomodoroSettings;

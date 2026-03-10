@@ -12,7 +12,6 @@ import type { ITransaction } from "types/Transaction";
 interface IChartData {
   category: string;
   amount: number;
-  // fill: string;
 }
 
 function CategoryPieChart({
