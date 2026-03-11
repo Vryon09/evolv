@@ -61,22 +61,24 @@ function FinanceChart() {
     queryKey: ["chartStats"],
   });
 
-  if (isChartStatsPending) return <p>loading...</p>;
-
   return (
     <div>
       <IncomeExpenseBarChart />
       <div className="flex flex-col">
-        <CategoryPieChart
-          chartConfig={expenseChartConfig}
-          transactions={chartStats[0].categories}
-          categories={categories.Expense}
-        />
-        <CategoryPieChart
-          chartConfig={incomeChartConfig}
-          transactions={chartStats[1].categories}
-          categories={categories.Income}
-        />
+        {!isChartStatsPending && (
+          <>
+            <CategoryPieChart
+              chartConfig={expenseChartConfig}
+              transactions={chartStats[0].categories}
+              categories={categories.Expense}
+            />
+            <CategoryPieChart
+              chartConfig={incomeChartConfig}
+              transactions={chartStats[1].categories}
+              categories={categories.Income}
+            />
+          </>
+        )}
       </div>
     </div>
   );

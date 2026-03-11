@@ -35,6 +35,8 @@ function CategoryPieChart({
     (acc: IChartData[], curr: ITransaction) => {
       const categoryId = acc.findIndex((a) => a.category === curr.category);
 
+      if (categoryId === -1) return acc;
+
       acc[categoryId].amount += curr.amount;
 
       return acc;
