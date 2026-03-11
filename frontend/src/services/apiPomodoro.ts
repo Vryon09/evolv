@@ -2,6 +2,12 @@ import type { IPomodoroSettings } from "@/components/modules/habit/PomodoroSetti
 import api from "@/lib/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+export async function handleGetPomodoroSettings() {
+  const res = await api.get("/api/pomodoro/settings");
+
+  return res.data || {};
+}
+
 async function handleUpdatePomodoroSettings({
   pomodoro,
   short,
@@ -26,7 +32,9 @@ export function useUpdatePomodoroSettings() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: handleUpdatePomodoroSettings,
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["currentUser"] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+      queryClient.invalidateQueries({ queryKey: ["pomodoroSettings"] });
+    },
   });
 }

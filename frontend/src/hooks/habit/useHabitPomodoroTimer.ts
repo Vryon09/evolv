@@ -10,6 +10,7 @@ interface useHabitPomodoroTimerProps {
   timerState: "idle" | "paused" | "running";
   time: number;
   pomodoroSettings: IPomodoroSettings;
+  userPomodoroSettings?: IPomodoroSettings;
   pomodoroCount: number;
 }
 
@@ -20,12 +21,13 @@ export function useHabitPomodoroTimer({
   timerState,
   time,
   pomodoroSettings,
+  userPomodoroSettings,
   pomodoroCount,
 }: useHabitPomodoroTimerProps) {
   useEffect(() => {
     dispatch({
       type: "setPomodoroSettings",
-      payload: user?.pomodoroSettings || {
+      payload: userPomodoroSettings || {
         pomodoro: 0,
         short: 0,
         long: 0,
@@ -38,10 +40,10 @@ export function useHabitPomodoroTimer({
     dispatch({
       type: "setTime",
       payload:
-        (user?.pomodoroSettings && user?.pomodoroSettings[timerType] * 60) ||
+        (userPomodoroSettings && userPomodoroSettings[timerType] * 60) ||
         25 * 60,
     });
-  }, [user, timerType, dispatch]);
+  }, [userPomodoroSettings, timerType, dispatch]);
 
   useEffect(() => {
     if (timerState === "idle" || timerState === "paused") return;

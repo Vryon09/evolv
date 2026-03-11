@@ -1,12 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Settings, SkipForward } from "lucide-react";
-import PomodoroSettings from "./PomodoroSettings";
+import PomodoroSettings, { type IPomodoroSettings } from "./PomodoroSettings";
 import { useOutletContext } from "react-router";
 import type { IUser } from "@/components/layout/OSLayout";
 import { cn } from "@/lib/utils";
 import { usePomodoroTimer } from "@/contexts/usePomodoroTimer";
 import { useHabitPomodoroTimer } from "@/hooks/habit/useHabitPomodoroTimer";
+import { useQuery } from "@tanstack/react-query";
+import { handleGetPomodoroSettings } from "@/services/apiPomodoro";
 
 function PomodoroTimer() {
   const {
@@ -19,6 +21,10 @@ function PomodoroTimer() {
     isPomodoroSettingsOpen,
   } = usePomodoroTimer();
   const { user }: { user?: IUser } = useOutletContext();
+  const { data: userPomodoroSettings } = useQuery<IPomodoroSettings>({
+    queryFn: handleGetPomodoroSettings,
+    queryKey: ["pomodoroSettings"],
+  });
 
   const { formatTime } = useHabitPomodoroTimer({
     dispatch,
@@ -26,6 +32,7 @@ function PomodoroTimer() {
     timerState,
     time,
     pomodoroSettings,
+    userPomodoroSettings,
     pomodoroCount,
     user,
   });
