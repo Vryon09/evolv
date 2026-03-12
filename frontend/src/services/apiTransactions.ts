@@ -39,9 +39,7 @@ async function handleAddTransaction({
 }) {
   const newTransaction = { transactionType, category, amount, description };
 
-  const res = await api.post(`/api/transactions`, newTransaction);
-
-  console.log(res.data);
+  await api.post(`/api/transactions`, newTransaction);
 }
 
 export function useAddTransaction() {
@@ -52,6 +50,7 @@ export function useAddTransaction() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       queryClient.invalidateQueries({ queryKey: ["transactionsStats"] });
+      queryClient.invalidateQueries({ queryKey: ["chartStats"] });
     },
   });
 }
@@ -67,6 +66,7 @@ export function useDeleteTransaction() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       queryClient.invalidateQueries({ queryKey: ["transactionsStats"] });
+      queryClient.invalidateQueries({ queryKey: ["chartStats"] });
     },
   });
 }
@@ -102,6 +102,7 @@ export function useUpdateTransaction() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       queryClient.invalidateQueries({ queryKey: ["transactionsStats"] });
+      queryClient.invalidateQueries({ queryKey: ["chartStats"] });
     },
   });
 }
@@ -120,6 +121,7 @@ export function useResetTransactions() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       queryClient.invalidateQueries({ queryKey: ["transactionsStats"] });
+      queryClient.invalidateQueries({ queryKey: ["chartStats"] });
     },
   });
 }
@@ -138,6 +140,7 @@ export function useSeedTransaction() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       queryClient.invalidateQueries({ queryKey: ["transactionsStats"] });
+      queryClient.invalidateQueries({ queryKey: ["chartStats"] });
     },
   });
 }

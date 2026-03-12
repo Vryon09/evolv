@@ -63,7 +63,7 @@ export function generateMockTransaction(): CreateTransactionInput {
 
   const amount =
     transactionType === "Expense"
-      ? randomAmount(1, 500)
+      ? randomAmount(500, 5_000)
       : randomAmount(500, 10_000);
 
   const description = randomItem(MOCK_DESCRIPTIONS[transactionType]);

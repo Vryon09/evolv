@@ -69,12 +69,12 @@ function FinanceChart() {
           <>
             <CategoryPieChart
               chartConfig={expenseChartConfig}
-              transactions={chartStats[0].categories}
+              transactions={chartStats[0]?.categories}
               categories={categories.Expense}
             />
             <CategoryPieChart
               chartConfig={incomeChartConfig}
-              transactions={chartStats[1].categories}
+              transactions={chartStats[1]?.categories}
               categories={categories.Income}
             />
           </>
