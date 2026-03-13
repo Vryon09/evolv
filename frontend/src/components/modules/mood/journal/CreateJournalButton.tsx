@@ -9,29 +9,19 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { useJournalCreate } from "@/hooks/journal/useJournalCreate";
 import { useAddJournal } from "@/services/apiJournals";
 import { Plus } from "lucide-react";
-import { useState } from "react";
 
 function CreateJournalButton() {
-  const [journalForm, setJournalForm] = useState<{
-    title: string;
-    content: string;
-  }>({ title: "", content: "" });
-  const [isCreating, setIsCreating] = useState(false);
-
   const { mutate: handleAddJournal } = useAddJournal();
-
-  function handleSubmit() {
-    handleAddJournal({
-      title: journalForm.title,
-      content: journalForm.content,
-    });
-
-    setJournalForm({ title: "", content: "" });
-
-    setIsCreating(false);
-  }
+  const {
+    isCreating,
+    setIsCreating,
+    handleSubmit,
+    journalForm,
+    setJournalForm,
+  } = useJournalCreate({ handleAddJournal });
 
   return (
     <>

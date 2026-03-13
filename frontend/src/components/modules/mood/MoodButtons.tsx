@@ -7,7 +7,7 @@ import type { PaginatedResponse } from "types/pagination";
 
 function JournalButtons() {
   const { data: journalsData } = useQuery<PaginatedResponse<IJournal>>({
-    queryFn: handleGetJournals,
+    queryFn: () => handleGetJournals({ page: 1, limit: 0 }),
     queryKey: ["journals"],
   });
 
