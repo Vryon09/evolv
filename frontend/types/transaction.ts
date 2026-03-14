@@ -30,3 +30,13 @@ export interface IFinanceFormValue {
   amount: string;
   description: string;
 }
+
+export interface ICategory {
+  category: Category;
+  amount: number;
+}
+
+export interface IChartStats<T> {
+  transactionType: "Income" | "Expense";
+  categories: T[];
+}

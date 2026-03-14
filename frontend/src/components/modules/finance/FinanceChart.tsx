@@ -2,28 +2,37 @@ import { handleGetTransactionsChartStats } from "@/services/apiTransactions";
 import { useQuery } from "@tanstack/react-query";
 import IncomeExpenseBarChart from "./charts/IncomeExpenseBarChart";
 import CategoryPieChart from "./charts/CategoryPieChart";
+import type { ICategory, IChartStats } from "types/Transaction";
 
 function FinanceChart() {
-  const { data: chartStats, isPending: isChartStatsPending } = useQuery({
+  const { data: chartStats, isPending: isChartStatsPending } = useQuery<
+    IChartStats<ICategory>[]
+  >({
     queryFn: handleGetTransactionsChartStats,
     queryKey: ["chartStats"],
   });
 
   if (isChartStatsPending) return <p>loading...</p>;
 
-  console.log(chartStats);
+  const expenseStats = chartStats?.find(
+    (stat) => stat.transactionType === "Expense",
+  );
+
+  const incomeStats = chartStats?.find(
+    (stat) => stat.transactionType === "Income",
+  );
 
   return (
     <div>
       <IncomeExpenseBarChart />
-      <div className="flex flex-col">
+      <div className="flex flex-row">
         <CategoryPieChart
-          transactions={chartStats[0]?.categories ?? []}
-          chartType={chartStats[0]?.transactionType ?? "Expense"}
+          transactions={expenseStats?.categories ?? []}
+          chartType={expenseStats?.transactionType ?? "Expense"}
         />
         <CategoryPieChart
-          transactions={chartStats[1]?.categories ?? []}
-          chartType={chartStats[1]?.transactionType ?? "Income"}
+          transactions={incomeStats?.categories ?? []}
+          chartType={incomeStats?.transactionType ?? "Income"}
         />
       </div>
     </div>

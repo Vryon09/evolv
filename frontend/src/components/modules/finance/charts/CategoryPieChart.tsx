@@ -7,13 +7,13 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart";
 import { Cell, Pie, PieChart } from "recharts";
-import type { ITransaction } from "types/Transaction";
+import type { ICategory } from "types/Transaction";
 
 function CategoryPieChart({
   transactions,
   chartType,
 }: {
-  transactions: ITransaction[];
+  transactions: ICategory[];
   chartType: "Income" | "Expense";
 }) {
   const expenseChartConfig = {
@@ -70,24 +70,39 @@ function CategoryPieChart({
     chartType === "Income" ? incomeChartConfig : expenseChartConfig;
 
   return (
-    <ChartContainer config={chartConfig} className="w-full">
-      <PieChart>
-        <ChartTooltip content={<ChartTooltipContent hideLabel />} />
-        <Pie data={transactions} dataKey="amount" label nameKey="category">
-          {transactions?.map((entry, id) => (
-            <Cell
-              key={`${entry.category}-${id}`}
-              fill={
-                (chartConfig as Record<string, { color: string }>)[
-                  entry.category
-                ]?.color ?? "#8884d8"
-              }
-            />
-          ))}
-        </Pie>
-        <ChartLegend content={<ChartLegendContent nameKey="category" />} />
-      </PieChart>
-    </ChartContainer>
+    <div className="w-full">
+      <p className="text-2xl font-semibold">{chartType}</p>
+      <ChartContainer config={chartConfig} className="w-full">
+        <PieChart>
+          <ChartTooltip
+            content={
+              <ChartTooltipContent
+                hideLabel
+                formatter={(value) => `₱${Number(value).toLocaleString()}`}
+              />
+            }
+          />
+          <Pie
+            data={transactions}
+            dataKey="amount"
+            label={({ value }) => `₱${Number(value).toLocaleString()}`}
+            nameKey="category"
+          >
+            {transactions?.map((entry, id) => (
+              <Cell
+                key={`${entry.category}-${id}`}
+                fill={
+                  (chartConfig as Record<string, { color: string }>)[
+                    entry.category
+                  ]?.color ?? "#8884d8"
+                }
+              />
+            ))}
+          </Pie>
+          <ChartLegend content={<ChartLegendContent nameKey="category" />} />
+        </PieChart>
+      </ChartContainer>
+    </div>
   );
 }
 
