@@ -51,9 +51,9 @@ export function HabitCard({
   );
 
   return (
-    <div className="relative">
-      <Card className="group h-fit overflow-hidden transition-all hover:shadow-lg">
-        <div className="px-6 py-4">
+    <div className="relative flex-1">
+      <Card className="group h-full overflow-hidden transition-all hover:shadow-lg">
+        <div className="flex h-full flex-col px-6 py-4">
           {/* Header */}
           <div className="mb-4 flex items-start justify-between">
             <div className="flex-1">
@@ -105,43 +105,48 @@ export function HabitCard({
             </DropdownMenu>
           </div>
           {/*create streak for weekly and monthly*/}
-          {/* Streak */}
-          <div className="mb-4 flex items-center gap-2">
-            <div className="bg-flame/20 flex cursor-default items-center gap-1.5 rounded-full px-3 py-1.5">
-              <Flame className="text-flame h-4 w-4" />
-              <span className="text-flame text-sm font-semibold select-none">
-                {`${habit.streak} ${habit.frequency === "daily" ? "day" : habit.frequency === "weekly" ? "week" : "month"} streak`}
-              </span>
+          <div className="flex flex-1 flex-col justify-end">
+            {/* Streak */}
+            <div className="mb-4 flex items-center gap-2">
+              <div className="bg-flame/20 flex cursor-default items-center gap-1.5 rounded-full px-3 py-1.5">
+                <Flame className="text-flame h-4 w-4" />
+                <span className="text-flame text-sm font-semibold select-none">
+                  {`${habit.streak} ${habit.frequency === "daily" ? "day" : habit.frequency === "weekly" ? "week" : "month"} streak`}
+                </span>
+              </div>
             </div>
-          </div>
-          {/* Actions */}
-          <div className="flex gap-2">
-            <Button
-              onClick={() => onToggleComplete(habit._id)}
-              className={cn(
-                "no-select hover:bg-success/90 hover:text-primary-foreground flex-1 cursor-pointer gap-2 transition-all",
-                isComplete
-                  ? "text-primary-foreground bg-success"
-                  : "border-accent border",
-              )}
-              variant={isComplete ? "default" : "outline"}
-              // disabled={
-              //   isComplete && habit.frequency !== "daily" ? true : false
-              // }
-            >
-              <Check
-                className={cn("h-4 w-4", isComplete && "animate-in zoom-in-50")}
-              />
-              {isComplete ? "Completed Today" : "Mark as Done"}
-            </Button>
+            {/* Actions */}
+            <div className="flex gap-2">
+              <Button
+                onClick={() => onToggleComplete(habit._id)}
+                className={cn(
+                  "no-select hover:bg-success/90 hover:text-primary-foreground flex-1 cursor-pointer gap-2 transition-all",
+                  isComplete
+                    ? "text-primary-foreground bg-success"
+                    : "border-accent border",
+                )}
+                variant={isComplete ? "default" : "outline"}
+                // disabled={
+                //   isComplete && habit.frequency !== "daily" ? true : false
+                // }
+              >
+                <Check
+                  className={cn(
+                    "h-4 w-4",
+                    isComplete && "animate-in zoom-in-50",
+                  )}
+                />
+                {isComplete ? "Completed Today" : "Mark as Done"}
+              </Button>
 
-            <Button
-              className="cursor-pointer"
-              variant="ghost"
-              onClick={() => setIsCalendarShow(!isCalendarShow)}
-            >
-              {!isCalendarShow ? <ChevronDown /> : <ChevronUp />}
-            </Button>
+              <Button
+                className="cursor-pointer"
+                variant="ghost"
+                onClick={() => setIsCalendarShow(!isCalendarShow)}
+              >
+                {!isCalendarShow ? <ChevronDown /> : <ChevronUp />}
+              </Button>
+            </div>
           </div>
         </div>
       </Card>

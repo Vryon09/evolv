@@ -62,7 +62,7 @@ export default function HabitsPage() {
               setEditingHabit(null);
               setIsDialogOpen(true);
             }}
-            className="cursor-pointer gap-2"
+            className="bg cursor-pointer gap-2"
           >
             <Plus className="h-4 w-4" />
             Add Habit

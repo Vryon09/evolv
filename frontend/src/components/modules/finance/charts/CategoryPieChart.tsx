@@ -85,7 +85,9 @@ function CategoryPieChart({
           <Pie
             data={transactions}
             dataKey="amount"
-            label={({ value }) => `₱${Number(value).toLocaleString()}`}
+            label={({ value, category }) =>
+              `₱${Number(value).toLocaleString()} ${category}`
+            }
             nameKey="category"
           >
             {transactions?.map((entry, id) => (

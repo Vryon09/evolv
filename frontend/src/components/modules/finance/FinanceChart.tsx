@@ -25,7 +25,7 @@ function FinanceChart() {
   return (
     <div>
       <IncomeExpenseBarChart />
-      <div className="flex flex-row">
+      <div className="mt-10 flex flex-row">
         <CategoryPieChart
           transactions={expenseStats?.categories ?? []}
           chartType={expenseStats?.transactionType ?? "Expense"}
